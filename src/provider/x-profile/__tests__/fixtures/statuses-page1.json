@@ -1,0 +1,2583 @@
+{
+  "code": 200,
+  "results": [
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042921162796081429",
+      "id": "2042921162796081429",
+      "text": "NASA пока не давали новых апдейтов по Artemis 2, кроме того, что с командой работают, а капсула Orion уже в доке корабля и плывёт на базу в Сан-Диего, там его начнут готовить к транспортировке в Хьюстон.\n\nИнтересная деталь, что отражающий слой на термоплитках самой капсулы почти не сорвало, как на Artemis 1. Выводов пока не будет, надо дождаться телеметрию и данные по входу.",
+      "raw_text": {
+        "text": "NASA пока не давали новых апдейтов по Artemis 2, кроме того, что с командой работают, а капсула Orion уже в доке корабля и плывёт на базу в Сан-Диего, там его начнут готовить к транспортировке в Хьюстон.\n\nИнтересная деталь, что отражающий слой на термоплитках самой капсулы почти не сорвало, как на Artemis 1. Выводов пока не будет, надо дождаться телеметрию и данные по входу.",
+        "display_text_range": [0, 377],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042919886020919296",
+            "display": "pic.x.com/DGMo3jHj3N",
+            "original": "https://t.co/DGMo3jHj3N",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042921162796081429/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042919885882134528",
+            "display": "pic.x.com/DGMo3jHj3N",
+            "original": "https://t.co/DGMo3jHj3N",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042921162796081429/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042919885882130432",
+            "display": "pic.x.com/DGMo3jHj3N",
+            "original": "https://t.co/DGMo3jHj3N",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042921162796081429/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042919885882220545",
+            "display": "pic.x.com/DGMo3jHj3N",
+            "original": "https://t.co/DGMo3jHj3N",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042921162796081429/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 8,
+      "reposts": 11,
+      "likes": 236,
+      "bookmarks": 4,
+      "quotes": 1,
+      "embed_card": "summary_large_image",
+      "created_at": "Sat Apr 11 11:02:15 +0000 2026",
+      "created_timestamp": 1775905335,
+      "possibly_sensitive": false,
+      "views": 5192,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042919886020919296",
+            "url": "https://pbs.twimg.com/media/HFnoz_7bwAAG2ZC.jpg?name=orig",
+            "width": 4096,
+            "height": 2533
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882134528",
+            "url": "https://pbs.twimg.com/media/HFnoz_aWEAABwq5.jpg?name=orig",
+            "width": 4096,
+            "height": 2532
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882130432",
+            "url": "https://pbs.twimg.com/media/HFnoz_aWAAAjIli.jpg?name=orig",
+            "width": 4096,
+            "height": 2878
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882220545",
+            "url": "https://pbs.twimg.com/media/HFnoz_aXYAEGsuM.jpg?name=orig",
+            "width": 4096,
+            "height": 2843
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042919886020919296",
+            "url": "https://pbs.twimg.com/media/HFnoz_7bwAAG2ZC.jpg?name=orig",
+            "width": 4096,
+            "height": 2533
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882134528",
+            "url": "https://pbs.twimg.com/media/HFnoz_aWEAABwq5.jpg?name=orig",
+            "width": 4096,
+            "height": 2532
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882130432",
+            "url": "https://pbs.twimg.com/media/HFnoz_aWAAAjIli.jpg?name=orig",
+            "width": 4096,
+            "height": 2878
+          },
+          {
+            "type": "photo",
+            "id": "2042919885882220545",
+            "url": "https://pbs.twimg.com/media/HFnoz_aXYAEGsuM.jpg?name=orig",
+            "width": 4096,
+            "height": 2843
+          }
+        ],
+        "mosaic": {
+          "type": "mosaic_photo",
+          "formats": {
+            "jpeg": "https://mosaic.fxtwitter.com/jpeg/2042921162796081429/HFnoz_7bwAAG2ZC/HFnoz_aWEAABwq5/HFnoz_aWAAAjIli/HFnoz_aXYAEGsuM",
+            "webp": "https://mosaic.fxtwitter.com/webp/2042921162796081429/HFnoz_7bwAAG2ZC/HFnoz_aWEAABwq5/HFnoz_aWAAAjIli/HFnoz_aXYAEGsuM"
+          }
+        }
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042796491748647129",
+      "id": "2042796491748647129",
+      "text": "Ну и традиционное бинго с этапами Artemis 2:\n🟢 Старт и прохождение зоны Max Q;\n🟢 Отделение боковых ускорителей;\n🟢 Отстрел системы аварийного спасения;\n🟢 выход на заданную орбиту и остановка маршевых двигателей RS-25 (MECO);\n🟢 Отделение второй ступени ICPS и выдвижение сопла на двигателе RL-10;\n🟢 Раскрытие 4 солнечных панелей корабля Orion;\n🟢 Первый импульс ICPS по поднятию перигея;\n🟢 Первый импульс ICPS по поднятию апогея;\n🟢 Отделение корабля Orion от второй ступени ICPS;\n🟢 Тренировка манёвров по сближению Orion с ICPS\n🟢 Отделение 4 кубсатов (только 2 вышли на связь);\n🟢 Второй импульс Orion по поднятию перигея;\n🟢 Импульс Orion для разгона и перехода на траекторию полета к Луне (TLI);\n🟢 Первый импульс Orion для коррекции курса к Луне;\n🟢 Второй импульс Orion для коррекции курса для полёта к Луне;\n🔴 Демонстрация сердечно-лёгочной реанимации на орбите;\n🟢 Тест системы оптической связи с помощью лазерного терминала на Orion;\n🟢 Третий импульс Orion для коррекции курса к Луне;\n🟢 Тест скафандров OCSS;\n🟢 Четвёртый импульс Orion для коррекции курса к Луне;\n🟢 Сближение с луной на 6000 км и фотосъёмка поверхности;\n🟢 Удаление от Земли на 402000 км — новый рекорд для пилотируемых полётов;\n🟢 Первый импульс Orion для коррекции курса к Земле;\n🟡 Тест системы радиационной защиты внутри Orion;\n🔴 Тест управления кораблём Orion в ручном режиме;\n🟢 Второй импульс Orion для коррекции курса к Земле;\n🟢 Третий импульс Orion для коррекции курса к Земле;\n🟢 Отделение сервисного модуля от капсулы Orion;\n🟢 Успешный вход в атмосферу на скорости 40000 км/ч — самый опасный этап;\n🟢 Выпуск парашютов и посадка на воду в заданной зоне;\n🟢 Экипаж Orion завершает миссию после 10 дней.\n\nЗажали почти все пальцы, кроме нескольких второстепенных задач. Люди слетали до Луны и вернулись живыми — а это главное в этом случае.",
+      "raw_text": {
+        "text": "Ну и традиционное бинго с этапами Artemis 2:\n🟢 Старт и прохождение зоны Max Q;\n🟢 Отделение боковых ускорителей;\n🟢 Отстрел системы аварийного спасения;\n🟢 выход на заданную орбиту и остановка маршевых двигателей RS-25 (MECO);\n🟢 Отделение второй ступени ICPS и выдвижение сопла на двигателе RL-10;\n🟢 Раскрытие 4 солнечных панелей корабля Orion;\n🟢 Первый импульс ICPS по поднятию перигея;\n🟢 Первый импульс ICPS по поднятию апогея;\n🟢 Отделение корабля Orion от второй ступени ICPS;\n🟢 Тренировка манёвров по сближению Orion с ICPS\n🟢 Отделение 4 кубсатов (только 2 вышли на связь);\n🟢 Второй импульс Orion по поднятию перигея;\n🟢 Импульс Orion для разгона и перехода на траекторию полета к Луне (TLI);\n🟢 Первый импульс Orion для коррекции курса к Луне;\n🟢 Второй импульс Orion для коррекции курса для полёта к Луне;\n🔴 Демонстрация сердечно-лёгочной реанимации на орбите;\n🟢 Тест системы оптической связи с помощью лазерного терминала на Orion;\n🟢 Третий импульс Orion для коррекции курса к Луне;\n🟢 Тест скафандров OCSS;\n🟢 Четвёртый импульс Orion для коррекции курса к Луне;\n🟢 Сближение с луной на 6000 км и фотосъёмка поверхности;\n🟢 Удаление от Земли на 402000 км — новый рекорд для пилотируемых полётов;\n🟢 Первый импульс Orion для коррекции курса к Земле;\n🟡 Тест системы радиационной защиты внутри Orion;\n🔴 Тест управления кораблём Orion в ручном режиме;\n🟢 Второй импульс Orion для коррекции курса к Земле;\n🟢 Третий импульс Orion для коррекции курса к Земле;\n🟢 Отделение сервисного модуля от капсулы Orion;\n🟢 Успешный вход в атмосферу на скорости 40000 км/ч — самый опасный этап;\n🟢 Выпуск парашютов и посадка на воду в заданной зоне;\n🟢 Экипаж Orion завершает миссию после 10 дней.\n\nЗажали почти все пальцы, кроме нескольких второстепенных задач. Люди слетали до Луны и вернулись живыми — а это главное в этом случае.",
+        "display_text_range": [0, 1836],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [275, 298],
+            "id": "2042796477920010240",
+            "display": "pic.x.com/kfnGCVSUqq",
+            "original": "https://t.co/kfnGCVSUqq",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042796491748647129/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [275, 298],
+            "id": "2042796477919936512",
+            "display": "pic.x.com/kfnGCVSUqq",
+            "original": "https://t.co/kfnGCVSUqq",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042796491748647129/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 19,
+      "reposts": 41,
+      "likes": 971,
+      "bookmarks": 23,
+      "quotes": 4,
+      "embed_card": "summary_large_image",
+      "created_at": "Sat Apr 11 02:46:51 +0000 2026",
+      "created_timestamp": 1775875611,
+      "possibly_sensitive": false,
+      "views": 21642,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042796477920010240",
+            "url": "https://pbs.twimg.com/media/HFl4ks7XYAA7WAb.jpg?name=orig",
+            "width": 4096,
+            "height": 3001
+          },
+          {
+            "type": "photo",
+            "id": "2042796477919936512",
+            "url": "https://pbs.twimg.com/media/HFl4ks7WQAA4oLq.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042796477920010240",
+            "url": "https://pbs.twimg.com/media/HFl4ks7XYAA7WAb.jpg?name=orig",
+            "width": 4096,
+            "height": 3001
+          },
+          {
+            "type": "photo",
+            "id": "2042796477919936512",
+            "url": "https://pbs.twimg.com/media/HFl4ks7WQAA4oLq.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          }
+        ],
+        "mosaic": {
+          "type": "mosaic_photo",
+          "formats": {
+            "jpeg": "https://mosaic.fxtwitter.com/jpeg/2042796491748647129/HFl4ks7XYAA7WAb/HFl4ks7WQAA4oLq",
+            "webp": "https://mosaic.fxtwitter.com/webp/2042796491748647129/HFl4ks7XYAA7WAb/HFl4ks7WQAA4oLq"
+          }
+        }
+      },
+      "quote": {
+        "url": "https://x.com/KYKYPY3A_B/status/2039366380454117589",
+        "id": "2039366380454117589",
+        "text": "Ключевые этапы миссии Artemis 2:\n\n⚪️ Старт и прохождение зоны Max Q;\n⚪️ Отделение боковых ускорителей;\n⚪️ Отстрел системы аварийного спасения;\n⚪️ выход на заданную орбиту и остановка маршевых двигателей RS-25 (MECO);\n⚪️ Отделение второй ступени ICPS и выдвижение сопла на двигателе RL-10;\n⚪️ Раскрытие 4 солнечных панелей корабля Orion;\n⚪️ Первый импульс ICPS по поднятию перигея;\n⚪️ Первый импульс ICPS по поднятию апогея;\n⚪️ Отделение корабля Orion от второй ступени ICPS;\n⚪️ Тренировка манёвров по сближению Orion с ICPS\n⚪️ Отделение 4 кубсатов;\n⚪️ Второй импульс Orion по поднятию перигея;\n⚪️ Импульс Orion для разгона и перехода на траекторию полета к Луне (TLI);\n⚪️ Первый импульс Orion для коррекции курса к Луне;\n⚪️ Второй импульс Orion для коррекции курса для полёта к Луне;\n⚪️ Демонстрация сердечно-лёгочной реанимации на орбите;\n⚪️ Тест системы оптической связи с помощью лазерного терминала на Orion;\n⚪️ Третий импульс Orion для коррекции курса к Луне;\n⚪️ Тест скафандров OCSS;\n⚪️ Четвёртый импульс Orion для коррекции курса к Луне;\n⚪️ Сближение с луной на 6000 км и фотосъёмка поверхности;\n⚪️ Удаление от Земли на 402000 км — новый рекорд для пилотируемых полётов;\n⚪️ Первый импульс Orion для коррекции курса к Земле;\n⚪️ Тест системы радиационной защиты внутри Orion;\n⚪️ Тест управления кораблём Orion в ручном режиме;\n⚪️ Второй импульс Orion для коррекции курса к Земле;\n⚪️ Третий импульс Orion для коррекции курса к Земле;\n⚪️ Отделение сервисного модуля от капсулы Orion;\n⚪️ Успешный вход в атмосферу на скорости 40000 км/ч — самый опасный этап;\n⚪️ Выпуск парашютов и посадка на воду в заданной зоне;\n⚪️ Экипаж Orion завершает миссию после 10 дней.\n\nНу и через 10 дней отметим пункты по результатам этой миссии.\n\nЭкипаж этой миссии войдёт в учебники истории. Всем причастным читателям канала в США и Европе огромная благодарность и удачного пуска. А зрителям во Флориде отличного шоу.",
+        "raw_text": {
+          "text": "Ключевые этапы миссии Artemis 2:\n\n⚪️ Старт и прохождение зоны Max Q;\n⚪️ Отделение боковых ускорителей;\n⚪️ Отстрел системы аварийного спасения;\n⚪️ выход на заданную орбиту и остановка маршевых двигателей RS-25 (MECO);\n⚪️ Отделение второй ступени ICPS и выдвижение сопла на двигателе RL-10;\n⚪️ Раскрытие 4 солнечных панелей корабля Orion;\n⚪️ Первый импульс ICPS по поднятию перигея;\n⚪️ Первый импульс ICPS по поднятию апогея;\n⚪️ Отделение корабля Orion от второй ступени ICPS;\n⚪️ Тренировка манёвров по сближению Orion с ICPS\n⚪️ Отделение 4 кубсатов;\n⚪️ Второй импульс Orion по поднятию перигея;\n⚪️ Импульс Orion для разгона и перехода на траекторию полета к Луне (TLI);\n⚪️ Первый импульс Orion для коррекции курса к Луне;\n⚪️ Второй импульс Orion для коррекции курса для полёта к Луне;\n⚪️ Демонстрация сердечно-лёгочной реанимации на орбите;\n⚪️ Тест системы оптической связи с помощью лазерного терминала на Orion;\n⚪️ Третий импульс Orion для коррекции курса к Луне;\n⚪️ Тест скафандров OCSS;\n⚪️ Четвёртый импульс Orion для коррекции курса к Луне;\n⚪️ Сближение с луной на 6000 км и фотосъёмка поверхности;\n⚪️ Удаление от Земли на 402000 км — новый рекорд для пилотируемых полётов;\n⚪️ Первый импульс Orion для коррекции курса к Земле;\n⚪️ Тест системы радиационной защиты внутри Orion;\n⚪️ Тест управления кораблём Orion в ручном режиме;\n⚪️ Второй импульс Orion для коррекции курса к Земле;\n⚪️ Третий импульс Orion для коррекции курса к Земле;\n⚪️ Отделение сервисного модуля от капсулы Orion;\n⚪️ Успешный вход в атмосферу на скорости 40000 км/ч — самый опасный этап;\n⚪️ Выпуск парашютов и посадка на воду в заданной зоне;\n⚪️ Экипаж Orion завершает миссию после 10 дней.\n\nНу и через 10 дней отметим пункты по результатам этой миссии.\n\nЭкипаж этой миссии войдёт в учебники истории. Всем причастным читателям канала в США и Европе огромная благодарность и удачного пуска. А зрителям во Флориде отличного шоу.",
+          "display_text_range": [0, 1899],
+          "facets": [
+            {
+              "type": "media",
+              "indices": [272, 295],
+              "id": "2039366366474727425",
+              "display": "pic.x.com/TP6YVUVRA5",
+              "original": "https://t.co/TP6YVUVRA5",
+              "replacement": "https://x.com/KYKYPY3A_B/status/2039366380454117589/photo/1"
+            },
+            {
+              "type": "media",
+              "indices": [272, 295],
+              "id": "2039366366302511104",
+              "display": "pic.x.com/TP6YVUVRA5",
+              "original": "https://t.co/TP6YVUVRA5",
+              "replacement": "https://x.com/KYKYPY3A_B/status/2039366380454117589/photo/1"
+            }
+          ]
+        },
+        "author": {
+          "screen_name": "KYKYPY3A_B",
+          "url": "https://x.com/KYKYPY3A_B",
+          "id": "138506755",
+          "followers": 32184,
+          "following": 698,
+          "likes": 146030,
+          "media_count": 7656,
+          "statuses": 40232,
+          "name": "Кукуруза как у томакруза 🌽",
+          "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+          "raw_description": {
+            "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+            "facets": [
+              {
+                "type": "url",
+                "indices": [110, 133],
+                "original": "https://t.co/2ymfQCyMTV",
+                "replacement": "https://t.me/starbasepost",
+                "display": "t.me/starbasepost"
+              }
+            ]
+          },
+          "location": "Cyprus",
+          "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+          "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+          "joined": "Thu Apr 29 18:56:02 +0000 2010",
+          "protected": false,
+          "website": null,
+          "verification": { "verified": true, "verified_at": null, "type": "individual" }
+        },
+        "replies": 40,
+        "reposts": 74,
+        "likes": 1192,
+        "bookmarks": 69,
+        "quotes": 9,
+        "embed_card": "summary_large_image",
+        "created_at": "Wed Apr 01 15:36:49 +0000 2026",
+        "created_timestamp": 1775057809,
+        "possibly_sensitive": false,
+        "views": 58870,
+        "is_note_tweet": true,
+        "community_note": null,
+        "lang": "ru",
+        "replying_to": null,
+        "media": {
+          "all": [
+            {
+              "type": "photo",
+              "id": "2039366366474727425",
+              "url": "https://pbs.twimg.com/media/HE1I58Ca8AEXZ3O.jpg?name=orig",
+              "width": 2400,
+              "height": 1350
+            },
+            {
+              "type": "photo",
+              "id": "2039366366302511104",
+              "url": "https://pbs.twimg.com/media/HE1I57ZXIAA5FM9.jpg?name=orig",
+              "width": 4096,
+              "height": 2304
+            }
+          ],
+          "photos": [
+            {
+              "type": "photo",
+              "id": "2039366366474727425",
+              "url": "https://pbs.twimg.com/media/HE1I58Ca8AEXZ3O.jpg?name=orig",
+              "width": 2400,
+              "height": 1350
+            },
+            {
+              "type": "photo",
+              "id": "2039366366302511104",
+              "url": "https://pbs.twimg.com/media/HE1I57ZXIAA5FM9.jpg?name=orig",
+              "width": 4096,
+              "height": 2304
+            }
+          ],
+          "mosaic": {
+            "type": "mosaic_photo",
+            "formats": {
+              "jpeg": "https://mosaic.fxtwitter.com/jpeg/2039366380454117589/HE1I58Ca8AEXZ3O/HE1I57ZXIAA5FM9",
+              "webp": "https://mosaic.fxtwitter.com/webp/2039366380454117589/HE1I58Ca8AEXZ3O/HE1I57ZXIAA5FM9"
+            }
+          }
+        },
+        "provider": "twitter",
+        "reposted_by": null
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/Mat_Mak_/status/2042789045386768629",
+      "id": "2042789045386768629",
+      "text": "@KYKYPY3A_B Только когда увидел их, счастливых и здоровых, передвигающихся на своих, меня начало отпускать окончательно. \nКак же круто, что все так наглядно.",
+      "raw_text": {
+        "text": "@KYKYPY3A_B Только когда увидел их, счастливых и здоровых, передвигающихся на своих, меня начало отпускать окончательно. \nКак же круто, что все так наглядно. https://t.co/crotECalGL",
+        "display_text_range": [12, 157],
+        "facets": [
+          { "type": "mention", "indices": [0, 11], "original": "KYKYPY3A_B", "id": "138506755" },
+          {
+            "type": "media",
+            "indices": [158, 181],
+            "id": "2042788983567224832",
+            "display": "pic.x.com/crotECalGL",
+            "original": "https://t.co/crotECalGL",
+            "replacement": "https://x.com/Mat_Mak_/status/2042789045386768629/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "Mat_Mak_",
+        "url": "https://x.com/Mat_Mak_",
+        "id": "1290372376308350983",
+        "followers": 526,
+        "following": 310,
+        "likes": 90043,
+        "media_count": 2114,
+        "statuses": 28559,
+        "name": "🇩🇪 MatMak 🇪🇺",
+        "description": "Всевозможный биомеханоид\n\nБармалей-либерал",
+        "raw_description": { "text": "Всевозможный биомеханоид\n\nБармалей-либерал", "facets": [] },
+        "location": "Holy Roman Empire",
+        "banner_url": "https://pbs.twimg.com/profile_banners/1290372376308350983/1688850279",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1632177673932877824/QwnHA9tL_200x200.jpg",
+        "joined": "Mon Aug 03 19:42:19 +0000 2020",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": false, "verified_at": null, "type": null }
+      },
+      "replies": 0,
+      "reposts": 12,
+      "likes": 398,
+      "bookmarks": 4,
+      "quotes": 0,
+      "embed_card": "summary_large_image",
+      "created_at": "Sat Apr 11 02:17:16 +0000 2026",
+      "created_timestamp": 1775873836,
+      "possibly_sensitive": false,
+      "views": 6145,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042788983567224832",
+            "url": "https://pbs.twimg.com/media/HFlxweSbEAA6usY.jpg?name=orig",
+            "width": 2560,
+            "height": 1440
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042788983567224832",
+            "url": "https://pbs.twimg.com/media/HFlxweSbEAA6usY.jpg?name=orig",
+            "width": 2560,
+            "height": 1440
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": {
+        "id": "138506755",
+        "name": "Кукуруза как у томакруза 🌽",
+        "screen_name": "KYKYPY3A_B",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "url": "https://x.com/KYKYPY3A_B"
+      }
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042788198351278088",
+      "id": "2042788198351278088",
+      "text": "Лунная миссия Artemis 2 успешно завершена. Рид Уайсман, Виктор Гловер, Кристина Кук и Джереми Хансен в безопасности на корабле. Спасибо всем причастным и вашему восторгу, вы подарили десяток прекрасных дней за многие годы. \n\nИ помните, что это не закат, а рассвет. Лучшее впереди.",
+      "raw_text": {
+        "text": "Лунная миссия Artemis 2 успешно завершена. Рид Уайсман, Виктор Гловер, Кристина Кук и Джереми Хансен в безопасности на корабле. Спасибо всем причастным и вашему восторгу, вы подарили десяток прекрасных дней за многие годы. \n\nИ помните, что это не закат, а рассвет. Лучшее впереди. https://t.co/lrQuGsOl7X",
+        "display_text_range": [0, 280],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042788182979121152",
+            "display": "pic.x.com/lrQuGsOl7X",
+            "original": "https://t.co/lrQuGsOl7X",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042788198351278088/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042788182983385088",
+            "display": "pic.x.com/lrQuGsOl7X",
+            "original": "https://t.co/lrQuGsOl7X",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042788198351278088/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042788182983413760",
+            "display": "pic.x.com/lrQuGsOl7X",
+            "original": "https://t.co/lrQuGsOl7X",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042788198351278088/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042788183105245186",
+            "display": "pic.x.com/lrQuGsOl7X",
+            "original": "https://t.co/lrQuGsOl7X",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042788198351278088/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 42,
+      "reposts": 126,
+      "likes": 2255,
+      "bookmarks": 24,
+      "quotes": 6,
+      "embed_card": "summary_large_image",
+      "created_at": "Sat Apr 11 02:13:54 +0000 2026",
+      "created_timestamp": 1775873634,
+      "possibly_sensitive": false,
+      "views": 23491,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042788182979121152",
+            "url": "https://pbs.twimg.com/media/HFlxB33WEAAMc6S.jpg?name=orig",
+            "width": 4032,
+            "height": 3024
+          },
+          {
+            "type": "photo",
+            "id": "2042788182983385088",
+            "url": "https://pbs.twimg.com/media/HFlxB34XIAAcdtp.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          },
+          {
+            "type": "photo",
+            "id": "2042788182983413760",
+            "url": "https://pbs.twimg.com/media/HFlxB34XkAAtFze.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          },
+          {
+            "type": "photo",
+            "id": "2042788183105245186",
+            "url": "https://pbs.twimg.com/media/HFlxB4VakAIGAcr.jpg?name=orig",
+            "width": 4000,
+            "height": 3000
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042788182979121152",
+            "url": "https://pbs.twimg.com/media/HFlxB33WEAAMc6S.jpg?name=orig",
+            "width": 4032,
+            "height": 3024
+          },
+          {
+            "type": "photo",
+            "id": "2042788182983385088",
+            "url": "https://pbs.twimg.com/media/HFlxB34XIAAcdtp.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          },
+          {
+            "type": "photo",
+            "id": "2042788182983413760",
+            "url": "https://pbs.twimg.com/media/HFlxB34XkAAtFze.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          },
+          {
+            "type": "photo",
+            "id": "2042788183105245186",
+            "url": "https://pbs.twimg.com/media/HFlxB4VakAIGAcr.jpg?name=orig",
+            "width": 4000,
+            "height": 3000
+          }
+        ],
+        "mosaic": {
+          "type": "mosaic_photo",
+          "formats": {
+            "jpeg": "https://mosaic.fxtwitter.com/jpeg/2042788198351278088/HFlxB33WEAAMc6S/HFlxB34XIAAcdtp/HFlxB34XkAAtFze/HFlxB4VakAIGAcr",
+            "webp": "https://mosaic.fxtwitter.com/webp/2042788198351278088/HFlxB33WEAAMc6S/HFlxB34XIAAcdtp/HFlxB34XkAAtFze/HFlxB4VakAIGAcr"
+          }
+        }
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042757075533492585",
+      "id": "2042757075533492585",
+      "text": "Экипаж Artemis 2 успешно вернулся на Землю.\n\nНаконец-то отпускает.",
+      "raw_text": {
+        "text": "Экипаж Artemis 2 успешно вернулся на Землю.\n\nНаконец-то отпускает. https://t.co/OWsBDNYTVB",
+        "display_text_range": [0, 66],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [67, 90],
+            "id": "2042757010131947521",
+            "display": "pic.x.com/OWsBDNYTVB",
+            "original": "https://t.co/OWsBDNYTVB",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042757075533492585/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 68,
+      "reposts": 176,
+      "likes": 3209,
+      "bookmarks": 38,
+      "quotes": 24,
+      "embed_card": "player",
+      "created_at": "Sat Apr 11 00:10:14 +0000 2026",
+      "created_timestamp": 1775866214,
+      "possibly_sensitive": false,
+      "views": 38764,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042757010131947521",
+            "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1920x1080/tIfy49tvWUnyCUHM.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042757010131947521/img/3llHbonxm1oD2ebJ.jpg",
+            "duration": 15.608,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/pl/EnmTuLt77jvFHoIl.m3u8?tag=21&v=89f",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/480x270/BfmLWREySkJsPJO3.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/640x360/QDaeBzZXufiiBMYA.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1280x720/gS-T9OeauNJR7BqJ.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1920x1080/tIfy49tvWUnyCUHM.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042757010131947521",
+            "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1920x1080/tIfy49tvWUnyCUHM.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042757010131947521/img/3llHbonxm1oD2ebJ.jpg",
+            "duration": 15.608,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/pl/EnmTuLt77jvFHoIl.m3u8?tag=21&v=89f",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/480x270/BfmLWREySkJsPJO3.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/640x360/QDaeBzZXufiiBMYA.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1280x720/gS-T9OeauNJR7BqJ.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042757010131947521/vid/avc1/1920x1080/tIfy49tvWUnyCUHM.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042756297557168552",
+      "id": "2042756297557168552",
+      "text": "Выдыхаем, 3 раскрывшихся парашюта на Orion",
+      "raw_text": {
+        "text": "Выдыхаем, 3 раскрывшихся парашюта на Orion https://t.co/Nem8eYlkvc",
+        "display_text_range": [0, 42],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [43, 66],
+            "id": "2042756208239742979",
+            "display": "pic.x.com/Nem8eYlkvc",
+            "original": "https://t.co/Nem8eYlkvc",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042756297557168552/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 34,
+      "reposts": 67,
+      "likes": 2121,
+      "bookmarks": 36,
+      "quotes": 8,
+      "embed_card": "player",
+      "created_at": "Sat Apr 11 00:07:08 +0000 2026",
+      "created_timestamp": 1775866028,
+      "possibly_sensitive": false,
+      "views": 54769,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042756208239742979",
+            "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1920x1080/tyN2mKH4ZF4em_KE.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042756208239742979/img/0ldFqhuXKQqdL2T4.jpg",
+            "duration": 26.18,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/pl/W90IzVNINTn0O6Ob.m3u8?tag=21&v=4d0",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/480x270/1COcK4P0EYW-5IVN.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/640x360/8hSFrGCz9A-qmfl7.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1280x720/HkIt5SzoIU-x2V5f.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1920x1080/tyN2mKH4ZF4em_KE.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042756208239742979",
+            "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1920x1080/tyN2mKH4ZF4em_KE.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042756208239742979/img/0ldFqhuXKQqdL2T4.jpg",
+            "duration": 26.18,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/pl/W90IzVNINTn0O6Ob.m3u8?tag=21&v=4d0",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/480x270/1COcK4P0EYW-5IVN.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/640x360/8hSFrGCz9A-qmfl7.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1280x720/HkIt5SzoIU-x2V5f.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042756208239742979/vid/avc1/1920x1080/tyN2mKH4ZF4em_KE.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042753433111802041",
+      "id": "2042753433111802041",
+      "text": "6 минут того, что чувствовали люди во время Аполлон 8, 10, 11, 12, 13, 14, 15, 16 и 17",
+      "raw_text": {
+        "text": "6 минут того, что чувствовали люди во время Аполлон 8, 10, 11, 12, 13, 14, 15, 16 и 17",
+        "display_text_range": [0, 86],
+        "facets": []
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 8,
+      "reposts": 5,
+      "likes": 416,
+      "bookmarks": 4,
+      "quotes": 1,
+      "embed_card": "tweet",
+      "created_at": "Fri Apr 10 23:55:45 +0000 2026",
+      "created_timestamp": 1775865345,
+      "views": 12735,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {},
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042752638215729166",
+      "id": "2042752638215729166",
+      "text": "Удачи экипажу Artemis 2. Пока всё идёт идеально. Впереди нервные 15 минут.",
+      "raw_text": {
+        "text": "Удачи экипажу Artemis 2. Пока всё идёт идеально. Впереди нервные 15 минут. https://t.co/Uh37Fs2A4b",
+        "display_text_range": [0, 74],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [75, 98],
+            "id": "2042752631219580928",
+            "display": "pic.x.com/Uh37Fs2A4b",
+            "original": "https://t.co/Uh37Fs2A4b",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042752638215729166/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 11,
+      "reposts": 4,
+      "likes": 359,
+      "bookmarks": 1,
+      "quotes": 0,
+      "embed_card": "summary_large_image",
+      "created_at": "Fri Apr 10 23:52:36 +0000 2026",
+      "created_timestamp": 1775865156,
+      "possibly_sensitive": false,
+      "views": 6953,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042752631219580928",
+            "url": "https://pbs.twimg.com/media/HFlQsfPWcAA_K5a.jpg?name=orig",
+            "width": 2283,
+            "height": 1284
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042752631219580928",
+            "url": "https://pbs.twimg.com/media/HFlQsfPWcAA_K5a.jpg?name=orig",
+            "width": 2283,
+            "height": 1284
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042750498407694338",
+      "id": "2042750498407694338",
+      "text": "Момент разделения корабля Orion и европейского сервисного модуля. Коррекция после разделения тала прошла успешно.\n\nЧерез 10 минут начнётся вход в атмосферу.",
+      "raw_text": {
+        "text": "Момент разделения корабля Orion и европейского сервисного модуля. Коррекция после разделения тала прошла успешно.\n\nЧерез 10 минут начнётся вход в атмосферу. https://t.co/O1kt6dR7Ne",
+        "display_text_range": [0, 156],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [157, 180],
+            "id": "2042750437703516160",
+            "display": "pic.x.com/O1kt6dR7Ne",
+            "original": "https://t.co/O1kt6dR7Ne",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042750498407694338/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 12,
+      "reposts": 25,
+      "likes": 739,
+      "bookmarks": 30,
+      "quotes": 2,
+      "embed_card": "player",
+      "created_at": "Fri Apr 10 23:44:05 +0000 2026",
+      "created_timestamp": 1775864645,
+      "possibly_sensitive": false,
+      "views": 21846,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042750437703516160",
+            "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/1280x720/_OwHHhjYEswO6N5n.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042750437703516160/img/Gqm6RjLDEuHOsKQd.jpg",
+            "duration": 36.438,
+            "width": 1280,
+            "height": 720,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/pl/aQADQJ3svlHrSXXf.m3u8?tag=21&v=5cc",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/480x270/R_MeNYpJzgqRGR__.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/640x360/Q9gLONHtaV6Occm5.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/1280x720/_OwHHhjYEswO6N5n.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042750437703516160",
+            "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/1280x720/_OwHHhjYEswO6N5n.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042750437703516160/img/Gqm6RjLDEuHOsKQd.jpg",
+            "duration": 36.438,
+            "width": 1280,
+            "height": 720,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/pl/aQADQJ3svlHrSXXf.m3u8?tag=21&v=5cc",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/480x270/R_MeNYpJzgqRGR__.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/640x360/Q9gLONHtaV6Occm5.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042750437703516160/vid/avc1/1280x720/_OwHHhjYEswO6N5n.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/RuslanLeviev/status/2042742008687587359",
+      "id": "2042742008687587359",
+      "text": "Смотрим трансляцию правильно",
+      "raw_text": {
+        "text": "Смотрим трансляцию правильно https://t.co/OxkoijXLOv",
+        "display_text_range": [0, 28],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [29, 52],
+            "id": "2042742005508325376",
+            "display": "pic.x.com/OxkoijXLOv",
+            "original": "https://t.co/OxkoijXLOv",
+            "replacement": "https://x.com/RuslanLeviev/status/2042742008687587359/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "RuslanLeviev",
+        "url": "https://x.com/RuslanLeviev",
+        "id": "17839060",
+        "followers": 84891,
+        "following": 757,
+        "likes": 1752,
+        "media_count": 10114,
+        "statuses": 106777,
+        "name": "Ruslan Leviev",
+        "description": "Founder of the investigative group Conflict Intelligence Team @CITeam_en. Contact: http://t.me/leviev",
+        "raw_description": {
+          "text": "Founder of the investigative group Conflict Intelligence Team @CITeam_en. Contact: https://t.co/YXe0OFXqqL",
+          "facets": [
+            { "type": "mention", "indices": [62, 72], "original": "CITeam_en", "id": "0" },
+            {
+              "type": "url",
+              "indices": [83, 106],
+              "original": "https://t.co/YXe0OFXqqL",
+              "replacement": "http://t.me/leviev",
+              "display": "t.me/leviev"
+            }
+          ]
+        },
+        "location": "New York City",
+        "banner_url": "https://pbs.twimg.com/profile_banners/17839060/1650793949",
+        "avatar_url": "https://pbs.twimg.com/profile_images/783751457271087106/0c-Cqzfv_200x200.jpg",
+        "joined": "Wed Dec 03 15:42:28 +0000 2008",
+        "protected": false,
+        "website": { "url": "https://donate.citeam.org", "display_url": "donate.citeam.org" },
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 7,
+      "reposts": 6,
+      "likes": 384,
+      "bookmarks": 3,
+      "quotes": 0,
+      "embed_card": "summary_large_image",
+      "created_at": "Fri Apr 10 23:10:21 +0000 2026",
+      "created_timestamp": 1775862621,
+      "possibly_sensitive": false,
+      "views": 8071,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042742005508325376",
+            "url": "https://pbs.twimg.com/media/HFlHB_YXwAA73_D.jpg?name=orig",
+            "width": 1536,
+            "height": 2048
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042742005508325376",
+            "url": "https://pbs.twimg.com/media/HFlHB_YXwAA73_D.jpg?name=orig",
+            "width": 1536,
+            "height": 2048
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": {
+        "id": "138506755",
+        "name": "Кукуруза как у томакруза 🌽",
+        "screen_name": "KYKYPY3A_B",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "url": "https://x.com/KYKYPY3A_B"
+      }
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042733103966228689",
+      "id": "2042733103966228689",
+      "text": "Artemis 2 готова вернуться домой. Через 1 час произойдёт отстыковка корабля Orion от сервисного отсека.\n\nДо посадки в Тихом океане остаётся 1 час и 34 минуты. Пока всё идёт штатно.\n\nОфициальная трансляция уже идёт на канале NASA.\n\n- Погода хорошая, корабль Orion работает штатно.\n\n- Пиропатроны для отстыковки европейского модуля и обрыва линий переведены в режим готовности.\n\n- Экипаж уже надел аварийно-спасательные скафандры OCSS, провели тесты и заняли свои места.\n\n- Связь с кораблём через 42 минуты переведут с дальней DSN на ретрансляторы TDRS, которые десятки лет используют для пилотируемых миссий (и не только).\n\n- Администратор NASA Джаред Айзекман уже прибыл на борт корабля USS John P. Murtha, который встречает астронавтов.",
+      "raw_text": {
+        "text": "Artemis 2 готова вернуться домой. Через 1 час произойдёт отстыковка корабля Orion от сервисного отсека.\n\nДо посадки в Тихом океане остаётся 1 час и 34 минуты. Пока всё идёт штатно.\n\nОфициальная трансляция уже идёт на канале NASA.\n\n- Погода хорошая, корабль Orion работает штатно.\n\n- Пиропатроны для отстыковки европейского модуля и обрыва линий переведены в режим готовности.\n\n- Экипаж уже надел аварийно-спасательные скафандры OCSS, провели тесты и заняли свои места.\n\n- Связь с кораблём через 42 минуты переведут с дальней DSN на ретрансляторы TDRS, которые десятки лет используют для пилотируемых миссий (и не только).\n\n- Администратор NASA Джаред Айзекман уже прибыл на борт корабля USS John P. Murtha, который встречает астронавтов.",
+        "display_text_range": [0, 737],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042733047255027712",
+            "display": "pic.x.com/I9uHwywZDl",
+            "original": "https://t.co/I9uHwywZDl",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042733103966228689/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 15,
+      "reposts": 20,
+      "likes": 415,
+      "bookmarks": 17,
+      "quotes": 1,
+      "embed_card": "player",
+      "created_at": "Fri Apr 10 22:34:58 +0000 2026",
+      "created_timestamp": 1775860498,
+      "possibly_sensitive": false,
+      "views": 25577,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042733047255027712",
+            "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1920x1080/oX1IEkK4UV6wvZOm.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042733047255027712/img/YVaE3uvk8yeMe9rH.jpg",
+            "duration": 2.863,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/pl/u_SHwvsD2KloXO3q.m3u8?tag=21",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/480x270/S2FiFPded-4HSE-t.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/640x360/-O2BYA4TCyfRip-B.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1280x720/fOr80FSeYEthyTFr.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1920x1080/oX1IEkK4UV6wvZOm.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042733047255027712",
+            "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1920x1080/oX1IEkK4UV6wvZOm.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042733047255027712/img/YVaE3uvk8yeMe9rH.jpg",
+            "duration": 2.863,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/pl/u_SHwvsD2KloXO3q.m3u8?tag=21",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/480x270/S2FiFPded-4HSE-t.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/640x360/-O2BYA4TCyfRip-B.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1280x720/fOr80FSeYEthyTFr.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042733047255027712/vid/avc1/1920x1080/oX1IEkK4UV6wvZOm.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "quote": {
+        "url": "https://x.com/NASA/status/2042731951308579134",
+        "id": "2042731951308579134",
+        "text": "LIVE: They are coming home.\n \nWatch as the Artemis II crew returns to Earth, splashing down at around 8:07pm ET (0007 UTC April 11). https://x.com/i/broadcasts/1pKdRbMALmvJW",
+        "raw_text": {
+          "text": "LIVE: They are coming home.\n \nWatch as the Artemis II crew returns to Earth, splashing down at around 8:07pm ET (0007 UTC April 11). https://t.co/n3vZE2rcFv",
+          "display_text_range": [0, 156],
+          "facets": [
+            {
+              "type": "url",
+              "indices": [133, 156],
+              "original": "https://t.co/n3vZE2rcFv",
+              "replacement": "https://x.com/i/broadcasts/1pKdRbMALmvJW",
+              "display": "x.com/i/broadcasts/1…"
+            }
+          ]
+        },
+        "author": {
+          "screen_name": "NASA",
+          "url": "https://x.com/NASA",
+          "id": "11348282",
+          "followers": 91029185,
+          "following": 118,
+          "likes": 16704,
+          "media_count": 27905,
+          "statuses": 73844,
+          "name": "NASA",
+          "description": "The Moon is the mission. Real-time updates about our Artemis II mission around the Moon.",
+          "raw_description": {
+            "text": "The Moon is the mission. Real-time updates about our Artemis II mission around the Moon.",
+            "facets": []
+          },
+          "location": "Pale Blue Dot",
+          "banner_url": "https://pbs.twimg.com/profile_banners/11348282/1775567134",
+          "avatar_url": "https://pbs.twimg.com/profile_images/1321163587679784960/0ZxKlEKB_200x200.jpg",
+          "joined": "Wed Dec 19 20:20:32 +0000 2007",
+          "protected": false,
+          "website": { "url": "http://www.nasa.gov/", "display_url": "nasa.gov" },
+          "verification": { "verified": true, "verified_at": null, "type": "government" }
+        },
+        "replies": 4592,
+        "reposts": 33472,
+        "likes": 132335,
+        "bookmarks": 9066,
+        "quotes": 4097,
+        "embed_card": "tweet",
+        "created_at": "Fri Apr 10 22:30:23 +0000 2026",
+        "created_timestamp": 1775860223,
+        "possibly_sensitive": false,
+        "views": 7346028,
+        "is_note_tweet": false,
+        "community_note": null,
+        "lang": "en",
+        "replying_to": null,
+        "media": {},
+        "provider": "twitter",
+        "reposted_by": null
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/discotune/status/2042698998197407893",
+      "id": "2042698998197407893",
+      "text": "Я НА ПЕРВОМ СВИДАНИИ ОБЪЯСНЯЮ МАЛОЙ ПОЧЕМУ ИНТЕРВЬЮ @KYKYPY3A_B ПРО РОССИЙСКИЙ КОСМОС НА КАРНЕГИ ЭТО ГЛАВНОЕ ВИДЕО НЕДЕЛИ\n\nЗНАЧИТ СЛУШАЙ ЛУНА ЭТО КУСОК СТАРОЙ ЗЕМЛИ КОТОРЫЙ ОТКОЛОЛСЯ МИЛЛИАРДЫ ЛЕТ НАЗАД И ТЕПЕРЬ США И КИТАЙ ТРАТЯТ МИЛЛИАРДЫ ЧТОБЫ ПРОВЕРИТЬ ЕСТЬ ЛИ ТАМ ВОДА ПОТОМУ ЧТО БЕЗ ВОДЫ ЛУНА ЭТО ПРОСТО ОЧЕНЬ ДОРОГАЯ ПУСТЫНЯ С ВИДОМ НА ЗЕМЛЮ США ПЛАНИРУЮТ ВЫСАДКУ ДО КОНЦА 28 ГОДА КИТАЙ ЦЕЛИТСЯ В 29 Й У КИТАЯ ЧЕТЫРЕ УСПЕШНЫХ МИССИИ ВКЛЮЧАЯ ГРУНТ С ОБРАТНОЙ СТОРОНЫ ЛУНЫ ЧЕГО НИКТО НИКОГДА НЕ ДЕЛАЛ А У АМЕРИКАНЦЕВ ТЕПЛОВОЙ ЩИТ КРОШИТСЯ СКАФАНДРЫ НЕ ГОТОВЫ И БЕЗОС СНАЧАЛА ПОДАЛ В СУД НА NASA А ПОТОМ ПОЛУЧИЛ КОНТРАКТ ПОТОМУ ЧТО В АМЕРИКЕ ЕСЛИ ТЫ ДОСТАТОЧНО БОГАТ ЧТОБЫ СУДИТЬСЯ С ГОСУДАРСТВОМ ТО ТЫ ДОСТАТОЧНО БОГАТ ЧТОБЫ ПОЛУЧИТЬ ОТ НЕГО ДЕНЬГИ\n\nНЕТ ПОДОЖДИ НЕ СМОТРИ НА МАТЧ ДАЛЬШЕ САМОЕ ИНТЕРЕСНОЕ РОССИЯ В ГОНКЕ НЕ УЧАСТВУЕТ НЕТ НИ РАКЕТЫ НИ КОРАБЛЯ НИ МОДУЛЯ НИ СКАФАНДРА НИ БЮДЖЕТА НИ ПЛАНА ЛУНА 25 РАЗБИЛАСЬ В 23 ГОДУ СЛЕДУЮЩАЯ НЕ РАНЬШЕ 28 ГО И ЭТО ПРОСТО ЗОНД НА ОРБИТУ ТО ЕСТЬ ПОКА АМЕРИКАНЦЫ ВЫСАЖИВАЮТСЯ РОССИЯ БУДЕТ ПЫТАТЬСЯ ХОТЯ БЫ ПРОЛЕТЕТЬ МИМО МКС ОПИСЫВАЮТ КАК НЕСЧАСТНЫЙ БРАК ОБЕИМ ТОШНО НО ДЕТИ РАСТУТ ПОЭТОМУ СТИСНУВ ЗУБЫ ПРОДОЛЖАЮТ А НОВАЯ СТАНЦИЯ РОС СУЩЕСТВУЕТ В ВИДЕ ПЛАНОВ КОТОРЫЕ ПЕРЕСМАТРИВАЮТСЯ ЧАЩЕ ЧЕМ КУРС РУБЛЯ ЛЕТАТЬ НА НЕЁ СОБИРАЮТСЯ НА СОЮЗАХ КОТОРЫМ БУДЕТ 60 ЛЕТ ТО ЕСТЬ КОРАБЛЬ ВЫЙДЕТ НА ПЕНСИЮ РАНЬШЕ ЧЕМ КОСМОНАВТ\n\nДА ТАМ ЗАБИЛИ Я ВИДЕЛ СЛУШАЙ ДАЛЬШЕ ЧАСТНЫХ РАКЕТ В РОССИИ НОЛЬ ВООБЩЕ НОЛЬ В КИТАЕ И США ДЕСЯТКИ РОССИЯ ЧЕТВЁРТАЯ ПО ПУСКАМ 18 В ГОД ПРОТИВ 165 У SPACEX В РОСКОСМОСЕ 150 ТЫСЯЧ ЧЕЛОВЕК В SPACEX 20 ТЫСЯЧ БЮДЖЕТ 4 МИЛЛИАРДА И НЕ ХВАТАЕТ НИ НА ЧТО СТРАНА ОТРЕЗАНА ОТ МИРОВОГО РЫНКА ПУСКОВ ПОСЛЕ ОТЖАТЫХ СПУТНИКОВ ONEWEB ДАЖЕ КАЗАХСТАН УЖЕ ЛЕТАЕТ НА SPACEX А ИНДИЯ ПРИ БЮДЖЕТЕ МЕНЬШЕ ДВУХ МИЛЛИАРДОВ УЖЕ ПОСАДИЛА ЗОНД НА ЛУНУ РАНЬШЕ РОССИИ\n\nА ТЕПЕРЬ ПРИКИНЬ ГАГАРИН ПОЛЕТЕЛ 65 ЛЕТ НАЗАД А СЕГОДНЯ РОСКОСМОС ПРЕДЛОЖИЛ РОССИЯНАМ ПОСВЕТИТЬ ФОНАРИКОМ В НЕБО И ЗАПОСТИТЬ С ХЕШТЕГОМ ПРИЧЁМ НА ОБЛОЖКЕ У ЛЮДЕЙ ЧЕТЫРЕ ПАЛЬЦА ПОТОМУ ЧТО ЕЁ СГЕНЕРИРОВАЛА НЕЙРОСЕТЬ КОТОРАЯ ВИДИМО ТОЖЕ ИМПОРТОЗАМЕЩЁННАЯ\n\nОНА ПЕРЕСЕЛА К ДРУГОМУ НО ИНТЕРВЬЮ РЕАЛЬНО ХОРОШЕЕ СПАСИБО ТЕБЕ @KYKYPY3A_B",
+      "raw_text": {
+        "text": "Я НА ПЕРВОМ СВИДАНИИ ОБЪЯСНЯЮ МАЛОЙ ПОЧЕМУ ИНТЕРВЬЮ @KYKYPY3A_B ПРО РОССИЙСКИЙ КОСМОС НА КАРНЕГИ ЭТО ГЛАВНОЕ ВИДЕО НЕДЕЛИ\n\nЗНАЧИТ СЛУШАЙ ЛУНА ЭТО КУСОК СТАРОЙ ЗЕМЛИ КОТОРЫЙ ОТКОЛОЛСЯ МИЛЛИАРДЫ ЛЕТ НАЗАД И ТЕПЕРЬ США И КИТАЙ ТРАТЯТ МИЛЛИАРДЫ ЧТОБЫ ПРОВЕРИТЬ ЕСТЬ ЛИ ТАМ ВОДА ПОТОМУ ЧТО БЕЗ ВОДЫ ЛУНА ЭТО ПРОСТО ОЧЕНЬ ДОРОГАЯ ПУСТЫНЯ С ВИДОМ НА ЗЕМЛЮ США ПЛАНИРУЮТ ВЫСАДКУ ДО КОНЦА 28 ГОДА КИТАЙ ЦЕЛИТСЯ В 29 Й У КИТАЯ ЧЕТЫРЕ УСПЕШНЫХ МИССИИ ВКЛЮЧАЯ ГРУНТ С ОБРАТНОЙ СТОРОНЫ ЛУНЫ ЧЕГО НИКТО НИКОГДА НЕ ДЕЛАЛ А У АМЕРИКАНЦЕВ ТЕПЛОВОЙ ЩИТ КРОШИТСЯ СКАФАНДРЫ НЕ ГОТОВЫ И БЕЗОС СНАЧАЛА ПОДАЛ В СУД НА NASA А ПОТОМ ПОЛУЧИЛ КОНТРАКТ ПОТОМУ ЧТО В АМЕРИКЕ ЕСЛИ ТЫ ДОСТАТОЧНО БОГАТ ЧТОБЫ СУДИТЬСЯ С ГОСУДАРСТВОМ ТО ТЫ ДОСТАТОЧНО БОГАТ ЧТОБЫ ПОЛУЧИТЬ ОТ НЕГО ДЕНЬГИ\n\nНЕТ ПОДОЖДИ НЕ СМОТРИ НА МАТЧ ДАЛЬШЕ САМОЕ ИНТЕРЕСНОЕ РОССИЯ В ГОНКЕ НЕ УЧАСТВУЕТ НЕТ НИ РАКЕТЫ НИ КОРАБЛЯ НИ МОДУЛЯ НИ СКАФАНДРА НИ БЮДЖЕТА НИ ПЛАНА ЛУНА 25 РАЗБИЛАСЬ В 23 ГОДУ СЛЕДУЮЩАЯ НЕ РАНЬШЕ 28 ГО И ЭТО ПРОСТО ЗОНД НА ОРБИТУ ТО ЕСТЬ ПОКА АМЕРИКАНЦЫ ВЫСАЖИВАЮТСЯ РОССИЯ БУДЕТ ПЫТАТЬСЯ ХОТЯ БЫ ПРОЛЕТЕТЬ МИМО МКС ОПИСЫВАЮТ КАК НЕСЧАСТНЫЙ БРАК ОБЕИМ ТОШНО НО ДЕТИ РАСТУТ ПОЭТОМУ СТИСНУВ ЗУБЫ ПРОДОЛЖАЮТ А НОВАЯ СТАНЦИЯ РОС СУЩЕСТВУЕТ В ВИДЕ ПЛАНОВ КОТОРЫЕ ПЕРЕСМАТРИВАЮТСЯ ЧАЩЕ ЧЕМ КУРС РУБЛЯ ЛЕТАТЬ НА НЕЁ СОБИРАЮТСЯ НА СОЮЗАХ КОТОРЫМ БУДЕТ 60 ЛЕТ ТО ЕСТЬ КОРАБЛЬ ВЫЙДЕТ НА ПЕНСИЮ РАНЬШЕ ЧЕМ КОСМОНАВТ\n\nДА ТАМ ЗАБИЛИ Я ВИДЕЛ СЛУШАЙ ДАЛЬШЕ ЧАСТНЫХ РАКЕТ В РОССИИ НОЛЬ ВООБЩЕ НОЛЬ В КИТАЕ И США ДЕСЯТКИ РОССИЯ ЧЕТВЁРТАЯ ПО ПУСКАМ 18 В ГОД ПРОТИВ 165 У SPACEX В РОСКОСМОСЕ 150 ТЫСЯЧ ЧЕЛОВЕК В SPACEX 20 ТЫСЯЧ БЮДЖЕТ 4 МИЛЛИАРДА И НЕ ХВАТАЕТ НИ НА ЧТО СТРАНА ОТРЕЗАНА ОТ МИРОВОГО РЫНКА ПУСКОВ ПОСЛЕ ОТЖАТЫХ СПУТНИКОВ ONEWEB ДАЖЕ КАЗАХСТАН УЖЕ ЛЕТАЕТ НА SPACEX А ИНДИЯ ПРИ БЮДЖЕТЕ МЕНЬШЕ ДВУХ МИЛЛИАРДОВ УЖЕ ПОСАДИЛА ЗОНД НА ЛУНУ РАНЬШЕ РОССИИ\n\nА ТЕПЕРЬ ПРИКИНЬ ГАГАРИН ПОЛЕТЕЛ 65 ЛЕТ НАЗАД А СЕГОДНЯ РОСКОСМОС ПРЕДЛОЖИЛ РОССИЯНАМ ПОСВЕТИТЬ ФОНАРИКОМ В НЕБО И ЗАПОСТИТЬ С ХЕШТЕГОМ ПРИЧЁМ НА ОБЛОЖКЕ У ЛЮДЕЙ ЧЕТЫРЕ ПАЛЬЦА ПОТОМУ ЧТО ЕЁ СГЕНЕРИРОВАЛА НЕЙРОСЕТЬ КОТОРАЯ ВИДИМО ТОЖЕ ИМПОРТОЗАМЕЩЁННАЯ\n\nОНА ПЕРЕСЕЛА К ДРУГОМУ НО ИНТЕРВЬЮ РЕАЛЬНО ХОРОШЕЕ СПАСИБО ТЕБЕ @KYKYPY3A_B",
+        "display_text_range": [0, 2128],
+        "facets": [
+          { "type": "mention", "indices": [52, 63], "original": "KYKYPY3A_B", "id": "138506755" },
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042698851241594883",
+            "display": "pic.x.com/RqpcKzeJKb",
+            "original": "https://t.co/RqpcKzeJKb",
+            "replacement": "https://x.com/discotune/status/2042698998197407893/video/1"
+          },
+          { "type": "mention", "indices": [2117, 2128], "original": "KYKYPY3A_B", "id": "138506755" }
+        ]
+      },
+      "author": {
+        "screen_name": "discotune",
+        "url": "https://x.com/discotune",
+        "id": "43183808",
+        "followers": 3283,
+        "following": 420,
+        "likes": 38093,
+        "media_count": 1774,
+        "statuses": 12714,
+        "name": "Paket Borsha",
+        "description": "Dev with benefits.                                                            \nFan of Magic Internet Money.",
+        "raw_description": {
+          "text": "Dev with benefits.                                                            \nFan of Magic Internet Money.",
+          "facets": []
+        },
+        "location": "Jane Street",
+        "banner_url": "https://pbs.twimg.com/profile_banners/43183808/1737578935",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1876476772667248640/A45EfqJy_200x200.jpg",
+        "joined": "Thu May 28 20:01:38 +0000 2009",
+        "protected": false,
+        "website": { "url": "https://gooooo.ooo", "display_url": "gooooo.ooo" },
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 8,
+      "reposts": 17,
+      "likes": 368,
+      "bookmarks": 54,
+      "quotes": 0,
+      "embed_card": "player",
+      "created_at": "Fri Apr 10 20:19:27 +0000 2026",
+      "created_timestamp": 1775852367,
+      "possibly_sensitive": false,
+      "views": 27415,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042698851241594883",
+            "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/794x672/w6t5kXFn9taug_n4.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042698851241594883/img/DFNR-nFm2dc06g0c.jpg",
+            "duration": 18.041,
+            "width": 794,
+            "height": 672,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/pl/9C0ZnmVxp9l6zmJi.m3u8?tag=21&v=3ab",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/318x270/MKNRX_dUqxLUtoXQ.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/424x360/aj8h6x715_g7rbeC.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/794x672/w6t5kXFn9taug_n4.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042698851241594883",
+            "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/794x672/w6t5kXFn9taug_n4.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042698851241594883/img/DFNR-nFm2dc06g0c.jpg",
+            "duration": 18.041,
+            "width": 794,
+            "height": 672,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/pl/9C0ZnmVxp9l6zmJi.m3u8?tag=21&v=3ab",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/318x270/MKNRX_dUqxLUtoXQ.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/424x360/aj8h6x715_g7rbeC.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042698851241594883/vid/avc1/794x672/w6t5kXFn9taug_n4.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "quote": {
+        "url": "https://x.com/tbel_it/status/2042651348173250841",
+        "id": "2042651348173250841",
+        "text": "уже есть классный разговор с @KYKYPY3A_B \nhttps://youtu.be/TjDBJEoAA0Q?si=n7E6KIaTilrFVXrp\nМне нравится что он не кликбейтит и абслютно адекватно и интерессно рассказывает по текущую ситуацию с космомом/запусками/перспективы. Это правда прекрасно и стоит того чтоб поглядеть.",
+        "raw_text": {
+          "text": "уже есть классный разговор с @KYKYPY3A_B \nhttps://t.co/ARhkwKb68v\nМне нравится что он не кликбейтит и абслютно адекватно и интерессно рассказывает по текущую ситуацию с космомом/запусками/перспективы. Это правда прекрасно и стоит того чтоб поглядеть.",
+          "display_text_range": [0, 250],
+          "facets": [
+            { "type": "mention", "indices": [29, 40], "original": "KYKYPY3A_B", "id": "138506755" },
+            {
+              "type": "url",
+              "indices": [42, 65],
+              "original": "https://t.co/ARhkwKb68v",
+              "replacement": "https://youtu.be/TjDBJEoAA0Q?si=n7E6KIaTilrFVXrp",
+              "display": "youtu.be/TjDBJEoAA0Q?si…"
+            }
+          ]
+        },
+        "author": {
+          "screen_name": "tbel_it",
+          "url": "https://x.com/tbel_it",
+          "id": "1805253123965075456",
+          "followers": 344,
+          "following": 500,
+          "likes": 27764,
+          "media_count": 1450,
+          "statuses": 13904,
+          "name": "Giorgio",
+          "description": "Always a catch. © John Constantine C++/DevEx\nLove Italy.",
+          "raw_description": { "text": "Always a catch. © John Constantine C++/DevEx\nLove Italy.", "facets": [] },
+          "location": "Italy",
+          "banner_url": "https://pbs.twimg.com/profile_banners/1805253123965075456/1720787339",
+          "avatar_url": "https://pbs.twimg.com/profile_images/1947045072949633028/bpdv9TwU_200x200.jpg",
+          "joined": "Mon Jun 24 14:54:30 +0000 2024",
+          "protected": false,
+          "website": null,
+          "verification": { "verified": false, "verified_at": null, "type": null }
+        },
+        "replies": 5,
+        "reposts": 10,
+        "likes": 158,
+        "bookmarks": 98,
+        "quotes": 2,
+        "embed_card": "player",
+        "created_at": "Fri Apr 10 17:10:06 +0000 2026",
+        "created_timestamp": 1775841006,
+        "possibly_sensitive": false,
+        "views": 45647,
+        "is_note_tweet": false,
+        "community_note": null,
+        "lang": "ru",
+        "replying_to": null,
+        "media": {
+          "external": {
+            "type": "video",
+            "url": "https://www.youtube.com/embed/TjDBJEoAA0Q",
+            "width": 1280,
+            "height": 720,
+            "thumbnail_url": "https://img.youtube.com/vi/TjDBJEoAA0Q/maxresdefault.jpg"
+          }
+        },
+        "provider": "twitter",
+        "reposted_by": null
+      },
+      "provider": "twitter",
+      "reposted_by": {
+        "id": "138506755",
+        "name": "Кукуруза как у томакруза 🌽",
+        "screen_name": "KYKYPY3A_B",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "url": "https://x.com/KYKYPY3A_B"
+      }
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042680557922840700",
+      "id": "2042680557922840700",
+      "text": "Так, ну третью коррекцию курса провели, кабину в конфигурацию посадки переводят, полную Землю на айфон сфоткали, можно и домой через пару часиков",
+      "raw_text": {
+        "text": "Так, ну третью коррекцию курса провели, кабину в конфигурацию посадки переводят, полную Землю на айфон сфоткали, можно и домой через пару часиков https://t.co/W9sE6CbaMw",
+        "display_text_range": [0, 145],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [146, 169],
+            "id": "2042680552340291584",
+            "display": "pic.x.com/W9sE6CbaMw",
+            "original": "https://t.co/W9sE6CbaMw",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042680557922840700/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 17,
+      "reposts": 21,
+      "likes": 760,
+      "bookmarks": 6,
+      "quotes": 1,
+      "embed_card": "summary_large_image",
+      "created_at": "Fri Apr 10 19:06:10 +0000 2026",
+      "created_timestamp": 1775847970,
+      "possibly_sensitive": false,
+      "views": 11621,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042680552340291584",
+            "url": "https://pbs.twimg.com/media/HFkPI8fXgAAKgJN.jpg?name=orig",
+            "width": 2283,
+            "height": 1284
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042680552340291584",
+            "url": "https://pbs.twimg.com/media/HFkPI8fXgAAKgJN.jpg?name=orig",
+            "width": 2283,
+            "height": 1284
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042678727406915775",
+      "id": "2042678727406915775",
+      "text": "Мне нравится, как для многоразовой ракеты New Glenn есть милая традиция давать им индивидуальная имена, и вот третий ускоритель получил цитату из Интерстеллара “No, It’s Necessary”.\n\nПервые 2 назывались So You're Telling Me There's a Chance (Тупой и ещё тупее), а второй Never Tell Me The Odds (ну Хана Соло грех не цитировать)",
+      "raw_text": {
+        "text": "Мне нравится, как для многоразовой ракеты New Glenn есть милая традиция давать им индивидуальная имена, и вот третий ускоритель получил цитату из Интерстеллара “No, It’s Necessary”.\n\nПервые 2 назывались So You're Telling Me There's a Chance (Тупой и ещё тупее), а второй Never Tell Me The Odds (ну Хана Соло грех не цитировать)",
+        "display_text_range": [0, 327],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [277, 300],
+            "id": "2042678720171778050",
+            "display": "pic.x.com/Hsjg3m24Xi",
+            "original": "https://t.co/Hsjg3m24Xi",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042678727406915775/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 12,
+      "reposts": 11,
+      "likes": 407,
+      "bookmarks": 13,
+      "quotes": 1,
+      "embed_card": "summary_large_image",
+      "created_at": "Fri Apr 10 18:58:54 +0000 2026",
+      "created_timestamp": 1775847534,
+      "possibly_sensitive": false,
+      "views": 12375,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042678720171778050",
+            "url": "https://pbs.twimg.com/media/HFkNeTIWoAIySxe.jpg?name=orig",
+            "width": 2048,
+            "height": 1366
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042678720171778050",
+            "url": "https://pbs.twimg.com/media/HFkNeTIWoAIySxe.jpg?name=orig",
+            "width": 2048,
+            "height": 1366
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042612220861796698",
+      "id": "2042612220861796698",
+      "text": "До входа Artemis 2 в атмосферу уже менее 10 часов — так что большой пост с деталями.\n\nНе забудьте, что капсула Orion с экипажем начнёт спуск в 23:52 по UTC.\n\nИтак, миссия Artemis 2 близится к завершению и впереди самая опасная часть — вход в атмосферу почти на скорости 40000 км/ч (точнее 38.3-38.6к в зависимости от профиля). В этот раз рекорд Apollo 10 не будет побит, но вот кинетическая энергия почти в 2 раза выше, чем при возвращении с той же МКС (чёртов квадрат скорости). В посте видео с Artemis 1 ускоренное в 10 раз.\n\nПри штатном входе тепловой щит Orion разогреется пример до 2800 градусов по Цельсию. Для сравнения, защита Crew Dragon прогревается до 1900 градусов, а у Шаттла до 1650 градусов. Но основная проблема даже не температура, а ударная волна.\n\nЗа 10 минут кораблю надо будет за счёт атмосферы скинуть почти всю энергию, которую он набрал благодаря ракете SLS и импульсам для ускорения уже на орбите.\n\nВы наверняка встречали много опасений и статей про тепловой щит Orion в этой версии (блочный Avcoat), которого уже не будет в Artemis 3. Да, есть риски высокой эрозии щита, но их занизили за счёт другого профиля входа по сравнению с Artemis 1 без скользящей траектории — заходить будут сразу, а не в 2 фазы, как в 2022.\n\nОсновные этапы:\n- За 20 минут до входа в атмосферу (122км) запланировано разъединение с сервисным модулем — он сгорит в атмосфере.\n\n- Через 4 минуты после этого будет короткая коррекция траектории с помощью двигателей на самой капсулой — это позволит точнее попасть в нужную программу входа.\n\n- Сразу после появления плазмы связь начнёт пропадать — это плановая часть.\n\n- Примерно через 10 минут после начала входа и на высоте менее 11км произойдёт отстрел головного обтекателя капсулы.\n\n- Через 3 секунды после этого и на высоте около 7.6км выпустят тормозные парашюты.\n\n- Через 79 секунд после этого и на высоте около 2.9км выпустят 3 основных парашюта.\n\n- И ещё через 2 минуты капсула мягко сядет в воду.\n\nПосле этого начнётся штатная процедура консервации двигателей на корабле, подплывут спасатели и начнут подготовку к переходу экипажа на лодки (есть также опция сразу на вертолёте). Затем капсулу отгонят в док на корабле, а экипаж пройдёт медосмотр и на вертолётах полетит в Сан-Диего.\n\n- При штатной программе входа экипаж испытает перегрузки до 3.9 G, но не в моменте, а непродолжительное время.\n\n- При экстренных сценариях и другой баллистике входа предусмотрены короткие перегрузки до 7.5 G.\n\n- Будет плановая потеря связи на 5-6 минут. Orion это не гигантский Starship со Starlink, но корабль будут отслеживать с воздуха и воды.\n\n- Благодаря смещённому центру тяжести и двигателям коррекции на капсуле, корабль будет управлять наклоном, чтобы в том числе снизить нагрузку на тепловой щит. Экипажу также доступно управление в ручном режиме.\n\nКак и всегда — всем причастным удачи, крепких нервов и большого выдоха после.",
+      "raw_text": {
+        "text": "До входа Artemis 2 в атмосферу уже менее 10 часов — так что большой пост с деталями.\n\nНе забудьте, что капсула Orion с экипажем начнёт спуск в 23:52 по UTC.\n\nИтак, миссия Artemis 2 близится к завершению и впереди самая опасная часть — вход в атмосферу почти на скорости 40000 км/ч (точнее 38.3-38.6к в зависимости от профиля). В этот раз рекорд Apollo 10 не будет побит, но вот кинетическая энергия почти в 2 раза выше, чем при возвращении с той же МКС (чёртов квадрат скорости). В посте видео с Artemis 1 ускоренное в 10 раз.\n\nПри штатном входе тепловой щит Orion разогреется пример до 2800 градусов по Цельсию. Для сравнения, защита Crew Dragon прогревается до 1900 градусов, а у Шаттла до 1650 градусов. Но основная проблема даже не температура, а ударная волна.\n\nЗа 10 минут кораблю надо будет за счёт атмосферы скинуть почти всю энергию, которую он набрал благодаря ракете SLS и импульсам для ускорения уже на орбите.\n\nВы наверняка встречали много опасений и статей про тепловой щит Orion в этой версии (блочный Avcoat), которого уже не будет в Artemis 3. Да, есть риски высокой эрозии щита, но их занизили за счёт другого профиля входа по сравнению с Artemis 1 без скользящей траектории — заходить будут сразу, а не в 2 фазы, как в 2022.\n\nОсновные этапы:\n- За 20 минут до входа в атмосферу (122км) запланировано разъединение с сервисным модулем — он сгорит в атмосфере.\n\n- Через 4 минуты после этого будет короткая коррекция траектории с помощью двигателей на самой капсулой — это позволит точнее попасть в нужную программу входа.\n\n- Сразу после появления плазмы связь начнёт пропадать — это плановая часть.\n\n- Примерно через 10 минут после начала входа и на высоте менее 11км произойдёт отстрел головного обтекателя капсулы.\n\n- Через 3 секунды после этого и на высоте около 7.6км выпустят тормозные парашюты.\n\n- Через 79 секунд после этого и на высоте около 2.9км выпустят 3 основных парашюта.\n\n- И ещё через 2 минуты капсула мягко сядет в воду.\n\nПосле этого начнётся штатная процедура консервации двигателей на корабле, подплывут спасатели и начнут подготовку к переходу экипажа на лодки (есть также опция сразу на вертолёте). Затем капсулу отгонят в док на корабле, а экипаж пройдёт медосмотр и на вертолётах полетит в Сан-Диего.\n\n- При штатной программе входа экипаж испытает перегрузки до 3.9 G, но не в моменте, а непродолжительное время.\n\n- При экстренных сценариях и другой баллистике входа предусмотрены короткие перегрузки до 7.5 G.\n\n- Будет плановая потеря связи на 5-6 минут. Orion это не гигантский Starship со Starlink, но корабль будут отслеживать с воздуха и воды.\n\n- Благодаря смещённому центру тяжести и двигателям коррекции на капсуле, корабль будет управлять наклоном, чтобы в том числе снизить нагрузку на тепловой щит. Экипажу также доступно управление в ручном режиме.\n\nКак и всегда — всем причастным удачи, крепких нервов и большого выдоха после.",
+        "display_text_range": [0, 2876],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [281, 304],
+            "id": "2042611656761503744",
+            "display": "pic.x.com/g7YoJlYDR1",
+            "original": "https://t.co/g7YoJlYDR1",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042612220861796698/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 66,
+      "reposts": 132,
+      "likes": 1910,
+      "bookmarks": 139,
+      "quotes": 10,
+      "embed_card": "player",
+      "created_at": "Fri Apr 10 14:34:38 +0000 2026",
+      "created_timestamp": 1775831678,
+      "possibly_sensitive": false,
+      "views": 65901,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042611656761503744",
+            "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/3840x2160/jkYGcSArPwhzLY3I.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042611656761503744/img/QYcVNxgVZRRvkC69.jpg",
+            "duration": 125.233,
+            "width": 3840,
+            "height": 2160,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/pl/5ULfvq93fM9Ktw0W.m3u8?tag=21&v=cfc",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/480x270/3Jf1RUlBCA9zq4gW.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/640x360/keAOWx1Uaege0nY5.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/1280x720/1eKlEE2NGI3Rqf5Z.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/1920x1080/vSKHAWcaiTjGOO8x.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/3840x2160/jkYGcSArPwhzLY3I.mp4?tag=21",
+                "bitrate": 25128000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042611656761503744",
+            "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/3840x2160/jkYGcSArPwhzLY3I.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042611656761503744/img/QYcVNxgVZRRvkC69.jpg",
+            "duration": 125.233,
+            "width": 3840,
+            "height": 2160,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/pl/5ULfvq93fM9Ktw0W.m3u8?tag=21&v=cfc",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/480x270/3Jf1RUlBCA9zq4gW.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/640x360/keAOWx1Uaege0nY5.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/1280x720/1eKlEE2NGI3Rqf5Z.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/1920x1080/vSKHAWcaiTjGOO8x.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042611656761503744/vid/avc1/3840x2160/jkYGcSArPwhzLY3I.mp4?tag=21",
+                "bitrate": 25128000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ]
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042615483682222271",
+      "id": "2042615483682222271",
+      "text": "Про щит вчера был вопрос, тут ниже пояснение, но без ухода в детали.",
+      "raw_text": {
+        "text": "Про щит вчера был вопрос, тут ниже пояснение, но без ухода в детали.",
+        "display_text_range": [0, 68],
+        "facets": []
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 2,
+      "reposts": 1,
+      "likes": 76,
+      "bookmarks": 4,
+      "quotes": 0,
+      "embed_card": "tweet",
+      "created_at": "Fri Apr 10 14:47:35 +0000 2026",
+      "created_timestamp": 1775832455,
+      "views": 8848,
+      "is_note_tweet": false,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": { "screen_name": "KYKYPY3A_B", "status": "2042612220861796698" },
+      "media": {},
+      "quote": {
+        "url": "https://x.com/KYKYPY3A_B/status/2042382469203185915",
+        "id": "2042382469203185915",
+        "text": "Это очень комплексная история. Если *почти* коротко, то есть 2 версии щита для Orion (Аполлоновский honeycomb и новый блочный Avcoat). Первую версию тестировали ещё в 2014 во время запуска EFT-1 почти на 6 тысяч километров. Она показала себя хорошо, но пришли к выводу, что будет долгое и дорогое производство (в итоге задержалось всё остальное), поэтому конструкцию решили поменять на щит из блочных плиток. Тут надо уточнить, что honeycomb экран для Ориона сложно производить по причине, что 5-метровый щит из мелких сот вручную заполняют смолой (а это долго и муторно + инспекции), а блочный сильно дешевле и проще, и в случае брака щит не летит на помойку, а только его часть. И на момент решения, подобная конструкция себя очень хорошо показывала на Dragon, так что будто должно было быть лучше.\n\nВ общем, щит поменяли, и он дебютировал на Artemis 1 в 2022. Но сразу после возвращения началась драма, тк эрозия щита оказалась сильно выше, чем ожидали, а значит где-то ошиблись в расчётах и модели отличаются (а это большая проблема). После чего NASA где-то 1.5 года просто отмалчивалась и для первой пилотируемой миссии подрядчики продолжали делать тот же самый щит. Потом вышли с исследованием, что мол проблема эрозии крылась в выборе траектории входа (скользящей), которая должна была снизить нагрузку на щит (там 2 захода), но получилось наоборот. С блочными avcoat так не залетали, поэтому данных не было. Выяснилось, что во время первого заныривания в атмосферу газ проникал в пористую структуру плитки, а уже во время второго входа запертый газ (давление то высокое) нагревался ещё сильнее, расширялся и разрушал плитку изнутри. Отсюда и эрозия. NASA это всё скрывали, первый отчёт вообще вышел весь закрашенным, тк прикрывали жопу под видом экспортных ограничений, и ещё криво коммуницировали, а потом объявили, что для первой пилотируемой миссии Artemis 2 щит оставят, но поменяют профиль входа, а для следующих вернутся к старому щиту (точнее эту часть объявили раньше). Это было не очень популярное решение.\n\nПоэтому есть минимальный фактор неизвестности для этого входа, но они провели достаточно глубокую оценку и всё взвесили, чтобы выписать миссию. Проблема не в щите, а как решали проблему с ним — очень криво.",
+        "raw_text": {
+          "text": "Это очень комплексная история. Если *почти* коротко, то есть 2 версии щита для Orion (Аполлоновский honeycomb и новый блочный Avcoat). Первую версию тестировали ещё в 2014 во время запуска EFT-1 почти на 6 тысяч километров. Она показала себя хорошо, но пришли к выводу, что будет долгое и дорогое производство (в итоге задержалось всё остальное), поэтому конструкцию решили поменять на щит из блочных плиток. Тут надо уточнить, что honeycomb экран для Ориона сложно производить по причине, что 5-метровый щит из мелких сот вручную заполняют смолой (а это долго и муторно + инспекции), а блочный сильно дешевле и проще, и в случае брака щит не летит на помойку, а только его часть. И на момент решения, подобная конструкция себя очень хорошо показывала на Dragon, так что будто должно было быть лучше.\n\nВ общем, щит поменяли, и он дебютировал на Artemis 1 в 2022. Но сразу после возвращения началась драма, тк эрозия щита оказалась сильно выше, чем ожидали, а значит где-то ошиблись в расчётах и модели отличаются (а это большая проблема). После чего NASA где-то 1.5 года просто отмалчивалась и для первой пилотируемой миссии подрядчики продолжали делать тот же самый щит. Потом вышли с исследованием, что мол проблема эрозии крылась в выборе траектории входа (скользящей), которая должна была снизить нагрузку на щит (там 2 захода), но получилось наоборот. С блочными avcoat так не залетали, поэтому данных не было. Выяснилось, что во время первого заныривания в атмосферу газ проникал в пористую структуру плитки, а уже во время второго входа запертый газ (давление то высокое) нагревался ещё сильнее, расширялся и разрушал плитку изнутри. Отсюда и эрозия. NASA это всё скрывали, первый отчёт вообще вышел весь закрашенным, тк прикрывали жопу под видом экспортных ограничений, и ещё криво коммуницировали, а потом объявили, что для первой пилотируемой миссии Artemis 2 щит оставят, но поменяют профиль входа, а для следующих вернутся к старому щиту (точнее эту часть объявили раньше). Это было не очень популярное решение.\n\nПоэтому есть минимальный фактор неизвестности для этого входа, но они провели достаточно глубокую оценку и всё взвесили, чтобы выписать миссию. Проблема не в щите, а как решали проблему с ним — очень криво.",
+          "display_text_range": [0, 2231],
+          "facets": []
+        },
+        "author": {
+          "screen_name": "KYKYPY3A_B",
+          "url": "https://x.com/KYKYPY3A_B",
+          "id": "138506755",
+          "followers": 32184,
+          "following": 698,
+          "likes": 146030,
+          "media_count": 7656,
+          "statuses": 40232,
+          "name": "Кукуруза как у томакруза 🌽",
+          "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+          "raw_description": {
+            "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+            "facets": [
+              {
+                "type": "url",
+                "indices": [110, 133],
+                "original": "https://t.co/2ymfQCyMTV",
+                "replacement": "https://t.me/starbasepost",
+                "display": "t.me/starbasepost"
+              }
+            ]
+          },
+          "location": "Cyprus",
+          "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+          "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+          "joined": "Thu Apr 29 18:56:02 +0000 2010",
+          "protected": false,
+          "website": null,
+          "verification": { "verified": true, "verified_at": null, "type": "individual" }
+        },
+        "replies": 1,
+        "reposts": 3,
+        "likes": 63,
+        "bookmarks": 3,
+        "quotes": 1,
+        "embed_card": "tweet",
+        "created_at": "Thu Apr 09 23:21:40 +0000 2026",
+        "created_timestamp": 1775776900,
+        "views": 10432,
+        "is_note_tweet": true,
+        "community_note": null,
+        "lang": "ru",
+        "replying_to": null,
+        "media": {},
+        "provider": "twitter",
+        "reposted_by": null
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042351324487172312",
+      "id": "2042351324487172312",
+      "text": "На корабле Orion утечка гелия, но сразу важный дикслеймер, что экипажу Artemis 2 ничего не угрожает, и это интересная история, как NASA управляет рисками. Также второй момент — утекает всё, вопрос насколько быстро. Ну а на фото сервисный модуль Orion, чтобы вы оценили сложность.\n\nСо вчерашнего дня экипаж корабля *без особого восторга* участвует в тестах для сбора данных о утечке гелия на линии для подачи давления в бак с окислителем (смесь оксидов азота, он же MOH) в европейском сервисном модуле. Уровень утечки «кратно вырос» после почти 6-минутного импульса к Луне (TLI) на второй день миссии, но находится в рамках допустимых рисков. И речь идёт именно о серии клапанов для подачи гелия в бак с окислителем, а не в самой топливной системе. При этом из-за пониженного давления эффективность работы системы коррекции слегка упала (сейчас в баках Orion осталось почти 2/3 горючего).\n\nТеперь интересная часть — подобная проблема была в допустимых пределах ещё во время Artemis 1 в 2022, но тогда не было заметных изменений в уровне утечки из-за отсутствия длительных импульсов для системы коррекции. И Artemis 2 допустили к полётам зная, что проблема есть. Опять же, в рамках рисков для миссии, но в этот раз уровень утечки заметно вырос.\n\nК Artemis 3 в следующем году, которая пройдёт на околоземной орбите (пока непонятно какой именно) проблему оставят как есть, тк не является критичной для предполагаемого плана миссии. А вот для Artemis 4 в 2028, которая уже будет с высадкой на Луну, и для которой Orion придётся выполнять множество длительных импульсов — это уже недопустимо. Поэтому за ~2.5 года NASA вместе с Airbus нужно будет внести необходимые изменения и протестировать эти клапаны. Отмечается, что эта проблема не на том уровне, как было с тепловым щитом.\n\nТо, что проблема именно в конструкции, а не отдельном изделии и за 3.5 года не была решена — камень в огород NASA, теперь придётся укладываться в 2.5 года.",
+      "raw_text": {
+        "text": "На корабле Orion утечка гелия, но сразу важный дикслеймер, что экипажу Artemis 2 ничего не угрожает, и это интересная история, как NASA управляет рисками. Также второй момент — утекает всё, вопрос насколько быстро. Ну а на фото сервисный модуль Orion, чтобы вы оценили сложность.\n\nСо вчерашнего дня экипаж корабля *без особого восторга* участвует в тестах для сбора данных о утечке гелия на линии для подачи давления в бак с окислителем (смесь оксидов азота, он же MOH) в европейском сервисном модуле. Уровень утечки «кратно вырос» после почти 6-минутного импульса к Луне (TLI) на второй день миссии, но находится в рамках допустимых рисков. И речь идёт именно о серии клапанов для подачи гелия в бак с окислителем, а не в самой топливной системе. При этом из-за пониженного давления эффективность работы системы коррекции слегка упала (сейчас в баках Orion осталось почти 2/3 горючего).\n\nТеперь интересная часть — подобная проблема была в допустимых пределах ещё во время Artemis 1 в 2022, но тогда не было заметных изменений в уровне утечки из-за отсутствия длительных импульсов для системы коррекции. И Artemis 2 допустили к полётам зная, что проблема есть. Опять же, в рамках рисков для миссии, но в этот раз уровень утечки заметно вырос.\n\nК Artemis 3 в следующем году, которая пройдёт на околоземной орбите (пока непонятно какой именно) проблему оставят как есть, тк не является критичной для предполагаемого плана миссии. А вот для Artemis 4 в 2028, которая уже будет с высадкой на Луну, и для которой Orion придётся выполнять множество длительных импульсов — это уже недопустимо. Поэтому за ~2.5 года NASA вместе с Airbus нужно будет внести необходимые изменения и протестировать эти клапаны. Отмечается, что эта проблема не на том уровне, как было с тепловым щитом.\n\nТо, что проблема именно в конструкции, а не отдельном изделии и за 3.5 года не была решена — камень в огород NASA, теперь придётся укладываться в 2.5 года.",
+        "display_text_range": [0, 1930],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042350866687029248",
+            "display": "pic.x.com/iQeGw6fWUV",
+            "original": "https://t.co/iQeGw6fWUV",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042351324487172312/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042350912015122432",
+            "display": "pic.x.com/iQeGw6fWUV",
+            "original": "https://t.co/iQeGw6fWUV",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042351324487172312/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042350912036024320",
+            "display": "pic.x.com/iQeGw6fWUV",
+            "original": "https://t.co/iQeGw6fWUV",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042351324487172312/photo/1"
+          },
+          {
+            "type": "media",
+            "indices": [280, 303],
+            "id": "2042350912048644096",
+            "display": "pic.x.com/iQeGw6fWUV",
+            "original": "https://t.co/iQeGw6fWUV",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042351324487172312/photo/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 28,
+      "reposts": 35,
+      "likes": 921,
+      "bookmarks": 37,
+      "quotes": 3,
+      "embed_card": "summary_large_image",
+      "created_at": "Thu Apr 09 21:17:55 +0000 2026",
+      "created_timestamp": 1775769475,
+      "possibly_sensitive": false,
+      "views": 38485,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "type": "photo",
+            "id": "2042350866687029248",
+            "url": "https://pbs.twimg.com/media/HFfjStuXcAAMl82.jpg?name=orig",
+            "width": 4000,
+            "height": 3000
+          },
+          {
+            "type": "photo",
+            "id": "2042350912015122432",
+            "url": "https://pbs.twimg.com/media/HFfjVWlbQAAWRvs.jpg?name=orig",
+            "width": 1181,
+            "height": 1181
+          },
+          {
+            "type": "photo",
+            "id": "2042350912036024320",
+            "url": "https://pbs.twimg.com/media/HFfjVWqaMAA0nt0.jpg?name=orig",
+            "width": 2055,
+            "height": 1156
+          },
+          {
+            "type": "photo",
+            "id": "2042350912048644096",
+            "url": "https://pbs.twimg.com/media/HFfjVWtawAAmfYf.jpg?name=orig",
+            "width": 2048,
+            "height": 1935
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042350866687029248",
+            "url": "https://pbs.twimg.com/media/HFfjStuXcAAMl82.jpg?name=orig",
+            "width": 4000,
+            "height": 3000
+          },
+          {
+            "type": "photo",
+            "id": "2042350912015122432",
+            "url": "https://pbs.twimg.com/media/HFfjVWlbQAAWRvs.jpg?name=orig",
+            "width": 1181,
+            "height": 1181
+          },
+          {
+            "type": "photo",
+            "id": "2042350912036024320",
+            "url": "https://pbs.twimg.com/media/HFfjVWqaMAA0nt0.jpg?name=orig",
+            "width": 2055,
+            "height": 1156
+          },
+          {
+            "type": "photo",
+            "id": "2042350912048644096",
+            "url": "https://pbs.twimg.com/media/HFfjVWtawAAmfYf.jpg?name=orig",
+            "width": 2048,
+            "height": 1935
+          }
+        ],
+        "mosaic": {
+          "type": "mosaic_photo",
+          "formats": {
+            "jpeg": "https://mosaic.fxtwitter.com/jpeg/2042351324487172312/HFfjStuXcAAMl82/HFfjVWlbQAAWRvs/HFfjVWqaMAA0nt0/HFfjVWtawAAmfYf",
+            "webp": "https://mosaic.fxtwitter.com/webp/2042351324487172312/HFfjStuXcAAMl82/HFfjVWlbQAAWRvs/HFfjVWqaMAA0nt0/HFfjVWtawAAmfYf"
+          }
+        }
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    },
+    {
+      "url": "https://x.com/KYKYPY3A_B/status/2042320757879963783",
+      "id": "2042320757879963783",
+      "text": "Через 29 часов экипаж Artemis 2 должен мягко сесть в Тихом океане рядом с Сан-Диего, поэтому экипаж со вчерашнего дня занят подготовкой корабля и решением мелких проблем. Траектория смотрится отлично, прогноз погоды благоприятный.\n\nТакже на новом видео снова видно сброс жидких отходов. NASA стараются не переполнять бак выше половины объёма, хотя сам туалет UWMS работает штатно.",
+      "raw_text": {
+        "text": "Через 29 часов экипаж Artemis 2 должен мягко сесть в Тихом океане рядом с Сан-Диего, поэтому экипаж со вчерашнего дня занят подготовкой корабля и решением мелких проблем. Траектория смотрится отлично, прогноз погоды благоприятный.\n\nТакже на новом видео снова видно сброс жидких отходов. NASA стараются не переполнять бак выше половины объёма, хотя сам туалет UWMS работает штатно.",
+        "display_text_range": [0, 380],
+        "facets": [
+          {
+            "type": "media",
+            "indices": [278, 301],
+            "id": "2042320633447501824",
+            "display": "pic.x.com/DrTsDBUqww",
+            "original": "https://t.co/DrTsDBUqww",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042320757879963783/video/1"
+          },
+          {
+            "type": "media",
+            "indices": [278, 301],
+            "id": "2042320633422368768",
+            "display": "pic.x.com/DrTsDBUqww",
+            "original": "https://t.co/DrTsDBUqww",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042320757879963783/video/1"
+          },
+          {
+            "type": "media",
+            "indices": [278, 301],
+            "id": "2042320633422336000",
+            "display": "pic.x.com/DrTsDBUqww",
+            "original": "https://t.co/DrTsDBUqww",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042320757879963783/video/1"
+          },
+          {
+            "type": "media",
+            "indices": [278, 301],
+            "id": "2042320633434963968",
+            "display": "pic.x.com/DrTsDBUqww",
+            "original": "https://t.co/DrTsDBUqww",
+            "replacement": "https://x.com/KYKYPY3A_B/status/2042320757879963783/video/1"
+          }
+        ]
+      },
+      "author": {
+        "screen_name": "KYKYPY3A_B",
+        "url": "https://x.com/KYKYPY3A_B",
+        "id": "138506755",
+        "followers": 32184,
+        "following": 698,
+        "likes": 146030,
+        "media_count": 7656,
+        "statuses": 40232,
+        "name": "Кукуруза как у томакруза 🌽",
+        "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+        "raw_description": {
+          "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+          "facets": [
+            {
+              "type": "url",
+              "indices": [110, 133],
+              "original": "https://t.co/2ymfQCyMTV",
+              "replacement": "https://t.me/starbasepost",
+              "display": "t.me/starbasepost"
+            }
+          ]
+        },
+        "location": "Cyprus",
+        "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+        "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_200x200.jpg",
+        "joined": "Thu Apr 29 18:56:02 +0000 2010",
+        "protected": false,
+        "website": null,
+        "verification": { "verified": true, "verified_at": null, "type": "individual" }
+      },
+      "replies": 24,
+      "reposts": 50,
+      "likes": 1156,
+      "bookmarks": 22,
+      "quotes": 0,
+      "embed_card": "player",
+      "created_at": "Thu Apr 09 19:16:27 +0000 2026",
+      "created_timestamp": 1775762187,
+      "possibly_sensitive": false,
+      "views": 45718,
+      "is_note_tweet": true,
+      "community_note": null,
+      "lang": "ru",
+      "replying_to": null,
+      "media": {
+        "all": [
+          {
+            "id": "2042320633447501824",
+            "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1920x1080/_nhEagXsukXxhllj.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042320633447501824/img/d6RSjDiS2vHfhvRq.jpg",
+            "duration": 105.189,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/pl/T1IsKFz7UUkabQkS.m3u8?tag=21&v=bf8",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/480x270/u06QKXxflvYw-X3H.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/640x360/20IAICfaTaguPX9o.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1280x720/6VHRsp5Y3utW7HOh.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1920x1080/_nhEagXsukXxhllj.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          },
+          {
+            "type": "photo",
+            "id": "2042320633422368768",
+            "url": "https://pbs.twimg.com/media/HFfHy6CXUAAB4EI.jpg?name=orig",
+            "width": 640,
+            "height": 427
+          },
+          {
+            "type": "photo",
+            "id": "2042320633422336000",
+            "url": "https://pbs.twimg.com/media/HFfHy6CW0AAiH0r.jpg?name=orig",
+            "width": 640,
+            "height": 427
+          },
+          {
+            "type": "photo",
+            "id": "2042320633434963968",
+            "url": "https://pbs.twimg.com/media/HFfHy6FXgAAMXK6.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          }
+        ],
+        "videos": [
+          {
+            "id": "2042320633447501824",
+            "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1920x1080/_nhEagXsukXxhllj.mp4?tag=21",
+            "thumbnail_url": "https://pbs.twimg.com/amplify_video_thumb/2042320633447501824/img/d6RSjDiS2vHfhvRq.jpg",
+            "duration": 105.189,
+            "width": 1920,
+            "height": 1080,
+            "format": "video/mp4",
+            "type": "video",
+            "formats": [
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/pl/T1IsKFz7UUkabQkS.m3u8?tag=21&v=bf8",
+                "container": "m3u8"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/480x270/u06QKXxflvYw-X3H.mp4?tag=21",
+                "bitrate": 256000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/640x360/20IAICfaTaguPX9o.mp4?tag=21",
+                "bitrate": 832000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1280x720/6VHRsp5Y3utW7HOh.mp4?tag=21",
+                "bitrate": 2176000,
+                "container": "mp4",
+                "codec": "h264"
+              },
+              {
+                "url": "https://video.twimg.com/amplify_video/2042320633447501824/vid/avc1/1920x1080/_nhEagXsukXxhllj.mp4?tag=21",
+                "bitrate": 10368000,
+                "container": "mp4",
+                "codec": "h264"
+              }
+            ],
+            "publisher": null
+          }
+        ],
+        "photos": [
+          {
+            "type": "photo",
+            "id": "2042320633422368768",
+            "url": "https://pbs.twimg.com/media/HFfHy6CXUAAB4EI.jpg?name=orig",
+            "width": 640,
+            "height": 427
+          },
+          {
+            "type": "photo",
+            "id": "2042320633422336000",
+            "url": "https://pbs.twimg.com/media/HFfHy6CW0AAiH0r.jpg?name=orig",
+            "width": 640,
+            "height": 427
+          },
+          {
+            "type": "photo",
+            "id": "2042320633434963968",
+            "url": "https://pbs.twimg.com/media/HFfHy6FXgAAMXK6.jpg?name=orig",
+            "width": 4096,
+            "height": 2731
+          }
+        ],
+        "mosaic": {
+          "type": "mosaic_photo",
+          "formats": {
+            "jpeg": "https://mosaic.fxtwitter.com/jpeg/2042320757879963783/HFfHy6CXUAAB4EI/HFfHy6CW0AAiH0r/HFfHy6FXgAAMXK6",
+            "webp": "https://mosaic.fxtwitter.com/webp/2042320757879963783/HFfHy6CXUAAB4EI/HFfHy6CW0AAiH0r/HFfHy6FXgAAMXK6"
+          }
+        }
+      },
+      "provider": "twitter",
+      "reposted_by": null
+    }
+  ],
+  "cursor": {
+    "top": "DAAHCgABHFn6J-sAJxELAAIAAAATMjA0MjkyMTE2Mjc5NjA4MTQyOQgAAwAAAAEAAA",
+    "bottom": "DAAHCgABHFn6J-r__-0LAAIAAAATMjA0MjMyMDc1Nzg3OTk2Mzc4MwgAAwAAAAIAAA"
+  }
+}

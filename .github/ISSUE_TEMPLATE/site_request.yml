@@ -1,0 +1,24 @@
+name: Site support request
+description: A specific website doesn't parse well
+labels: [site-support]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      placeholder: https://example.com/article
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What's wrong with the output?
+      description: Missing content, broken formatting, wrong metadata, etc.
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Current output
+      description: "Paste the result of `rdrr <url>` (first ~50 lines is enough)."
+      render: markdown

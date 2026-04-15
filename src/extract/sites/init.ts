@@ -1,0 +1,13 @@
+// Side-effect imports: each module calls registerSite() on load
+import "./x-article"
+import "./x-oembed"
+import "./reddit"
+import "./hackernews"
+import "./chatgpt"
+import "./claude"
+import "./grok"
+import "./gemini"
+import "./github"
+import "./substack"
+import "./c2-wiki"
+import "./bbcode-data"

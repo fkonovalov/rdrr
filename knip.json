@@ -1,0 +1,7 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "vitest": {
+    "config": "vitest.config.ts",
+    "entry": "src/**/*.{test,test-d,bench}.ts"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["vitest", "eslint", "typescript", "unicorn", "oxc"],
+  "rules": {
+    "vitest/expect-expect": "error",
+    "vitest/no-commented-out-tests": "error",
+    "vitest/no-conditional-expect": "error",
+    "vitest/no-disabled-tests": "error",
+    "vitest/no-focused-tests": "error",
+    "vitest/no-identical-title": "error",
+    "vitest/no-import-node-test": "error",
+    "vitest/no-interpolation-in-snapshots": "error",
+    "vitest/no-mocks-import": "error",
+    "vitest/no-standalone-expect": "error",
+    "vitest/require-local-test-context-for-concurrent-snapshots": "error",
+    "vitest/valid-describe-callback": "error",
+    "vitest/valid-expect": "error"
+  }
+}

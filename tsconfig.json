@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+
+    "target": "ES2022",
+
+    "moduleDetection": "force",
+    "moduleResolution": "bundler",
+
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+
+    "module": "preserve",
+    "noEmit": true,
+
+    "declaration": true,
+
+    "lib": ["ES2022", "DOM"],
+    "types": ["node"],
+
+    "paths": {
+      "@extract": ["./src/extract"],
+      "@provider": ["./src/provider"],
+      "@shared": ["./src/shared.ts"]
+    }
+  },
+  "include": ["src"]
+}

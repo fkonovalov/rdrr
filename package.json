@@ -1,0 +1,90 @@
+{
+  "name": "rdrr",
+  "version": "0.2.0",
+  "private": false,
+  "description": "Convert any URL to clean markdown for AI agents.",
+  "keywords": [
+    "ai-agents",
+    "content-extraction",
+    "html-to-markdown",
+    "llm",
+    "markdown",
+    "rdrr",
+    "readability",
+    "reader",
+    "web-scraping",
+    "x-twitter",
+    "youtube-transcript"
+  ],
+  "homepage": "https://rdrr.app",
+  "license": "MIT",
+  "author": {
+    "name": "Finn Paketborsha",
+    "url": "https://github.com/fkonovalov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fkonovalov/rdrr.git"
+  },
+  "bin": {
+    "rdrr": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.mts",
+  "typesVersions": {
+    "*": {
+      "extract": [
+        "./dist/extract/index.d.mts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./extract": {
+      "types": "./dist/extract/index.d.mts",
+      "default": "./dist/extract/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --noEmit && tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest run",
+    "lint": "knip && oxlint ./src",
+    "fmt": "oxfmt --write .",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "commander": "14.0.3",
+    "linkedom": "0.18.12",
+    "turndown": "7.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "22.15.3",
+    "@types/turndown": "5.0.5",
+    "knip": "6.4.0",
+    "oxfmt": "0.44.0",
+    "oxlint": "1.59.0",
+    "tsdown": "0.21.7",
+    "typescript": "6.0.2",
+    "vitest": "4.1.4"
+  },
+  "optionalDependencies": {
+    "unpdf": "1.6.0"
+  },
+  "engines": {
+    "node": ">=20.17.0"
+  }
+}

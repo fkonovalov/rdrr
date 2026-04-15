@@ -1,0 +1,35 @@
+{
+  "code": 200,
+  "message": "OK",
+  "user": {
+    "screen_name": "KYKYPY3A_B",
+    "url": "https://x.com/KYKYPY3A_B",
+    "id": "138506755",
+    "followers": 32184,
+    "following": 698,
+    "likes": 146030,
+    "media_count": 7656,
+    "tweets": 40232,
+    "name": "Кукуруза как у томакруза 🌽",
+    "description": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.me/starbasepost",
+    "raw_description": {
+      "text": "Average rocket enjoyer. Ex NVIDIA. Opinions are my own. Чуть больше про ракеты в канале «Техасский Вестник» — https://t.co/2ymfQCyMTV",
+      "facets": [
+        {
+          "type": "url",
+          "indices": [110, 133],
+          "original": "https://t.co/2ymfQCyMTV",
+          "replacement": "https://t.me/starbasepost",
+          "display": "t.me/starbasepost"
+        }
+      ]
+    },
+    "location": "Cyprus",
+    "banner_url": "https://pbs.twimg.com/profile_banners/138506755/1775657767",
+    "avatar_url": "https://pbs.twimg.com/profile_images/1252676758832365568/Au_Zvees_normal.jpg",
+    "joined": "Thu Apr 29 18:56:02 +0000 2010",
+    "protected": false,
+    "website": null,
+    "verification": { "verified": true, "verified_at": null, "type": "individual" }
+  }
+}
