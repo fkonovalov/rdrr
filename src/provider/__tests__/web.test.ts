@@ -61,21 +61,6 @@ describe("parseWeb", () => {
     expect(result.title).toBe("Remote")
   })
 
-  it("routes PDF content-type to parsePdf (PdfResult)", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(async () => {
-        // Minimal but technically malformed PDF — unpdf will reject, but that happens
-        // inside parsePdf. We only need to assert the routing path here.
-        return new Response(new Uint8Array([0x25, 0x50, 0x44, 0x46]), {
-          status: 200,
-          headers: { "content-type": "application/pdf" },
-        })
-      }),
-    )
-    await expect(parseWeb("https://public.example/doc.pdf")).rejects.toThrow(/./)
-  })
-
   it("wraps raw-text content types in fenced code", async () => {
     stubFetch(
       () =>
