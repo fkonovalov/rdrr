@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.2.2] — 2026-04-16
+
+### Fixed
+
+- Fix CI: sync lockfile after removing `@types/turndown`.
+
+### Added
+
+- Auto-create GitHub Release from CHANGELOG when a version tag is pushed.
+
 ## [0.2.1] — 2026-04-16
 
 ### Changed
@@ -45,5 +55,6 @@ First public release.
 - Requires Node.js >=20.17.0.
 - API is considered experimental until `1.0.0`; breaking changes may land in `0.x.0` releases.
 
+[0.2.2]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.2
 [0.2.1]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.1
 [0.2.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.0
