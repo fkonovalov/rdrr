@@ -10,7 +10,7 @@ export default defineConfig({
   format: ["esm"],
   platform: "node",
   minify: true,
-  sourcemap: false,
+  sourcemap: true,
   hash: false,
   dts: true,
   clean: true,
@@ -22,5 +22,6 @@ export default defineConfig({
   },
   deps: {
     alwaysBundle: ["turndown", "linkedom", "commander"],
+    onlyBundle: false,
   },
 })

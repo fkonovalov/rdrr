@@ -1,3 +1,4 @@
+import { parseHTML } from "linkedom"
 import type { RawChapter, RawItem, VideoMetadata } from "./types"
 
 const INNERTUBE_API = "https://www.youtube.com/youtubei/v1/player?prettyPrint=false"
@@ -18,12 +19,12 @@ export const fetchMetadata = async (videoId: string): Promise<VideoMetadata> => 
   }
 }
 
-export const fetchTranscript = async (videoId: string): Promise<RawItem[]> => {
+export const fetchTranscript = async (videoId: string, preferredLanguage?: string): Promise<RawItem[]> => {
   const playerData = await fetchPlayerData(videoId)
   if (!playerData) throw new Error("FETCH_FAILED")
   const tracks = getCaptionTracks(playerData)
   if (tracks.length === 0) throw new Error("NO_CAPTIONS")
-  const track = pickTrack(tracks, playerData)
+  const track = pickTrack(tracks, playerData, preferredLanguage)
   if (!track?.baseUrl || !validateCaptionUrl(track.baseUrl)) throw new Error("NO_CAPTIONS")
   const res = await fetch(track.baseUrl, {
     headers: { "User-Agent": "Mozilla/5.0" },
@@ -37,81 +38,104 @@ export const fetchTranscript = async (videoId: string): Promise<RawItem[]> => {
 }
 
 export const fetchChapters = async (videoId: string): Promise<RawChapter[]> => {
-  const res = await fetch(INNERTUBE_NEXT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ videoId, context: WEB_CONTEXT }),
-  })
+  let res: Response
+  try {
+    res = await fetch(INNERTUBE_NEXT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ videoId, context: WEB_CONTEXT }),
+      signal: AbortSignal.timeout(4000),
+    })
+  } catch {
+    return []
+  }
   if (!res.ok) return []
-  const data = (await res.json()) as Record<string, unknown>
-  const panels = (data as { engagementPanels?: unknown[] }).engagementPanels ?? []
-  for (const panel of panels) {
-    const contents = (panel as Record<string, unknown>)?.engagementPanelSectionListRenderer as
-      | Record<string, unknown>
-      | undefined
-    const markers = (contents?.content as Record<string, unknown>)?.macroMarkersListRenderer as
-      | Record<string, unknown>
-      | undefined
-    const items = markers?.contents
-    if (!Array.isArray(items)) continue
+  const data = await res.json()
+  for (const panel of asArray(asRecord(data).engagementPanels)) {
+    const panelObj = asRecord(panel)
+    const markers = asRecord(asRecord(panelObj.engagementPanelSectionListRenderer).content).macroMarkersListRenderer
+    const items = asArray(asRecord(markers).contents)
+    if (items.length === 0) continue
     const chapters: RawChapter[] = []
     for (const item of items) {
-      const r = (item as Record<string, unknown>)?.macroMarkersListItemRenderer as Record<string, unknown> | undefined
-      const title = (r?.title as Record<string, unknown>)?.simpleText as string | undefined
-      const timeStr = (r?.timeDescription as Record<string, unknown>)?.simpleText as string | undefined
+      const renderer = asRecord(asRecord(item).macroMarkersListItemRenderer)
+      const title = asString(asRecord(renderer.title).simpleText)
+      const timeStr = asString(asRecord(renderer.timeDescription).simpleText)
       if (!title || !timeStr) continue
-      const parts = timeStr.split(":").map(Number)
-      const seconds = parts.length === 3 ? parts[0]! * 3600 + parts[1]! * 60 + parts[2]! : parts[0]! * 60 + parts[1]!
-      chapters.push({ title, startTime: seconds })
+      chapters.push({ title, startTime: parseTimestamp(timeStr) })
     }
     if (chapters.length > 1) return chapters
   }
   return []
 }
 
+// Narrow helpers to keep the deep InnerTube JSON walks readable.
+const asRecord = (v: unknown): Record<string, unknown> =>
+  v !== null && typeof v === "object" ? (v as Record<string, unknown>) : {}
+const asArray = (v: unknown): unknown[] => (Array.isArray(v) ? v : [])
+const asString = (v: unknown): string | undefined => (typeof v === "string" ? v : undefined)
+
+const parseTimestamp = (timeStr: string): number => {
+  const parts = timeStr.split(":").map(Number)
+  if (parts.length === 3) return (parts[0] ?? 0) * 3600 + (parts[1] ?? 0) * 60 + (parts[2] ?? 0)
+  if (parts.length === 2) return (parts[0] ?? 0) * 60 + (parts[1] ?? 0)
+  return parts[0] ?? 0
+}
+
 const fetchPlayerData = async (videoId: string): Promise<unknown | undefined> => {
-  try {
-    const res = await fetch(INNERTUBE_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "User-Agent": ANDROID_UA },
-      signal: AbortSignal.timeout(4000),
-      body: JSON.stringify({ context: ANDROID_CONTEXT, videoId }),
-    })
-    if (res.ok) {
-      const data = await res.json()
-      if (getCaptionTracks(data).length > 0) return data
-    }
-  } catch (e: unknown) {
-    if ((e as { name?: string })?.name === "TimeoutError") return undefined
+  // Race both client contexts in parallel. Android almost always wins and carries
+  // captions; WEB is a safety net when YouTube rate-limits the Android client.
+  const attempts = [
+    tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA),
+    tryFetchPlayerData(videoId, WEB_CONTEXT),
+  ]
+  const results = await Promise.all(attempts)
+  for (const data of results) {
+    if (data && getCaptionTracks(data).length > 0) return data
   }
-  try {
-    const res = await fetch(INNERTUBE_API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      signal: AbortSignal.timeout(4000),
-      body: JSON.stringify({ context: WEB_CONTEXT, videoId }),
-    })
-    if (res.ok) {
-      const data = await res.json()
-      if (getCaptionTracks(data).length > 0) return data
-    }
-  } catch {}
   return undefined
 }
 
+const tryFetchPlayerData = async (
+  videoId: string,
+  context: Record<string, unknown>,
+  userAgent?: string,
+): Promise<unknown | undefined> => {
+  try {
+    const headers: Record<string, string> = { "Content-Type": "application/json" }
+    if (userAgent) headers["User-Agent"] = userAgent
+    const res = await fetch(INNERTUBE_API, {
+      method: "POST",
+      headers,
+      signal: AbortSignal.timeout(4000),
+      body: JSON.stringify({ context, videoId }),
+    })
+    if (!res.ok) return undefined
+    return await res.json()
+  } catch {
+    return undefined
+  }
+}
+
 const getCaptionTracks = (data: unknown): Array<{ languageCode?: string; baseUrl?: string }> => {
-  const tracks = (data as Record<string, unknown>)?.captions as Record<string, unknown> | undefined
-  const list = tracks?.playerCaptionsTracklistRenderer as Record<string, unknown> | undefined
-  const arr = list?.captionTracks
-  return Array.isArray(arr) ? arr : []
+  const list = asRecord(asRecord(data).captions).playerCaptionsTracklistRenderer
+  return asArray(asRecord(list).captionTracks) as Array<{ languageCode?: string; baseUrl?: string }>
 }
 
 const pickTrack = (
   tracks: Array<{ languageCode?: string; baseUrl?: string }>,
   playerData: unknown,
+  preferredLanguage?: string,
 ): { baseUrl?: string } | undefined => {
-  const details = (playerData as Record<string, unknown>)?.videoDetails as Record<string, unknown> | undefined
-  const baseLang = ((details?.defaultAudioLanguage as string) ?? "").split("-")[0]?.toLowerCase() ?? ""
+  // Priority: explicit user preference -> video's default audio language -> English -> first.
+  const preferred = preferredLanguage?.split(/[-_,;]/)[0]?.toLowerCase() ?? ""
+  if (preferred) {
+    const m = tracks.find((t) => t.languageCode?.toLowerCase().startsWith(preferred))
+    if (m) return m
+  }
+
+  const details = asRecord(asRecord(playerData).videoDetails)
+  const baseLang = (asString(details.defaultAudioLanguage) ?? "").split("-")[0]?.toLowerCase() ?? ""
   if (baseLang) {
     const m = tracks.find((t) => t.languageCode?.toLowerCase().startsWith(baseLang))
     if (m) return m
@@ -158,5 +182,39 @@ const parseCaptionXml = (xml: string): RawItem[] => {
     if (text)
       items.push({ text, offset: Math.round(parseFloat(m[1]!) * 1000), duration: Math.round(parseFloat(m[2]!) * 1000) })
   }
-  return items
+  if (items.length > 0) return items
+
+  // Last-resort DOM walk: survives YouTube caption-format drift that breaks both regexes.
+  return parseCaptionXmlDom(xml)
+}
+
+const parseCaptionXmlDom = (xml: string): RawItem[] => {
+  try {
+    const { document } = parseHTML(`<!doctype html><html><body>${xml}</body></html>`)
+    const items: RawItem[] = []
+    for (const node of document.querySelectorAll("p[t], p[d]")) {
+      const t = node.getAttribute("t")
+      const d = node.getAttribute("d")
+      if (!t || !d) continue
+      const text = decodeEntities(node.textContent ?? "").trim()
+      if (text) items.push({ text, offset: parseInt(t, 10), duration: parseInt(d, 10) })
+    }
+    if (items.length > 0) return items
+    for (const node of document.querySelectorAll("text[start][dur]")) {
+      const start = node.getAttribute("start")
+      const dur = node.getAttribute("dur")
+      if (!start || !dur) continue
+      const text = decodeEntities(node.textContent ?? "").trim()
+      if (text) {
+        items.push({
+          text,
+          offset: Math.round(parseFloat(start) * 1000),
+          duration: Math.round(parseFloat(dur) * 1000),
+        })
+      }
+    }
+    return items
+  } catch {
+    return []
+  }
 }

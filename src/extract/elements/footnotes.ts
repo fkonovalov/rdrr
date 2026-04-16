@@ -12,7 +12,7 @@ export const normaliseFootnotes = (root: Element): void => {
 
   const asideFootnotes = collectAsideFootnotes(root, doc)
   for (const [num, data] of Object.entries(asideFootnotes)) {
-    const n = parseInt(num)
+    const n = parseInt(num, 10)
     if (!footnotes[n]) footnotes[n] = data
   }
 
@@ -131,7 +131,7 @@ const buildFootnoteList = (
   const ol = doc.createElement("ol")
 
   for (const [num, data] of Object.entries(allFootnotes)) {
-    ol.appendChild(createFootnoteItem(doc, parseInt(num), data.content, data.refs))
+    ol.appendChild(createFootnoteItem(doc, parseInt(num, 10), data.content, data.refs))
   }
 
   // Remove original lists

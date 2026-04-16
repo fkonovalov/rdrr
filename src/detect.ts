@@ -85,9 +85,11 @@ export const normalizeUrl = (url: string): string => {
     const u = new URL(url)
     u.hash = ""
     if (u.protocol === "http:") u.protocol = "https:"
-    let normalized = u.toString()
-    if (normalized.endsWith("/")) normalized = normalized.slice(0, -1)
-    return normalized
+    const normalized = u.toString()
+    // Preserve the canonical trailing slash on the root path (`https://x/`),
+    // strip elsewhere (`https://x/foo/` -> `https://x/foo`).
+    if (u.pathname === "/") return normalized
+    return normalized.endsWith("/") ? normalized.slice(0, -1) : normalized
   } catch {
     return url
   }

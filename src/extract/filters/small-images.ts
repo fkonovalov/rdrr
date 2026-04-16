@@ -43,13 +43,13 @@ const removeMatchingElements = (doc: Document, small: Set<string>): number => {
 }
 
 const parseDimension = (el: Element, attr: "width" | "height"): number => {
-  const fromAttr = parseInt(el.getAttribute(attr) ?? "0")
+  const fromAttr = parseInt(el.getAttribute(attr) ?? "0", 10)
   if (fromAttr > 0) return fromAttr
 
   const style = el.getAttribute("style") ?? ""
   const pattern = attr === "width" ? /width\s*:\s*(\d+)/ : /height\s*:\s*(\d+)/
   const match = style.match(pattern)
-  return match ? parseInt(match[1]!) : 0
+  return match ? parseInt(match[1]!, 10) : 0
 }
 
 const hasImageSource = (el: Element): boolean =>

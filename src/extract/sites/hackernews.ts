@@ -85,7 +85,7 @@ const extractComments = (doc: Document): string => {
     processedIds.add(id)
 
     const indent = comment.querySelector(".ind img")?.getAttribute("width") ?? "0"
-    const depth = parseInt(indent) / 40
+    const depth = parseInt(indent, 10) / 40
     const commentText = comment.querySelector(".commtext")
     const author = comment.querySelector(".hnuser")?.textContent ?? "[deleted]"
     const timeElement = comment.querySelector(".age")

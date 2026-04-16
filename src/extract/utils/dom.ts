@@ -35,10 +35,24 @@ export const escapeHtml = (text: string): string =>
 export const getClassName = (el: Element): string =>
   typeof el.className === "string" ? el.className : (el.getAttribute("class") ?? "")
 
+// URL schemes that can execute script or deliver HTML in ways that survive
+// sanitisation of the rendered markdown. SVG is blocked because inline <script>
+// is valid in image/svg+xml.
+const DANGEROUS_SCHEMES = [
+  "javascript:",
+  "vbscript:",
+  "livescript:",
+  "mocha:",
+  "data:text/html",
+  "data:application/xhtml",
+  "data:image/svg+xml",
+  "data:application/x-msdownload",
+]
+
 export const isDangerousUrl = (url: string): boolean => {
   // eslint-disable-next-line no-control-regex -- intentional: strip control chars to detect obfuscated URL schemes
   const normalized = url.replace(/[\s\u0000-\u001F]+/g, "").toLowerCase()
-  return normalized.startsWith("javascript:") || normalized.startsWith("data:text/html")
+  return DANGEROUS_SCHEMES.some((scheme) => normalized.startsWith(scheme))
 }
 
 export const isElement = (node: Node): node is Element => node.nodeType === 1

@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.3.0] — 2026-04-17
+
+### Added
+
+- New `ParseOptions`: `githubToken`, `signal`, `timeoutMs`, `userAgent`, `wordsPerMinute`, `allowPrivateNetworks`.
+- CLI flags: `--timeout`, `--user-agent`, `--github-token`, `--wpm`, `--allow-private-networks`.
+- Exports: `parseXProfile`, `XProfileResult`, `PrivateNetworkError`.
+- GitHub comments now paginate (up to 10 pages).
+- YouTube caption tracks honour `options.language`; `.well-known/llms.txt` probed alongside `/llms.txt`.
+
+### Changed
+
+- Private-network requests blocked by default — opt in with `allowPrivateNetworks: true` or `--allow-private-networks`.
+- `parseWeb` returns `Promise<WebpageResult | PdfResult>` — handle `"pdf"` in your `switch`.
+- `ParseHtmlOptions` no longer extends `ParseOptions`; `ParseOptions.noCache` removed.
+- `https://` → `http://` redirects refused.
+- SSRF and TLS-downgrade protection on every request.
+- YouTube InnerTube Android+Web contexts raced in parallel; `fetchChapters` gets a timeout.
+- Sourcemaps shipped with the bundle.
+- `parsePdf` split into focused modules.
+
+### Infrastructure
+
+- Release via npm OIDC trusted publishing with provenance.
+- `prepublishOnly` runs `lint && test && build`.
+- Windows in CI matrix; coverage and bundle-size guard added.
+- `SECURITY.md`, `.github/dependabot.yml`, `packageManager: pnpm@9.15.1`.
+
 ## [0.2.2] — 2026-04-16
 
 ### Fixed
@@ -22,9 +50,9 @@ While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking ch
 ### Changed
 
 - Bundle all runtime dependencies (turndown, linkedom, commander) into dist -- zero production dependencies.
-- Replace `@mixmark-io/domino` (7.4 MB) with a lightweight linkedom-based shim.
+- Replace `@mixmark-io/domino` with a lightweight linkedom-based shim.
 - Enable full minification.
-- Install size reduced from 12.6 MB to 405 KB (31x).
+- Install size reduced
 
 ## [0.2.0] — 2026-04-14
 
@@ -55,6 +83,7 @@ First public release.
 - Requires Node.js >=20.17.0.
 - API is considered experimental until `1.0.0`; breaking changes may land in `0.x.0` releases.
 
+[0.3.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.3.0
 [0.2.2]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.2
 [0.2.1]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.1
 [0.2.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.0

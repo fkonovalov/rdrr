@@ -1,5 +1,7 @@
-import { countWords, estimateReadTime } from "@shared"
+import { countWords, estimateReadTime, mergeSignals } from "@shared"
 import type { GitHubResult, ParseOptions } from "../types"
+
+const DEFAULT_TIMEOUT_MS = 15000
 
 const ISSUE_PR_RE = /github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)/
 const FILE_RE = /github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)/
@@ -21,21 +23,22 @@ interface Comment {
   author_association: string
 }
 
-export const parseGitHub = async (url: string, _options?: ParseOptions): Promise<GitHubResult> => {
-  if (ISSUE_PR_RE.test(url)) return parseIssue(url)
-  if (FILE_RE.test(url)) return parseFile(url)
+export const parseGitHub = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
+  if (ISSUE_PR_RE.test(url)) return parseIssue(url, options)
+  if (FILE_RE.test(url)) return parseFile(url, options)
   throw new Error(`Not a GitHub issue/PR/file URL: ${url}`)
 }
 
-const parseIssue = async (url: string): Promise<GitHubResult> => {
+const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
   const match = url.match(ISSUE_PR_RE)!
   const [, owner, repo, type, number] = match
   const api = `https://api.github.com/repos/${owner}/${repo}`
-  const headers = ghHeaders()
+  const headers = ghHeaders(options?.githubToken)
+  const signal = mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal)
 
-  const [issueRes, commentsRes] = await Promise.all([
-    fetch(`${api}/issues/${number}`, { headers, signal: AbortSignal.timeout(15000) }),
-    fetch(`${api}/issues/${number}/comments`, { headers, signal: AbortSignal.timeout(15000) }),
+  const [issueRes, comments] = await Promise.all([
+    fetch(`${api}/issues/${number}`, { headers, signal }),
+    fetchAllComments(`${api}/issues/${number}/comments`, headers, options),
   ])
 
   if (!issueRes.ok) {
@@ -45,7 +48,6 @@ const parseIssue = async (url: string): Promise<GitHubResult> => {
   }
 
   const issue = (await issueRes.json()) as Issue
-  const comments = commentsRes.ok ? ((await commentsRes.json()) as Comment[]) : []
 
   const isPR = !!issue.pull_request || type === "pull"
   const kind = isPR ? "PR" : "Issue"
@@ -92,11 +94,11 @@ const parseIssue = async (url: string): Promise<GitHubResult> => {
     siteName: `GitHub - ${owner}/${repo}`,
     published: issue.created_at,
     wordCount: wc,
-    readTime: estimateReadTime(wc),
+    readTime: estimateReadTime(wc, options?.wordsPerMinute),
   }
 }
 
-const parseFile = async (url: string): Promise<GitHubResult> => {
+const parseFile = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
   const match = url.match(FILE_RE)!
   const [, owner, repo, rest] = match
   const slashIdx = rest!.indexOf("/")
@@ -105,7 +107,10 @@ const parseFile = async (url: string): Promise<GitHubResult> => {
   const filename = filePath.split("/").pop() ?? filePath ?? "file"
 
   const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${filePath}`
-  const res = await fetch(rawUrl, { headers: ghHeaders(), signal: AbortSignal.timeout(15000) })
+  const res = await fetch(rawUrl, {
+    headers: ghHeaders(options?.githubToken),
+    signal: mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal),
+  })
 
   if (!res.ok) {
     if (res.status === 404) throw new Error(`File not found: ${filePath}`)
@@ -118,7 +123,7 @@ const parseFile = async (url: string): Promise<GitHubResult> => {
     !contentType.includes("application/json") &&
     !contentType.includes("application/xml")
   ) {
-    return fileResult(owner!, repo!, filename, `Binary file: ${filename} (${contentType})`, 0)
+    return fileResult(owner!, repo!, filename, `Binary file: ${filename} (${contentType})`, 0, options?.wordsPerMinute)
   }
 
   const text = await res.text()
@@ -126,10 +131,17 @@ const parseFile = async (url: string): Promise<GitHubResult> => {
   const noFence = lang === "markdown" || lang === "md" || (lang === "" && filename.endsWith(".txt"))
   const content = noFence ? text : "```" + lang + "\n" + text + "\n```"
 
-  return fileResult(owner!, repo!, filename, content, countWords(text))
+  return fileResult(owner!, repo!, filename, content, countWords(text), options?.wordsPerMinute)
 }
 
-const fileResult = (owner: string, repo: string, filename: string, content: string, wc: number): GitHubResult => ({
+const fileResult = (
+  owner: string,
+  repo: string,
+  filename: string,
+  content: string,
+  wc: number,
+  wpm?: number,
+): GitHubResult => ({
   type: "github",
   title: `${filename} - ${owner}/${repo}`,
   author: "",
@@ -139,7 +151,7 @@ const fileResult = (owner: string, repo: string, filename: string, content: stri
   siteName: `GitHub - ${owner}/${repo}`,
   published: null,
   wordCount: wc,
-  readTime: estimateReadTime(wc),
+  readTime: estimateReadTime(wc, wpm),
 })
 
 const ROLE_BADGES: Record<string, string> = {
@@ -190,9 +202,46 @@ const detectLang = (filename: string): string => {
   return LANG_MAP[ext] ?? ext
 }
 
-const ghHeaders = (): Record<string, string> => {
+// GitHub paginates comments at 100/page via `Link: rel="next"`.
+// We cap pages to avoid runaway loops on issues with thousands of comments.
+const MAX_COMMENT_PAGES = 10
+
+const fetchAllComments = async (
+  baseUrl: string,
+  headers: Record<string, string>,
+  options?: ParseOptions,
+): Promise<Comment[]> => {
+  const collected: Comment[] = []
+  let nextUrl: string | null = `${baseUrl}?per_page=100`
+  let pages = 0
+
+  while (nextUrl && pages < MAX_COMMENT_PAGES) {
+    const res: Response = await fetch(nextUrl, {
+      headers,
+      signal: mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal),
+    })
+    if (!res.ok) break
+    const page = (await res.json()) as Comment[]
+    collected.push(...page)
+    pages++
+    nextUrl = parseNextLink(res.headers.get("link"))
+  }
+
+  return collected
+}
+
+const parseNextLink = (link: string | null): string | null => {
+  if (!link) return null
+  for (const part of link.split(",")) {
+    const match = part.match(/<([^>]+)>\s*;\s*rel="next"/)
+    if (match) return match[1] ?? null
+  }
+  return null
+}
+
+const ghHeaders = (overrideToken?: string): Record<string, string> => {
   const headers: Record<string, string> = { "Accept": "application/vnd.github.v3+json", "User-Agent": "rdrr/1.0" }
-  const token = process.env.GITHUB_TOKEN
+  const token = overrideToken ?? process.env.GITHUB_TOKEN
   if (token) headers.Authorization = `Bearer ${token}`
   return headers
 }

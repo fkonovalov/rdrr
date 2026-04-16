@@ -6,13 +6,14 @@ import { fetchChapters, fetchMetadata, fetchTranscript } from "./youtube/innertu
 import { detectLyricContent, groupLyricItems } from "./youtube/lyrics"
 import { groupTranscriptItems } from "./youtube/transcript"
 
-export const parseYouTube = async (url: string, _options?: ParseOptions): Promise<YouTubeResult> => {
+export const parseYouTube = async (url: string, options?: ParseOptions): Promise<YouTubeResult> => {
+  const wpm = options?.wordsPerMinute
   const videoId = extractVideoId(url)
   if (!videoId) throw new Error(`Invalid YouTube URL: ${url}`)
 
   const [metadata, transcript, chapters] = await Promise.allSettled([
     fetchMetadata(videoId),
-    fetchTranscript(videoId),
+    fetchTranscript(videoId, options?.language),
     fetchChapters(videoId),
   ])
 
@@ -45,7 +46,7 @@ export const parseYouTube = async (url: string, _options?: ParseOptions): Promis
     transcript: segments,
     isLyric: lyric.isLyric,
     wordCount: wc,
-    readTime: estimateReadTime(wc),
+    readTime: estimateReadTime(wc, wpm),
   }
 }
 
