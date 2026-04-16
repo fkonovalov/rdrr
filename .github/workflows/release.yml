@@ -24,7 +24,12 @@ jobs:
             found { print }
           ' CHANGELOG.md > notes.md
 
-      - name: Create GitHub release
-        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
+      - name: Create or update GitHub release
+        run: |
+          if gh release view "$GITHUB_REF_NAME" &>/dev/null; then
+            gh release edit "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
+          else
+            gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --notes-file notes.md
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
