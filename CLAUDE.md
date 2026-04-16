@@ -119,3 +119,71 @@ After completing any implementation, review the code for:
 - Missing error handling on async operations
 
 Run /simplify before presenting code to the user.
+
+## Release checklist
+
+Follow these steps exactly when releasing a new version. Do NOT skip or reorder.
+
+### 1. Prepare
+
+```sh
+# Bump version in package.json
+# Update CHANGELOG.md with new section
+pnpm install                    # sync lockfile after version bump
+```
+
+### 2. Verify
+
+All three must pass before committing:
+
+```sh
+pnpm build
+pnpm test
+pnpm lint
+```
+
+Then confirm lockfile is CI-ready:
+
+```sh
+pnpm install --frozen-lockfile  # must succeed -- same check CI runs
+```
+
+### 3. Commit, tag, push
+
+```sh
+git add package.json CHANGELOG.md pnpm-lock.yaml
+git commit -m "chore: release v<VERSION>"
+git tag v<VERSION>
+git push && git push origin v<VERSION>
+```
+
+The `release.yml` workflow auto-creates a GitHub Release from CHANGELOG.md.
+
+### 4. Publish to npm
+
+```sh
+pnpm publish --no-git-checks
+```
+
+**STOP here if publish fails.** Do not proceed to downstream updates until the package is confirmed on npm:
+
+```sh
+npm view rdrr version           # must print the new version
+```
+
+### 5. Update downstream (rdrr-app)
+
+Only after npm publish is confirmed:
+
+```sh
+cd ~/Projects/ideas/rdrr-app
+# Update rdrr version in apps/api/package.json
+pnpm install
+pnpm build:api
+```
+
+### Common mistakes to avoid
+
+- **Forgetting `pnpm install` after changing package.json** -- lockfile goes out of sync, CI fails with `ERR_PNPM_OUTDATED_LOCKFILE`.
+- **Proceeding after a failed `npm publish`** -- downstream updates will fail because the version doesn't exist on the registry.
+- **Not including `pnpm-lock.yaml` in the commit** -- always stage it alongside package.json changes.
