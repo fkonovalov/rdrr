@@ -76,7 +76,7 @@
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "@types/node": "22.15.3",
+    "@types/node": "25.6.0",
     "@vitest/coverage-v8": "4.1.4",
     "commander": "14.0.3",
     "knip": "6.4.1",
