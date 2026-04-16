@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { ensureProtocol } from "@shared"
 import { Command, InvalidArgumentError } from "commander"
 import { existsSync, readFileSync, writeFileSync } from "node:fs"
 import { resolve as resolvePath } from "node:path"
@@ -25,9 +26,6 @@ interface ResolvedInput {
   raw: string
 }
 
-const ensureProtocol = (url: string): string =>
-  url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`
-
 const looksLikeUrl = (input: string): boolean =>
   /^https?:\/\//i.test(input) || /^[a-z0-9.-]+\.[a-z]{2,}(\/|$)/i.test(input)
 
@@ -46,7 +44,10 @@ const resolveInput = async (input: string): Promise<ResolvedInput> => {
   return { kind: "url", url: ensureProtocol(input), raw: input }
 }
 
-const esc = (s: string): string => s.replace(/"/g, '\\"').replace(/\n/g, " ")
+// YAML double-quoted strings accept the JSON string grammar, so JSON.stringify
+// produces a valid-and-readable value and correctly escapes backslashes, quotes,
+// and control characters that the previous hand-rolled escaper missed.
+const yamlString = (value: string): string => JSON.stringify(value.replace(/\n/g, " "))
 
 const buildFrontmatter = (result: ParseResult, source: string): string => {
   const fields: Array<[string, unknown]> = [
@@ -64,7 +65,7 @@ const buildFrontmatter = (result: ParseResult, source: string): string => {
 
   const lines = fields
     .filter(([, value]) => value !== undefined && value !== null && value !== "")
-    .map(([key, value]) => `${key}: ${typeof value === "string" ? `"${esc(String(value))}"` : value}`)
+    .map(([key, value]) => `${key}: ${typeof value === "string" ? yamlString(value) : value}`)
 
   return lines.length > 0 ? `---\n${lines.join("\n")}\n---\n\n` : ""
 }
@@ -107,6 +108,11 @@ program
   .option("--order <order>", "for aggregate URLs: newest|oldest", parseOrderArg, "newest")
   .option("--check", "check if URL is probably readerable (exit 0/1 without parsing)")
   .option("--llms", "append the site's /llms.txt to the output if available")
+  .option("--timeout <ms>", "per-request timeout in milliseconds (default 15000)", parseLimitArg)
+  .option("--user-agent <ua>", "override the outbound User-Agent header")
+  .option("--github-token <token>", "GitHub API token (falls back to $GITHUB_TOKEN)")
+  .option("--wpm <n>", "words-per-minute used for readTime estimation (default 200)", parseLimitArg)
+  .option("--allow-private-networks", "allow fetches against RFC1918/loopback/link-local (SSRF-unsafe)")
   .option("--debug", "print pipeline diagnostics to stderr")
   .action(
     async (
@@ -120,6 +126,11 @@ program
         order?: "newest" | "oldest"
         check?: boolean
         llms?: boolean
+        timeout?: number
+        userAgent?: string
+        githubToken?: string
+        wpm?: number
+        allowPrivateNetworks?: boolean
         debug?: boolean
       },
     ) => {
@@ -170,9 +181,21 @@ program
     },
   )
 
+interface PipelineOpts {
+  language?: string
+  llms?: boolean
+  limit?: number
+  order?: "newest" | "oldest"
+  timeout?: number
+  userAgent?: string
+  githubToken?: string
+  wpm?: number
+  allowPrivateNetworks?: boolean
+}
+
 const runPipeline = async (
   resolved: ResolvedInput,
-  opts: { language?: string; llms?: boolean; limit?: number; order?: "newest" | "oldest" },
+  opts: PipelineOpts,
   debug: ReturnType<typeof createDebug>,
 ): Promise<ParseResult> => {
   if (resolved.kind === "url") {
@@ -183,6 +206,11 @@ const runPipeline = async (
       includeLlmsTxt: opts.llms,
       limit: opts.limit,
       order: opts.order,
+      timeoutMs: opts.timeout,
+      userAgent: opts.userAgent,
+      githubToken: opts.githubToken,
+      wordsPerMinute: opts.wpm,
+      allowPrivateNetworks: opts.allowPrivateNetworks,
     })
   }
 
@@ -190,14 +218,22 @@ const runPipeline = async (
     process.stderr.write("Warning: --llms is ignored when parsing local HTML or stdin\n")
   }
   debug("route", { urlType: "webpage", source: resolved.kind })
-  return parseHtml(resolved.html!, { url: resolved.url, language: opts.language })
+  return parseHtml(resolved.html!, { url: resolved.url, language: opts.language, wordsPerMinute: opts.wpm })
+}
+
+const pickProperty = (result: ParseResult, property: string): unknown => {
+  // `ParseResult` variants (YouTube, PDF, GitHub, XProfile) each add their own
+  // fields. Route through a discriminated index instead of a blanket cast so
+  // future additions surface via the type system.
+  const record: Record<string, unknown> = { ...result }
+  return Object.hasOwn(record, property) ? record[property] : undefined
 }
 
 const formatOutput = (result: ParseResult, source: string, opts: { json?: boolean; property?: string }): string => {
   if (opts.json) return JSON.stringify(result, null, 2)
 
   if (opts.property) {
-    const value = (result as unknown as Record<string, unknown>)[opts.property]
+    const value = pickProperty(result, opts.property)
     if (value === undefined) {
       process.stderr.write(`Property "${opts.property}" not found\n`)
       process.exit(1)

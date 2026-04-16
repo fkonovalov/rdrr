@@ -20,7 +20,7 @@ export const isProbablyReaderable = async (
 }
 
 const fetchAndParse = async (url: string): Promise<Document> => {
-  const res = await fetchWithRedirects(url)
+  const res = await fetchWithRedirects(url, {})
   if (!res.ok) throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`)
   const html = await res.text()
   return parseLinkedomHTML(html, url)

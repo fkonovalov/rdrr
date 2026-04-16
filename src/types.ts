@@ -1,11 +1,28 @@
 export interface ParseOptions {
   language?: string
-  noCache?: boolean
   includeLlmsTxt?: boolean
   /** For aggregate URLs (e.g. x.com profiles): max items to include. */
   limit?: number
   /** For aggregate URLs: chronological order within the fetched window. */
   order?: "newest" | "oldest"
+  /**
+   * Allow requests to private, loopback, link-local and ULA addresses.
+   * Defaults to `false` to prevent SSRF when `rdrr` is exposed as a service.
+   */
+  allowPrivateNetworks?: boolean
+  /**
+   * GitHub API token for issue/PR/file requests. Falls back to `process.env.GITHUB_TOKEN`.
+   * Use a fine-grained token with `public_repo` read scope for most cases.
+   */
+  githubToken?: string
+  /** Words-per-minute for `readTime` estimation. Defaults to 200. */
+  wordsPerMinute?: number
+  /** Abort signal forwarded to every underlying fetch. */
+  signal?: AbortSignal
+  /** Per-request timeout in milliseconds. Defaults to 15000. */
+  timeoutMs?: number
+  /** Override the outbound User-Agent header. */
+  userAgent?: string
 }
 
 export interface ParseResult {

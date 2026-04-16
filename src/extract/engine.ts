@@ -1,4 +1,4 @@
-import { countWords } from "@shared"
+import { countWords, safeDomain } from "@shared"
 import type { ExtractOptions, ExtractResult } from "./types"
 import { stripUnsafeElements, resolveRelativeUrls, countHtmlWords } from "./cleanup"
 import { flattenShadowRoots, resolveStreamedContent, evaluateMediaQueries, applyMobileStyles } from "./compat"
@@ -259,14 +259,6 @@ const emptyResult = (url: string): ExtractResult => ({
   wordCount: 0,
 })
 
-const safeDomain = (url: string): string => {
-  try {
-    return new URL(url).hostname
-  } catch {
-    return ""
-  }
-}
-
 const getSelector = (el: Element, doc: Document): string => {
   const parts: string[] = []
   let current: Element | null = el
@@ -279,6 +271,18 @@ const getSelector = (el: Element, doc: Document): string => {
   return parts.join(" > ")
 }
 
+// Memoize countWords(el.textContent) so that repeated scans during retry and
+// subsequent schema-fallback comparisons don't re-walk the same subtrees.
+const wordCountCache = new WeakMap<Element, number>()
+
+const cachedWordCount = (el: Element): number => {
+  const hit = wordCountCache.get(el)
+  if (hit !== undefined) return hit
+  const count = countWords(el.textContent ?? "")
+  wordCountCache.set(el, count)
+  return count
+}
+
 const findLargestHiddenContentSelector = (doc: Document): string | undefined => {
   if (!doc.body) return undefined
   const candidates = Array.from(doc.body.querySelectorAll(HIDDEN_EXACT_SKIP_SELECTOR)).filter(
@@ -288,7 +292,7 @@ const findLargestHiddenContentSelector = (doc: Document): string | undefined => 
   let best: Element | null = null
   let bestWords = 0
   for (const el of candidates) {
-    const words = countWords(el.textContent ?? "")
+    const words = cachedWordCount(el)
     if (words > bestWords) {
       best = el
       bestWords = words

@@ -462,7 +462,7 @@ const selectBestSource = (sources: NodeListOf<Element>): Element | null => {
     const wMatch = srcset.match(WIDTH_IN_SRCSET)
     const dMatch = srcset.match(DPR_IN_URL)
     if (wMatch?.[1]) {
-      const res = parseInt(wMatch[1]) * (dMatch?.[1] ? parseFloat(dMatch[1]) : 1)
+      const res = parseInt(wMatch[1], 10) * (dMatch?.[1] ? parseFloat(dMatch[1]) : 1)
       if (res > maxRes) {
         maxRes = res
         best = source

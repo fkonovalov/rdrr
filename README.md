@@ -1,8 +1,9 @@
 # rdrr
 
 [![npm version](https://img.shields.io/npm/v/rdrr.svg)](https://www.npmjs.com/package/rdrr)
+[![CI](https://github.com/fkonovalov/rdrr/actions/workflows/ci.yml/badge.svg)](https://github.com/fkonovalov/rdrr/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/rdrr.svg)](./LICENSE)
-[![install size](https://packagephobia.com/badge?p=rdrr)](https://packagephobia.com/result?p=rdrr)
+[![min](https://badgen.net/bundlephobia/minzip/rdrr)](https://bundlephobia.com/package/rdrr)
 
 Convert any URL to clean markdown for AI agents.
 
@@ -13,7 +14,7 @@ npx rdrr https://react.dev/learn
 ## Features
 
 - **Fast**: no headless browser, lightweight
-- **Smart**: 20+ site-specific extractors (Wikipedia, Reddit, X, Hacker News, GitHub, ChatGPT, Claude, Substack, ...)
+- **Smart**: 20+ site-specific extractors (Wiki, Reddit, X, Hacker News, GitHub, ChatGPT, Claude, Substack, ...)
 - **LLM-ready**: strips ads, navigation, footers; keeps code blocks, tables, math
 - **Versatile**: webpages, GitHub issues/PRs, PDFs, X profiles, YouTube transcripts
 
@@ -120,9 +121,15 @@ Also available as direct imports: `parseWeb`, `parseYouTube`, `parseGitHub`, `pa
 | **Webpages** | Any HTML page with 20+ site-specific extractors |
 | **YouTube** | Transcripts with chapters, speakers, timestamps |
 | **GitHub** | Issues, PRs (with comments), raw files |
-| **PDFs** | Any public `.pdf` (requires optional `pdfjs-dist`) |
+| **PDFs** | Any public `.pdf` (requires optional `unpdf`) |
 | **X/Twitter** | Single posts and full profile timelines |
 | **llms.txt** | Appended on demand via `--llms` or `includeLlmsTxt` |
+
+## Community
+
+- Discussion, questions, site-extractor requests: [GitHub Discussions](https://github.com/fkonovalov/rdrr/discussions)
+- Bugs: [GitHub Issues](https://github.com/fkonovalov/rdrr/issues)
+- Security: see [SECURITY.md](./SECURITY.md)
 
 ## Contributing
 

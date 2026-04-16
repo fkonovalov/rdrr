@@ -103,7 +103,7 @@ export const evaluateMediaQueries = (doc: Document): Array<{ selector: string; s
         if (!(rule instanceof CSSMediaRule) || !rule.conditionText.includes("max-width")) continue
         const match = rule.conditionText.match(/max-width[^:]*:\s*(\d+)/)
         if (!match?.[1]) continue
-        const maxWidth = parseInt(match[1])
+        const maxWidth = parseInt(match[1], 10)
         if (MOBILE_WIDTH > maxWidth) continue
 
         for (const cssRule of rule.cssRules) {

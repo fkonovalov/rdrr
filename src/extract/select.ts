@@ -54,7 +54,7 @@ const findByEntryPoints = (doc: Document): Element | null => {
 const findTableBasedContent = (doc: Document): Element | null => {
   const tables = Array.from(doc.getElementsByTagName("table"))
   const hasLayout = tables.some((table) => {
-    const width = parseInt(table.getAttribute("width") ?? "0")
+    const width = parseInt(table.getAttribute("width") ?? "0", 10)
     const cls = (table.className ?? "").toLowerCase()
     return width > 400 || table.getAttribute("align") === "center" || cls.includes("content") || cls.includes("article")
   })

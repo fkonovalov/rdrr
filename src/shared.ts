@@ -1,3 +1,23 @@
+/**
+ * Merge a per-request timeout with an optional user-supplied AbortSignal.
+ * Returns a single signal that aborts as soon as either fires.
+ */
+export const mergeSignals = (timeoutMs: number, external?: AbortSignal): AbortSignal => {
+  const timeout = AbortSignal.timeout(timeoutMs)
+  return external ? AbortSignal.any([timeout, external]) : timeout
+}
+
+export const safeDomain = (url: string): string => {
+  try {
+    return new URL(url).hostname
+  } catch {
+    return ""
+  }
+}
+
+export const ensureProtocol = (url: string): string =>
+  url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`
+
 export const formatTime = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)
   const m = Math.floor((seconds % 3600) / 60)
@@ -6,8 +26,11 @@ export const formatTime = (seconds: number): string => {
   return `${m}:${pad(s)}`
 }
 
-export const estimateReadTime = (wordCount: number): string => {
-  const minutes = Math.max(1, Math.ceil(wordCount / 200))
+const DEFAULT_WORDS_PER_MINUTE = 200
+
+export const estimateReadTime = (wordCount: number, wordsPerMinute = DEFAULT_WORDS_PER_MINUTE): string => {
+  const wpm = wordsPerMinute > 0 ? wordsPerMinute : DEFAULT_WORDS_PER_MINUTE
+  const minutes = Math.max(1, Math.ceil(wordCount / wpm))
   return `${minutes} min`
 }
 

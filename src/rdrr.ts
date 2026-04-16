@@ -1,3 +1,4 @@
+import { ensureProtocol } from "@shared"
 import type { ParseOptions, ParseResult } from "./types"
 import { detectUrlType, isValidUrl, normalizeUrl } from "./detect"
 import { detectLlmsTxt } from "./provider/llms-txt"
@@ -14,7 +15,7 @@ export const parse = async (url: string, options?: ParseOptions): Promise<ParseR
   const result = await route(finalUrl, urlType, options)
 
   if (options?.includeLlmsTxt) {
-    const llms = await detectLlmsTxt(finalUrl)
+    const llms = await detectLlmsTxt(finalUrl, options?.allowPrivateNetworks)
     if (llms?.llmsContent) {
       result.llmsTxt = llms.llmsContent
       result.content = `${result.content}\n\n---\n\n## llms.txt\n\nSource: ${llms.llmsTxtUrl}\n\n${llms.llmsContent}`
@@ -54,7 +55,3 @@ const route = async (
   }
 }
 
-const ensureProtocol = (url: string): string => {
-  if (url.startsWith("http://") || url.startsWith("https://")) return url
-  return `https://${url}`
-}

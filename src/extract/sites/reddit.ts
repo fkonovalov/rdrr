@@ -127,7 +127,7 @@ const extractShredditComments = (doc: Document): string => {
   const commentData: CommentData[] = []
 
   for (const comment of comments) {
-    const depth = parseInt(comment.getAttribute("depth") ?? "0")
+    const depth = parseInt(comment.getAttribute("depth") ?? "0", 10)
     const author = comment.getAttribute("author") ?? ""
     const score = comment.getAttribute("score") ?? "0"
     const permalink = comment.getAttribute("permalink") ?? ""

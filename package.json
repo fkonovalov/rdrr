@@ -1,6 +1,6 @@
 {
   "name": "rdrr",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": false,
   "description": "Convert any URL to clean markdown for AI agents.",
   "keywords": [
@@ -26,6 +26,10 @@
     "type": "git",
     "url": "git+https://github.com/fkonovalov/rdrr.git"
   },
+  "bugs": {
+    "url": "https://github.com/fkonovalov/rdrr/issues"
+  },
+  "packageManager": "pnpm@9.15.1",
   "bin": {
     "rdrr": "./dist/cli.mjs"
   },
@@ -36,6 +40,10 @@
     "CHANGELOG.md"
   ],
   "type": "module",
+  "sideEffects": [
+    "./dist/parse-html.mjs",
+    "./dist/esm.mjs"
+  ],
   "types": "./dist/index.d.mts",
   "typesVersions": {
     "*": {
@@ -62,19 +70,21 @@
     "build": "tsc --noEmit && tsdown",
     "dev": "tsdown --watch",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "lint": "knip && oxlint ./src",
     "fmt": "oxfmt --write .",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
   },
   "devDependencies": {
     "@types/node": "22.15.3",
+    "@vitest/coverage-v8": "4.1.4",
     "commander": "14.0.3",
+    "knip": "6.4.1",
     "linkedom": "0.18.12",
+    "oxfmt": "0.45.0",
+    "oxlint": "1.60.0",
+    "tsdown": "0.21.9",
     "turndown": "7.2.4",
-    "knip": "6.4.0",
-    "oxfmt": "0.44.0",
-    "oxlint": "1.59.0",
-    "tsdown": "0.21.7",
     "typescript": "6.0.2",
     "vitest": "4.1.4"
   },

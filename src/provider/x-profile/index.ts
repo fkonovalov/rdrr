@@ -47,7 +47,7 @@ export const parseXProfile = async (url: string, options?: ParseOptions): Promis
     siteName: "X (Twitter)",
     published,
     wordCount,
-    readTime: estimateReadTime(wordCount),
+    readTime: estimateReadTime(wordCount, options?.wordsPerMinute),
     handle,
     postCount: selected.length,
   }

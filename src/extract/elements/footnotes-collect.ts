@@ -293,7 +293,7 @@ const collectWordFootnotes = (
   for (const anchor of backrefs) {
     const fragment = (anchor.getAttribute("href") ?? "").split("#").pop() ?? ""
     const match = fragment.match(/^_ftnref(\d+)$/)
-    if (match?.[1]) pairs.push({ num: parseInt(match[1]), anchor })
+    if (match?.[1]) pairs.push({ num: parseInt(match[1], 10), anchor })
   }
   pairs.sort((a, b) => a.num - b.num)
 

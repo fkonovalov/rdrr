@@ -210,9 +210,16 @@ const scoreBlock = (el: Element): number => {
       return 0
   } catch {}
 
+  // Cache everything we touch more than once. The block-level scoring runs across
+  // every candidate element on the page, so even small repeated DOM/string work
+  // adds up to double-digit ms on large documents.
   const text = el.textContent ?? ""
   const words = countWords(text)
   if (words < 3) return 0
+
+  const textLen = text.length
+  const linkEls = el.getElementsByTagName("a")
+  const links = linkEls.length
 
   let score = text.split(",").length - 1
 
@@ -221,22 +228,20 @@ const scoreBlock = (el: Element): number => {
     if (re.test(lower)) score -= 10
   }
 
-  const linkEls = el.getElementsByTagName("a")
-  const links = linkEls.length
   if (links / (words || 1) > 0.5) score -= 15
 
   if (links > 1 && words < 80) {
     let linkLen = 0
     for (let i = 0; i < linkEls.length; i++) linkLen += (linkEls[i]!.textContent ?? "").length
-    if (text.length > 0 && linkLen / text.length > 0.8) score -= 15
+    if (textLen > 0 && linkLen / textLen > 0.8) score -= 15
   }
 
   const lists = el.getElementsByTagName("ul").length + el.getElementsByTagName("ol").length
   if (lists > 0 && links > lists * 3) score -= 10
 
   if (words < 80) {
-    for (const a of el.getElementsByTagName("a")) {
-      if (SOCIAL_PROFILE.test(a.getAttribute("href") ?? "")) {
+    for (let i = 0; i < links; i++) {
+      if (SOCIAL_PROFILE.test(linkEls[i]!.getAttribute("href") ?? "")) {
         score -= 15
         break
       }
@@ -248,8 +253,10 @@ const scoreBlock = (el: Element): number => {
 
   const cls = (el.getAttribute("class") ?? "").toLowerCase()
   const id = (el.id ?? "").toLowerCase()
-  for (const pat of NON_CONTENT_CLASSES) {
-    if (cls.includes(pat) || id.includes(pat)) score -= 8
+  if (cls || id) {
+    for (const pat of NON_CONTENT_CLASSES) {
+      if (cls.includes(pat) || id.includes(pat)) score -= 8
+    }
   }
 
   return score

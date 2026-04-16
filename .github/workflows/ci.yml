@@ -22,6 +22,8 @@ jobs:
         include:
           - os: macos-latest
             node: 20
+          - os: windows-latest
+            node: 20
 
     steps:
       - name: Checkout
@@ -50,5 +52,48 @@ jobs:
       - name: Test
         run: pnpm test
 
+      - name: Coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        run: pnpm test:coverage
+
+      - name: Upload coverage artifact
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage/
+          retention-days: 7
+
       - name: Verify pack
+        if: matrix.os != 'windows-latest'
         run: pnpm pack --pack-destination /tmp
+
+      - name: Check bundle size
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        shell: bash
+        run: |
+          file=$(ls /tmp/rdrr-*.tgz | head -1)
+          size=$(wc -c < "$file")
+          limit=$((600 * 1024))  # 600 KB, tightens as dist stabilises
+          printf "Package size: %d bytes (limit: %d)\n" "$size" "$limit"
+          if [ "$size" -gt "$limit" ]; then
+            echo "::error::Package size $size exceeds limit $limit"
+            exit 1
+          fi
+
+      - name: Smoke-test published tarball
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        shell: bash
+        run: |
+          file=$(ls /tmp/rdrr-*.tgz | head -1)
+          workdir=$(mktemp -d)
+          cd "$workdir"
+          npm init -y >/dev/null
+          npm pkg set type=module >/dev/null
+          npm install "$file" >/dev/null
+          node --input-type=module -e "
+            import { parse, detectUrlType } from 'rdrr'
+            if (typeof parse !== 'function') throw new Error('parse missing')
+            if (detectUrlType('https://example.com') !== 'webpage') throw new Error('detect broken')
+            console.log('Smoke OK')
+          "
