@@ -7,26 +7,19 @@ settings:
 importers:
 
   .:
-    dependencies:
-      commander:
-        specifier: 14.0.3
-        version: 14.0.3
-      linkedom:
-        specifier: 0.18.12
-        version: 0.18.12
-      turndown:
-        specifier: 7.2.4
-        version: 7.2.4
     devDependencies:
       '@types/node':
         specifier: 22.15.3
         version: 22.15.3
-      '@types/turndown':
-        specifier: 5.0.5
-        version: 5.0.5
+      commander:
+        specifier: 14.0.3
+        version: 14.0.3
       knip:
         specifier: 6.4.0
         version: 6.4.0(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)
+      linkedom:
+        specifier: 0.18.12
+        version: 0.18.12
       oxfmt:
         specifier: 0.44.0
         version: 0.44.0
@@ -36,6 +29,9 @@ importers:
       tsdown:
         specifier: 0.21.7
         version: 0.21.7(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(oxc-resolver@11.19.1(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2))(typescript@6.0.2)
+      turndown:
+        specifier: 7.2.4
+        version: 7.2.4
       typescript:
         specifier: 6.0.2
         version: 6.0.2
@@ -1060,9 +1056,6 @@ packages:
 
   '@types/node@22.15.3':
     resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
-
-  '@types/turndown@5.0.5':
-    resolution: {integrity: sha512-TL2IgGgc7B5j78rIccBtlYAnkuv8nUQqhQc+DSYV5j9Be9XOcm/SKOVRuA47xAVI3680Tk9B1d8flK2GWT2+4w==}
 
   '@vitest/expect@4.1.4':
     resolution: {integrity: sha512-iPBpra+VDuXmBFI3FMKHSFXp3Gx5HfmSCE8X67Dn+bwephCnQCaB7qWK2ldHa+8ncN8hJU8VTMcxjPpyMkUjww==}
@@ -2300,8 +2293,6 @@ snapshots:
   '@types/node@22.15.3':
     dependencies:
       undici-types: 6.21.0
-
-  '@types/turndown@5.0.5': {}
 
   '@vitest/expect@4.1.4':
     dependencies:
