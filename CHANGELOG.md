@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.4.0] — 2026-04-18
+
+The "make rdrr a first-class tool for AI agents" release.
+
+### Added
+
+- **Single X posts.** `rdrr https://x.com/…/status/…` now goes straight to fxtwitter, with a twimg-syndication fallback if that's down. No more login walls, no HTML fetch at all.
+- **`--budget <tokens>`.** Fit the output into a token budget. Cuts at paragraph boundaries, never inside a fenced code block, always keeps the head so truncation never leaves an empty page.
+- **`--quality`.** A readability score (0–100) with signals — links, paragraphs, boilerplate, paywall markers in five languages. Lets agents route low-confidence pages to a fallback instead of handing an LLM garbage.
+- **`--format md|json|jsonl|xml`.** JSONL for batch pipelines, XML with a real `<?xml?>` declaration and CDATA-safe body for LLMs that parse XML better than markdown. `-j` still works.
+- **`-c, --clip`.** Cross-platform clipboard: pbcopy, wl-copy, xclip, xsel, clip.exe.
+- **`rdrr history` and `rdrr last`.** A local JSONL log of every fetch, auto-rotated at 1000 entries. `--no-history` or `RDRR_NO_HISTORY=1` to opt out.
+
+### Fixed
+
+- **The bundled CLI was quietly missing every site extractor** (reddit, hackernews, substack, x-oembed, chatgpt, claude, grok, gemini, github, …). A `sideEffects` whitelist in `package.json` was tree-shaking the registration calls out of the published build, leaving only generic readability. Restored.
+- **`extract` / `extractAsync` now respect `options.markdown: true`.** Browser-extension callers were getting raw HTML back on Wikipedia "no article" pages.
+
+### Security
+
+- URLs logged to `history.jsonl` are stripped of basic-auth credentials **and** of any `api_key` / `token` / `authorization` / `secret` query parameters.
+- CLI arg-value logging redacts sensitive flags (`--github-token`, `--user-agent`, `-l`).
+- XML CDATA wrapping splits any stray `]]>` in article content so a single tweet can't prematurely close the block.
+
+### Internal
+
+- fxtwitter normalisation (facets, media, quotes) lives in one shared module instead of three forks.
+
 ## [0.3.0] — 2026-04-17
 
 ### Added
@@ -83,6 +111,7 @@ First public release.
 - Requires Node.js >=20.17.0.
 - API is considered experimental until `1.0.0`; breaking changes may land in `0.x.0` releases.
 
+[0.4.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.4.0
 [0.3.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.3.0
 [0.2.2]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.2
 [0.2.1]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.1

@@ -16,7 +16,12 @@ const makeComputedStyleStub = (): () => Record<string, unknown> => () =>
   new Proxy({}, COMPUTED_STYLE_STUB) as Record<string, unknown>
 
 export const parseLinkedomHTML = (html: string, url?: string): Document => {
-  const { document } = parseHTML(html)
+  // linkedom throws from deep inside its internals on empty/whitespace-only
+  // input ("Cannot destructure property 'firstElementChild' of 'e' as it is
+  // null"). Substitute a minimal valid shell so downstream code handles it
+  // like any other content-less document instead of crashing.
+  const safe = html && html.trim() ? html : "<!doctype html><html><head></head><body></body></html>"
+  const { document } = parseHTML(safe)
   const doc = document as unknown as Record<string, unknown>
   if (!doc.styleSheets) doc.styleSheets = []
   if (doc.defaultView && !(doc.defaultView as Record<string, unknown>).getComputedStyle) {

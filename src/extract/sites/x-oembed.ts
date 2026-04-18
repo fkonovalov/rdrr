@@ -59,6 +59,10 @@ interface FxResponse {
   }
 }
 
+// Used by `parseHtml`/extension callers that already have the rendered DOM
+// and want a site-extractor pass; the CLI `parse` path routes X status URLs
+// straight to `provider/x-status` (fxtwitter primary, syndication fallback)
+// and skips this branch entirely.
 registerSite({
   patterns: ["x.com"],
   create: (_doc, url) =>

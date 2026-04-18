@@ -15,8 +15,12 @@ export const safeDomain = (url: string): string => {
   }
 }
 
-export const ensureProtocol = (url: string): string =>
-  url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`
+// Any scheme-like prefix (`foo://`, `ftp:`, `mailto:`, etc.) — if one is already
+// present we must leave it alone so `isValidUrl` can reject non-HTTP schemes
+// cleanly instead of producing a Frankenstein `https://ftp://...`.
+const SCHEME_PREFIX = /^[a-z][a-z0-9+\-.]*:/i
+
+export const ensureProtocol = (url: string): string => (SCHEME_PREFIX.test(url) ? url : `https://${url}`)
 
 export const formatTime = (seconds: number): string => {
   const h = Math.floor(seconds / 3600)

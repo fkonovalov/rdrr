@@ -110,6 +110,15 @@ describe("ensureProtocol", () => {
     expect(ensureProtocol("example.com")).toBe("https://example.com")
     expect(ensureProtocol("example.com/path?q=1")).toBe("https://example.com/path?q=1")
   })
+
+  it("leaves other schemes alone (so the caller can reject them later)", () => {
+    // Regression: an earlier check only spotted http/https, so `ftp://foo`
+    // got rewritten to `https://ftp://foo` and slipped past URL validation.
+    expect(ensureProtocol("ftp://example.com")).toBe("ftp://example.com")
+    expect(ensureProtocol("mailto:a@b.com")).toBe("mailto:a@b.com")
+    expect(ensureProtocol("file:///etc/hosts")).toBe("file:///etc/hosts")
+    expect(ensureProtocol("javascript:alert(1)")).toBe("javascript:alert(1)")
+  })
 })
 
 describe("mergeSignals", () => {

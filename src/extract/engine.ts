@@ -9,54 +9,87 @@ import { filterHiddenElements } from "./filters/hidden"
 import { filterBySelectors, filterContentPatterns } from "./filters/patterns"
 import { filterLowScoringBlocks } from "./filters/scoring"
 import { filterSmallImages } from "./filters/small-images"
-import { extractMetadata } from "./metadata"
+import { toMarkdown } from "./markdown"
+import { type Metadata, extractMetadata } from "./metadata"
 import { normaliseContent } from "./normalise"
 import { extractSchemaOrg, getSchemaText, findElementBySchemaText, collectMetaTags } from "./schema"
 import { findMainContent } from "./select"
 import { findSiteExtractor, findAsyncSiteExtractor } from "./sites/registry"
+import type { SiteExtractorResult } from "./sites/types"
 import { serializeHTML } from "./utils/dom"
+
+/**
+ * Minimum word count a pass must hit before we accept it. Below this the
+ * pipeline will retry with progressively looser filters and, as a last resort,
+ * take the longest attempt it made.
+ */
+const MIN_ACCEPTABLE_WORDS = 50
 
 export const extract = (doc: Document, options: ExtractOptions = {}): ExtractResult => {
   const url = options.url ?? ""
+  const viaSite = runSyncSiteExtractor(doc, url, options)
+  const raw = viaSite ?? runPipeline(doc, url, options)
+  return finaliseMarkdown(raw, options, url)
+}
 
-  // Try sync site extractors first
-  const siteExtractor = url ? findSiteExtractor(doc, url) : null
-  if (siteExtractor) {
-    const extracted = siteExtractor.extract()
-    if (extracted.contentSelector) {
-      // Extractor wants the engine to process a specific element
-      const pipelineResult = extractInternal(doc, url, {
-        ...options,
-        contentSelector: extracted.contentSelector,
-        removeLowScoring: false,
-        removeHiddenElements: false,
-      })
-      return mergeExtractorVariables(pipelineResult, extracted.variables)
-    }
-    if (extracted.contentHtml) {
-      const schemaOrg = extractSchemaOrg(doc)
-      const metaTags = collectMetaTags(doc)
-      const meta = extractMetadata(doc, schemaOrg, metaTags)
-      return {
-        title: extracted.variables?.title ?? meta.title,
-        author: extracted.variables?.author ?? meta.author,
-        content: extracted.contentHtml,
-        description: extracted.variables?.description ?? meta.description,
-        domain: meta.domain || (url ? safeDomain(url) : ""),
-        siteName: extracted.variables?.site ?? meta.siteName,
-        language: extracted.variables?.language ?? meta.language,
-        dir: meta.dir,
-        published: extracted.variables?.published ?? meta.published ?? null,
-        wordCount: countHtmlWords(extracted.contentHtml),
-      }
-    }
+export const extractAsync = async (doc: Document, options: ExtractOptions = {}): Promise<ExtractResult> => {
+  const url = options.url ?? ""
+  // Async site extractor short-circuits everything — an async site knows how
+  // to talk to its own API and the sync pipeline has nothing to add.
+  const asyncExtractor = findAsyncSiteExtractor(doc, url)
+  if (asyncExtractor?.extractAsync) {
+    const extracted = await asyncExtractor.extractAsync()
+    return finaliseMarkdown(buildResultFromExtractor(extracted, collectMeta(doc), url), options, url)
   }
 
-  // Build cache once, reuse across all retries
-  const _cache = getOrCreateCache(doc)
-  const opts = { ...options, _cache }
+  // Otherwise run the sync engine, then patch in an async extractor's result
+  // only if sync gave up. We pass `markdown: false` so the async fallback below
+  // doesn't convert HTML that will be replaced wholesale.
+  let result = extract(doc, { ...options, markdown: false })
+  if (result.wordCount === 0 && asyncExtractor?.extractAsync) {
+    const extracted = await asyncExtractor.extractAsync()
+    result = mergeAsyncFallback(result, extracted)
+  }
+  return finaliseMarkdown(result, options, url)
+}
 
-  // Collect all attempts for final safety net fallback
+/**
+ * Try a sync site extractor (e.g. reddit, hackernews, github). Returns the
+ * built result if one matched, or `null` to hand control to the readability
+ * pipeline. Encapsulates both site-extractor modes (`contentSelector` asks
+ * the engine to process a specific DOM subtree; `contentHtml` hands us a
+ * pre-rendered body).
+ */
+const runSyncSiteExtractor = (doc: Document, url: string, options: ExtractOptions): ExtractResult | null => {
+  if (!url) return null
+  const siteExtractor = findSiteExtractor(doc, url)
+  if (!siteExtractor) return null
+  const extracted = siteExtractor.extract()
+
+  if (extracted.contentSelector) {
+    const pipelineResult = extractInternal(doc, url, {
+      ...options,
+      contentSelector: extracted.contentSelector,
+      removeLowScoring: false,
+      removeHiddenElements: false,
+    })
+    return mergeExtractorVariables(pipelineResult, extracted.variables)
+  }
+  if (extracted.contentHtml) {
+    return buildResultFromExtractor(extracted, collectMeta(doc), url)
+  }
+  return null
+}
+
+/**
+ * Full readability pipeline with up to three retries (progressive loosening of
+ * filters) plus a schema.org rescue pass. Only entered when no site extractor
+ * handled the page.
+ */
+const runPipeline = (doc: Document, url: string, options: ExtractOptions): ExtractResult => {
+  const cache = getOrCreateCache(doc)
+  const opts: InternalOptions = { ...options, _cache: cache }
+
   const attempts: ExtractResult[] = []
   const tryExtract = (retryOpts: InternalOptions): ExtractResult => {
     const r = extractInternal(doc, url, retryOpts)
@@ -65,108 +98,127 @@ export const extract = (doc: Document, options: ExtractOptions = {}): ExtractRes
   }
 
   let result = tryExtract(opts)
-
-  if (result.wordCount < 50) {
-    const retry = tryExtract({ ...opts, removeHiddenElements: false })
-    if (retry.wordCount > result.wordCount * 2) result = retry
-
-    // Try targeting the largest hidden subtree directly
-    const hiddenSelector = findLargestHiddenContentSelector(doc)
-    if (hiddenSelector) {
-      const hiddenRetry = tryExtract({
-        ...opts,
-        removeHiddenElements: false,
-        contentSelector: hiddenSelector,
-      })
-      if (
-        hiddenRetry.wordCount > result.wordCount ||
-        (hiddenRetry.wordCount > Math.max(20, result.wordCount * 0.7) &&
-          hiddenRetry.content.length < result.content.length)
-      ) {
-        result = hiddenRetry
-      }
-    }
-  }
-
-  if (result.wordCount < 50) {
-    const retry = tryExtract({
-      ...opts,
-      removeLowScoring: false,
-    })
-    if (retry.wordCount > result.wordCount) result = retry
-  }
-
-  // Safety net: if all retries still failed, fall back to the longest attempt.
-  // Only triggers when the current pipeline already gave up (wordCount < 50),
-  // so happy-path output is unaffected.
-  if (result.wordCount < 50 && attempts.length > 1) {
-    const best = attempts.reduce((a, b) => (b.wordCount > a.wordCount ? b : a))
-    if (best.wordCount > result.wordCount) result = best
-  }
+  if (result.wordCount < MIN_ACCEPTABLE_WORDS) result = retryWithHiddenIncluded(result, doc, opts, tryExtract)
+  if (result.wordCount < MIN_ACCEPTABLE_WORDS) result = retryWithLowScoringKept(result, opts, tryExtract)
+  if (result.wordCount < MIN_ACCEPTABLE_WORDS) result = bestOfAttempts(result, attempts)
 
   stripUnsafeElements(doc)
 
-  const schemaText = getSchemaText(_cache.schemaOrg)
-  if (schemaText && countWords(schemaText) > result.wordCount * 1.5) {
-    const bestMatch = doc.body ? findElementBySchemaText(doc.body, schemaText) : null
-    if (bestMatch) {
-      const selector = getSelector(bestMatch, doc)
-      result = extractInternal(doc, url, { ...opts, contentSelector: selector })
-    } else {
-      result.content = schemaText
-      result.wordCount = countWords(schemaText)
-    }
-  }
-
-  return result
+  return rescueFromSchemaOrg(result, doc, url, opts, cache.schemaOrg)
 }
 
-export const extractAsync = async (doc: Document, options: ExtractOptions = {}): Promise<ExtractResult> => {
-  const url = options.url ?? ""
+const retryWithHiddenIncluded = (
+  current: ExtractResult,
+  doc: Document,
+  opts: InternalOptions,
+  tryExtract: (o: InternalOptions) => ExtractResult,
+): ExtractResult => {
+  let result = current
+  const retry = tryExtract({ ...opts, removeHiddenElements: false })
+  if (retry.wordCount > result.wordCount * 2) result = retry
 
-  // Try async site extractors first (e.g. X.com via FxTwitter API)
-  const asyncExtractor = findAsyncSiteExtractor(doc, url)
-  if (asyncExtractor?.extractAsync) {
-    const extracted = await asyncExtractor.extractAsync()
-    const schemaOrg = extractSchemaOrg(doc)
-    const metaTags = collectMetaTags(doc)
-    const meta = extractMetadata(doc, schemaOrg, metaTags)
+  // Target the largest visually-hidden subtree directly — some SPAs stash the
+  // full article inside an aria-hidden wrapper while only a skeleton is visible.
+  const hiddenSelector = findLargestHiddenContentSelector(doc)
+  if (!hiddenSelector) return result
 
-    return {
-      title: extracted.variables?.title ?? meta.title,
-      author: extracted.variables?.author ?? meta.author,
-      content: extracted.contentHtml,
-      description: extracted.variables?.description ?? meta.description,
-      domain: meta.domain,
-      siteName: extracted.variables?.site ?? meta.siteName,
-      language: extracted.variables?.language ?? meta.language,
-      dir: meta.dir,
-      published: extracted.variables?.published ?? meta.published ?? null,
-      wordCount: countHtmlWords(extracted.contentHtml),
-    }
+  const hiddenRetry = tryExtract({ ...opts, removeHiddenElements: false, contentSelector: hiddenSelector })
+  const beatsByWords = hiddenRetry.wordCount > result.wordCount
+  const similarWordsButTighter =
+    hiddenRetry.wordCount > Math.max(20, result.wordCount * 0.7) && hiddenRetry.content.length < result.content.length
+  return beatsByWords || similarWordsButTighter ? hiddenRetry : result
+}
+
+const retryWithLowScoringKept = (
+  current: ExtractResult,
+  opts: InternalOptions,
+  tryExtract: (o: InternalOptions) => ExtractResult,
+): ExtractResult => {
+  const retry = tryExtract({ ...opts, removeLowScoring: false })
+  return retry.wordCount > current.wordCount ? retry : current
+}
+
+/**
+ * Safety net: when the pipeline has already given up, take the longest attempt
+ * it made. Only runs when `current.wordCount < MIN_ACCEPTABLE_WORDS`, so the
+ * happy path is untouched.
+ */
+const bestOfAttempts = (current: ExtractResult, attempts: ExtractResult[]): ExtractResult => {
+  if (attempts.length <= 1) return current
+  const best = attempts.reduce((a, b) => (b.wordCount > a.wordCount ? b : a))
+  return best.wordCount > current.wordCount ? best : current
+}
+
+/**
+ * If schema.org JSON-LD describes a substantially longer article body than the
+ * pipeline extracted, reach for that element instead. Keeps us honest on SSR
+ * sites where the rendered DOM hides most of the prose behind interactive widgets.
+ */
+const rescueFromSchemaOrg = (
+  current: ExtractResult,
+  doc: Document,
+  url: string,
+  opts: InternalOptions,
+  schemaOrg: unknown[],
+): ExtractResult => {
+  const schemaText = getSchemaText(schemaOrg)
+  if (!schemaText || countWords(schemaText) <= current.wordCount * 1.5) return current
+
+  const bestMatch = doc.body ? findElementBySchemaText(doc.body, schemaText) : null
+  if (bestMatch) {
+    const selector = getSelector(bestMatch, doc)
+    return extractInternal(doc, url, { ...opts, contentSelector: selector })
   }
+  return { ...current, content: schemaText, wordCount: countWords(schemaText) }
+}
 
-  // Fall back to sync extract
-  const result = extract(doc, options)
+/**
+ * Merge an async-extractor result onto a (near-empty) sync result. Preserves
+ * every field the async extractor left unset (e.g. `domain`, `language`) so
+ * callers still see the metadata the sync pipeline gathered.
+ */
+const mergeAsyncFallback = (syncResult: ExtractResult, extracted: SiteExtractorResult): ExtractResult => ({
+  ...syncResult,
+  title: extracted.variables?.title ?? syncResult.title,
+  author: extracted.variables?.author ?? syncResult.author,
+  content: extracted.contentHtml,
+  siteName: extracted.variables?.site ?? syncResult.siteName,
+  published: extracted.variables?.published ?? syncResult.published,
+  wordCount: countHtmlWords(extracted.contentHtml),
+})
 
-  // If sync produced very little content, try async extractors as fallback
-  if (result.wordCount === 0) {
-    const fallback = findAsyncSiteExtractor(doc, url)
-    if (fallback?.extractAsync) {
-      const extracted = await fallback.extractAsync()
-      return {
-        ...result,
-        title: extracted.variables?.title ?? result.title,
-        author: extracted.variables?.author ?? result.author,
-        content: extracted.contentHtml,
-        siteName: extracted.variables?.site ?? result.siteName,
-        published: extracted.variables?.published ?? result.published,
-        wordCount: countHtmlWords(extracted.contentHtml),
-      }
-    }
-  }
+/**
+ * Build a canonical `ExtractResult` out of a site-extractor payload and the
+ * document metadata. Identical shape between sync and async code paths.
+ */
+const buildResultFromExtractor = (extracted: SiteExtractorResult, meta: Metadata, url: string): ExtractResult => ({
+  title: extracted.variables?.title ?? meta.title,
+  author: extracted.variables?.author ?? meta.author,
+  content: extracted.contentHtml,
+  description: extracted.variables?.description ?? meta.description,
+  domain: meta.domain || (url ? safeDomain(url) : ""),
+  siteName: extracted.variables?.site ?? meta.siteName,
+  language: extracted.variables?.language ?? meta.language,
+  dir: meta.dir,
+  published: extracted.variables?.published ?? meta.published ?? null,
+  wordCount: countHtmlWords(extracted.contentHtml),
+})
 
-  return result
+const collectMeta = (doc: Document): Metadata => {
+  const schemaOrg = extractSchemaOrg(doc)
+  const metaTags = collectMetaTags(doc)
+  return extractMetadata(doc, schemaOrg, metaTags)
+}
+
+/**
+ * Convert `result.content` from HTML to markdown when the caller asked for it
+ * via `options.markdown === true`. Preserves word count (computed from text, not
+ * markup) and leaves HTML in place for every other caller so existing consumers
+ * that do their own conversion downstream (e.g. provider/web.ts) aren't affected.
+ */
+const finaliseMarkdown = (result: ExtractResult, options: ExtractOptions, url: string): ExtractResult => {
+  if (options.markdown !== true || !result.content) return result
+  return { ...result, content: toMarkdown(result.content, url) }
 }
 
 interface InternalOptions extends ExtractOptions {

@@ -7,6 +7,11 @@ import { resolve as resolvePath } from "node:path"
 import { text as readStdinText } from "node:stream/consumers"
 import { pathToFileURL } from "node:url"
 import type { ParseResult } from "./types"
+import { estimateTokens, truncateToBudget } from "./cli/budget"
+import { copyToClipboard } from "./cli/clipboard"
+import { parseFormat, renderJsonl, renderXml, type EnrichedResult, type OutputFormat } from "./cli/format"
+import { filterHistory, readHistory, recordHistory, sanitiseArgs, sanitiseUrl } from "./cli/history"
+import { computeQuality } from "./cli/quality"
 import { detectUrlType } from "./detect"
 import { isProbablyReaderable } from "./extract/readerable"
 import { parseHtml } from "./provider/web"
@@ -93,6 +98,14 @@ const parseOrderArg = (value: string): "newest" | "oldest" => {
   return value
 }
 
+const parseFormatArg = (value: string): OutputFormat => {
+  try {
+    return parseFormat(value)
+  } catch {
+    throw new InvalidArgumentError("must be one of md | json | jsonl | xml")
+  }
+}
+
 const program = new Command()
 
 program
@@ -101,7 +114,9 @@ program
   .version(__RDRR_VERSION__)
   .argument("<input>", "URL, local .html file, or - to read HTML from stdin")
   .option("-o, --output <file>", "save to file instead of stdout")
-  .option("-j, --json", "output full JSON with metadata")
+  .option("-c, --clip", "copy output to the system clipboard (suppresses stdout)")
+  .option("-j, --json", "output full JSON with metadata (alias for --format json)")
+  .option("--format <fmt>", "output format: md | json | jsonl | xml", parseFormatArg)
   .option("-p, --property <name>", "extract specific field (title, author, etc.)")
   .option("-l, --language <code>", "preferred language (BCP 47)")
   .option("-n, --limit <n>", "for aggregate URLs (e.g. x.com profiles): max items to fetch", parseLimitArg)
@@ -112,6 +127,9 @@ program
   .option("--user-agent <ua>", "override the outbound User-Agent header")
   .option("--github-token <token>", "GitHub API token (falls back to $GITHUB_TOKEN)")
   .option("--wpm <n>", "words-per-minute used for readTime estimation (default 200)", parseLimitArg)
+  .option("--budget <tokens>", "truncate output to fit a token budget", parseLimitArg)
+  .option("--quality", "include a quality/readability report (score 0-100) in JSON output")
+  .option("--no-history", "skip logging this call to ~/.local/state/rdrr/history.jsonl")
   .option("--allow-private-networks", "allow fetches against RFC1918/loopback/link-local (SSRF-unsafe)")
   .option("--debug", "print pipeline diagnostics to stderr")
   .action(
@@ -119,7 +137,9 @@ program
       input: string,
       opts: {
         output?: string
+        clip?: boolean
         json?: boolean
+        format?: OutputFormat
         property?: string
         language?: string
         limit?: number
@@ -130,6 +150,9 @@ program
         userAgent?: string
         githubToken?: string
         wpm?: number
+        budget?: number
+        quality?: boolean
+        history?: boolean
         allowPrivateNetworks?: boolean
         debug?: boolean
       },
@@ -163,16 +186,47 @@ program
           contentChars: result.content.length,
         })
 
-        const output = formatOutput(result, source, opts)
+        const budgeted: EnrichedResult = opts.budget ? applyBudget(result, opts.budget) : result
+        if (opts.budget) debug("budget", { budget: opts.budget, contentChars: budgeted.content.length })
+
+        const scored: EnrichedResult = opts.quality ? { ...budgeted, quality: computeQuality(budgeted) } : budgeted
+        if (scored.quality) debug("quality", scored.quality)
+
+        const output = formatOutput(scored, source, opts)
 
         if (opts.output) {
           writeFileSync(opts.output, output, "utf-8")
           process.stderr.write(`Saved to ${opts.output}\n`)
-        } else {
+        }
+        if (opts.clip) {
+          try {
+            const backend = await copyToClipboard(output)
+            process.stderr.write(`Copied ${output.length} chars to clipboard (${backend})\n`)
+          } catch (err) {
+            const message = err instanceof Error ? err.message : String(err)
+            process.stderr.write(`Clipboard copy failed: ${message}\n`)
+            process.exit(5)
+          }
+        }
+        if (!opts.output && !opts.clip) {
           process.stdout.write(output)
         }
 
-        debug("done", { ms: Date.now() - started })
+        const durationMs = Date.now() - started
+        if (resolved.kind === "url" && opts.history !== false) {
+          const cleanArgs = sanitiseArgs(process.argv.slice(2).filter((a) => a !== resolved.raw))
+          recordHistory({
+            ts: new Date().toISOString(),
+            url: sanitiseUrl(resolved.url!),
+            title: scored.title,
+            tokens: estimateTokens(output),
+            ...(scored.quality ? { quality: scored.quality.score } : {}),
+            durationMs,
+            args: cleanArgs,
+          })
+        }
+
+        debug("done", { ms: durationMs })
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
         process.stderr.write(`Error: ${message}\n`)
@@ -221,6 +275,14 @@ const runPipeline = async (
   return parseHtml(resolved.html!, { url: resolved.url, language: opts.language, wordsPerMinute: opts.wpm })
 }
 
+const applyBudget = (result: ParseResult, budget: number): EnrichedResult => {
+  const { content, info } = truncateToBudget(result.content, budget)
+  if (!info) return result
+  // Attach `truncated` as an extra field so JSON output carries it; frontmatter/
+  // markdown modes get the inline `[truncated ...]` marker that `content` already includes.
+  return { ...result, content, truncated: info }
+}
+
 const pickProperty = (result: ParseResult, property: string): unknown => {
   // `ParseResult` variants (YouTube, PDF, GitHub, XProfile) each add their own
   // fields. Route through a discriminated index instead of a blanket cast so
@@ -229,9 +291,11 @@ const pickProperty = (result: ParseResult, property: string): unknown => {
   return Object.hasOwn(record, property) ? record[property] : undefined
 }
 
-const formatOutput = (result: ParseResult, source: string, opts: { json?: boolean; property?: string }): string => {
-  if (opts.json) return JSON.stringify(result, null, 2)
-
+const formatOutput = (
+  result: EnrichedResult,
+  source: string,
+  opts: { json?: boolean; format?: OutputFormat; property?: string },
+): string => {
   if (opts.property) {
     const value = pickProperty(result, opts.property)
     if (value === undefined) {
@@ -241,7 +305,87 @@ const formatOutput = (result: ParseResult, source: string, opts: { json?: boolea
     return typeof value === "string" ? value : JSON.stringify(value, null, 2)
   }
 
-  return buildFrontmatter(result, source) + result.content
+  const format = resolveFormat(opts)
+  switch (format) {
+    case "json":
+      return JSON.stringify(result, null, 2)
+    case "jsonl":
+      return renderJsonl(result)
+    case "xml":
+      return renderXml(result, { source, fetchedAt: new Date().toISOString() })
+    case "md":
+    default:
+      return buildFrontmatter(result, source) + result.content
+  }
 }
+
+const resolveFormat = (opts: { json?: boolean; format?: OutputFormat }): OutputFormat => {
+  // `-j`/`--json` and `--format` together are ambiguous. Warn so scripted
+  // callers see the collision, then fall back to `--format` (explicit beats
+  // legacy) — keeps modern usage predictable without breaking `-j`-only
+  // scripts.
+  if (opts.json && opts.format && opts.format !== "json") {
+    process.stderr.write(
+      `Warning: both --json and --format ${opts.format} given; using --format ${opts.format}\n`,
+    )
+    return opts.format
+  }
+  if (opts.json) return "json"
+  return opts.format ?? "md"
+}
+
+// commander 14 leaks parent-defined flag names into subcommand action's opts
+// object (they're accessible via `optsWithGlobals()` only). We standardise on
+// `optsWithGlobals()` here so subcommand flags that collide with parent flags
+// (like `--json`) still work.
+interface CommandSelf {
+  optsWithGlobals: () => Record<string, unknown>
+}
+
+program
+  .command("history")
+  .description("list recent rdrr fetches")
+  .option("--json", "emit raw JSONL")
+  .option("--limit <n>", "max entries to show (default 20)", parseLimitArg)
+  .option("--search <q>", "substring match on title/url")
+  .option("--since <date>", "only entries at or after this ISO date")
+  .action(function (this: CommandSelf) {
+    const opts = this.optsWithGlobals() as { json?: boolean; limit?: number; search?: string; since?: string }
+    const since = opts.since ? new Date(opts.since) : undefined
+    if (since && Number.isNaN(since.getTime())) {
+      process.stderr.write(`Invalid --since date: ${opts.since}\n`)
+      process.exit(2)
+    }
+    const entries = filterHistory(readHistory(), { limit: opts.limit ?? 20, search: opts.search, since })
+    if (entries.length === 0) {
+      process.stderr.write("no history yet\n")
+      return
+    }
+    if (opts.json) {
+      for (const e of entries) process.stdout.write(JSON.stringify(e) + "\n")
+      return
+    }
+    for (const e of entries) {
+      const ts = e.ts.replace("T", " ").slice(0, 19)
+      const tokens = String(e.tokens).padStart(6)
+      process.stdout.write(`${ts}  ${tokens}t  ${e.title || "(untitled)"} — ${e.url}\n`)
+    }
+  })
+
+program
+  .command("last")
+  .description("print the most recent rdrr fetch")
+  .option("-j, --json", "full last-entry JSON")
+  .action(function (this: CommandSelf) {
+    const opts = this.optsWithGlobals() as { json?: boolean }
+    const entries = readHistory()
+    const latest = entries[entries.length - 1]
+    if (!latest) {
+      process.stderr.write("no history yet\n")
+      process.exit(1)
+    }
+    if (opts.json) process.stdout.write(JSON.stringify(latest, null, 2) + "\n")
+    else process.stdout.write(latest.url + "\n")
+  })
 
 program.parse()

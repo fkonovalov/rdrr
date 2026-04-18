@@ -48,6 +48,10 @@ const route = async (
       const { parseXProfile } = await import("./provider/x-profile")
       return parseXProfile(url, options)
     }
+    case "x-status": {
+      const { parseXStatus } = await import("./provider/x-status")
+      return parseXStatus(url, options)
+    }
     case "webpage": {
       const { parseWeb } = await import("./provider/web")
       return parseWeb(url, options)
