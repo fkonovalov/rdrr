@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { detectUrlType, extractVideoId, extractXHandle, isValidUrl, normalizeUrl } from "../detect"
+import { detectUrlType, extractVideoId, extractXHandle, extractXStatus, isValidUrl, normalizeUrl } from "../detect"
 
 describe("detectUrlType", () => {
   it("classifies youtube variants", () => {
@@ -31,12 +31,41 @@ describe("detectUrlType", () => {
   it("does not classify x reserved paths as profile", () => {
     expect(detectUrlType("https://x.com/home")).toBe("webpage")
     expect(detectUrlType("https://x.com/settings")).toBe("webpage")
-    expect(detectUrlType("https://x.com/i/status/123")).toBe("webpage")
+  })
+
+  it("classifies x/twitter status urls", () => {
+    expect(detectUrlType("https://x.com/someone/status/123")).toBe("x-status")
+    expect(detectUrlType("https://twitter.com/handle/status/9876")).toBe("x-status")
+    // Routed-by-id form with `i` placeholder for unknown author.
+    expect(detectUrlType("https://x.com/i/status/123")).toBe("x-status")
   })
 
   it("falls back to webpage for anything else", () => {
     expect(detectUrlType("https://example.com")).toBe("webpage")
     expect(detectUrlType("https://react.dev/learn")).toBe("webpage")
+  })
+})
+
+describe("extractXStatus", () => {
+  it("extracts handle + id", () => {
+    expect(extractXStatus("https://x.com/someone/status/123")).toEqual({ handle: "someone", id: "123" })
+    expect(extractXStatus("https://twitter.com/handle/status/987654321")).toEqual({
+      handle: "handle",
+      id: "987654321",
+    })
+  })
+
+  it("supports the /i/status/ canonical form", () => {
+    expect(extractXStatus("https://x.com/i/status/123")).toEqual({ handle: null, id: "123" })
+  })
+
+  it("returns null for non-status paths", () => {
+    expect(extractXStatus("https://x.com/someone")).toBeNull()
+    expect(extractXStatus("https://x.com/i/foo/123")).toBeNull()
+  })
+
+  it("returns null for non-x hosts", () => {
+    expect(extractXStatus("https://example.com/someone/status/1")).toBeNull()
   })
 })
 

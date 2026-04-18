@@ -25,19 +25,47 @@ const X_RESERVED_HANDLES = new Set([
 ])
 
 const X_PROFILE_HANDLE = /^\/([A-Za-z0-9_]{1,15})\/?$/
+const X_STATUS_BY_HANDLE = /^\/([A-Za-z0-9_]{1,15})\/status\/(\d+)\/?$/
+const X_STATUS_BY_ID = /^\/i\/status\/(\d+)\/?$/
 
 const GITHUB_ISSUE_PR = /github\.com\/[^/]+\/[^/]+\/(issues|pull)\/\d+/
 const GITHUB_FILE = /github\.com\/[^/]+\/[^/]+\/blob\/.+/
-export type UrlType = "youtube" | "github-issue" | "github-file" | "pdf" | "x-profile" | "webpage"
+export type UrlType = "youtube" | "github-issue" | "github-file" | "pdf" | "x-profile" | "x-status" | "webpage"
 
 export const detectUrlType = (url: string): UrlType => {
   if (isYouTube(url)) return "youtube"
   if (GITHUB_ISSUE_PR.test(url)) return "github-issue"
   if (GITHUB_FILE.test(url)) return "github-file"
   if (isPdf(url)) return "pdf"
+  if (isXStatus(url)) return "x-status"
   if (isXProfile(url)) return "x-profile"
   return "webpage"
 }
+
+interface XStatusRef {
+  handle: string | null
+  id: string
+}
+
+export const extractXStatus = (url: string): XStatusRef | null => {
+  try {
+    const u = new URL(url)
+    if (!X_HOSTS.has(u.hostname)) return null
+
+    const byId = u.pathname.match(X_STATUS_BY_ID)
+    if (byId?.[1]) return { handle: null, id: byId[1] }
+
+    const byHandle = u.pathname.match(X_STATUS_BY_HANDLE)
+    if (!byHandle?.[2]) return null
+    const handle = byHandle[1] ?? ""
+    if (X_RESERVED_HANDLES.has(handle.toLowerCase())) return null
+    return { handle, id: byHandle[2] }
+  } catch {
+    return null
+  }
+}
+
+const isXStatus = (url: string): boolean => extractXStatus(url) !== null
 
 export const extractXHandle = (url: string): string | null => {
   try {
