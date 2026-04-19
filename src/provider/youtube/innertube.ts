@@ -9,13 +9,42 @@ const WEB_CONTEXT = { client: { clientName: "WEB", clientVersion: "2.20240101.00
 const ANDROID_UA = `com.google.android.youtube/${INNERTUBE_VERSION} (Linux; U; Android 14)`
 
 export const fetchMetadata = async (videoId: string): Promise<VideoMetadata> => {
-  const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
-  if (!res.ok) throw new Error(`Video not found (${res.status})`)
-  const data = (await res.json()) as { title: string; author_name: string; thumbnail_url: string }
+  const oembed = await fetchOembedMetadata(videoId)
+  if (oembed) return oembed
+  const player = await fetchPlayerMetadata(videoId)
+  if (player) return player
+  throw new Error("Video not found")
+}
+
+const fetchOembedMetadata = async (videoId: string): Promise<VideoMetadata | undefined> => {
+  try {
+    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+    if (!res.ok) return undefined
+    const data = (await res.json()) as { title?: string; author_name?: string; thumbnail_url?: string }
+    return {
+      title: data.title ?? "",
+      author: data.author_name ?? "",
+      thumbnailUrl: data.thumbnail_url ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    }
+  } catch {
+    return undefined
+  }
+}
+
+const fetchPlayerMetadata = async (videoId: string): Promise<VideoMetadata | undefined> => {
+  const data = await tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA)
+  if (!data) return undefined
+  const details = asRecord(asRecord(data).videoDetails)
+  const title = asString(details.title)
+  if (!title) return undefined
+  const thumbs = asArray(asRecord(details.thumbnail).thumbnails)
+  const bestThumb = thumbs
+    .map(asRecord)
+    .reduce<string | undefined>((best, t) => asString(t.url) ?? best, undefined)
   return {
-    title: data.title ?? "",
-    author: data.author_name ?? "",
-    thumbnailUrl: data.thumbnail_url ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+    title,
+    author: asString(details.author) ?? "",
+    thumbnailUrl: bestThumb ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
   }
 }
 

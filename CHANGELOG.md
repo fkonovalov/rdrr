@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.4.1] - 2026-04-19
+
+### Fixed
+
+- **YouTube metadata for embed-restricted videos.** oembed endpoint returns 401 for some videos (age-gated, embedding disabled). Added fallback to the innertube Android player endpoint, which still returns title, author, and thumbnails.
+
 ## [0.4.0] — 2026-04-18
 
 The "make rdrr a first-class tool for AI agents" release.
