@@ -1,7 +1,6 @@
 # rdrr
 
 [![npm version](https://img.shields.io/npm/v/rdrr.svg)](https://www.npmjs.com/package/rdrr)
-[![CI](https://github.com/fkonovalov/rdrr/actions/workflows/ci.yml/badge.svg)](https://github.com/fkonovalov/rdrr/actions/workflows/ci.yml)
 [![license](https://img.shields.io/npm/l/rdrr.svg)](./LICENSE)
 [![min](https://badgen.net/bundlephobia/minzip/rdrr)](https://bundlephobia.com/package/rdrr)
 
@@ -14,7 +13,7 @@ npx rdrr https://react.dev/learn
 ## Features
 
 - **Fast**: no headless browser, lightweight
-- **Smart**: 20+ site-specific extractors (Wiki, Reddit, X, Hacker News, GitHub, ChatGPT, Claude, Substack, ...)
+- **Smart**: 20+ site-specific extractors (Wiki, Reddit, X, MDN, Claude, Substack ...)
 - **LLM-ready**: strips ads, navigation, footers; keeps code blocks, tables, math
 - **Versatile**: webpages, GitHub issues/PRs, PDFs, X profiles, YouTube transcripts
 

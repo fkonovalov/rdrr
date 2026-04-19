@@ -11,7 +11,7 @@ word_count: 188
 
 # X
 
-**@X** · 60.8M followers
+**@X** · 60.9M followers
 
 > what's happening?!
 
