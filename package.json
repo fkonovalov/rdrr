@@ -91,7 +91,7 @@
     "vitest": "4.1.4"
   },
   "optionalDependencies": {
-    "unpdf": "1.6.0"
+    "unpdf": "1.6.2"
   },
   "engines": {
     "node": ">=20.17.0"
