@@ -2,11 +2,11 @@
 title: "X (@X) — last 10"
 author: "@X"
 site: "X (Twitter)"
-published: "2026-04-12"
+published: "2026-05-10"
 source: "https://x.com/X"
 domain: "x.com"
 description: "what's happening?!"
-word_count: 188
+word_count: 166
 ---
 
 # X
@@ -16,6 +16,50 @@ word_count: 188
 > what's happening?!
 
 _Last 10 posts_
+
+---
+
+## [2026-05-10 15:03 UTC](https://x.com/X/status/2053491018897445128)
+
+tell your mom i said happy mother's day
+
+---
+
+## [2026-04-24 18:46 UTC](https://x.com/X/status/2047748955669135863)
+
+↪ Reply to @X:
+
+download for iOS: [apple.co/4sVp8bF](https://apple.co/4sVp8bF)
+
+---
+
+## [2026-04-24 18:46 UTC](https://x.com/X/status/2047748954071195814)
+
+i just upgraded your home screen
+
+the XChat app is now available on iOS
+
+https://t.co/YD93djN8Zx
+
+[video](https://video.twimg.com/amplify_video/2047746842713313280/vid/avc1/1920x1080/S7xMCnwFuMvSpuz-.mp4?tag=21)
+
+---
+
+## [2026-04-22 19:06 UTC](https://x.com/X/status/2047029292240937331)
+
+control the plot
+
+Custom Timelines have landed 
+
+https://t.co/sAgsBXqjnL
+
+[video](https://video.twimg.com/amplify_video/2046725405198131200/vid/avc1/1920x1080/5pra-1Q7vJB1YOSp.mp4?tag=21)
+
+---
+
+## [2026-04-20 20:20 UTC](https://x.com/X/status/2046323018092380564)
+
+hehehe
 
 ---
 
@@ -55,48 +99,3 @@ have you said thank you to Grok yet?
 voice mode now live on X for Android and web
 
 [video](https://video.twimg.com/amplify_video/2034676250707443712/vid/avc1/1920x1080/KLIICTiFaTBa8P0U.mp4?tag=21)
-
----
-
-## [2026-03-17 13:30 UTC](https://x.com/X/status/2033898779632349327)
-
-tomorrow is a brand new day
-
----
-
-## [2026-03-06 18:23 UTC](https://x.com/X/status/2029986216842613078)
-
-your bookmarked Articles yearn to be read
-
-let Grok read them to you
-
-[video](https://video.twimg.com/amplify_video/2029985156182745088/vid/avc1/1080x1080/sj5MHuRSdW_kYMy3.mp4?tag=21)
-
----
-
-## [2026-03-06 18:23 UTC](https://x.com/X/status/2029986218998485252)
-
-↪ Reply to @X:
-
-live now on trending Articles in English on iOS 👇
-[x.com/WillManidis/st…](https://x.com/WillManidis/status/2023866928608002183)
-
-> **Quoting [@WillManidis](https://x.com/WillManidis/status/2023866928608002183)**
->
-> https://t.co/bbApQIwYr5
-
----
-
-## [2026-03-01 04:09 UTC](https://x.com/nikitabier/status/2027959264099090669)
-
-🔁 Reposted @nikitabier:
-
-Today was the biggest day on 𝕏 in history
-
----
-
-## [2026-02-22 09:22 UTC](https://x.com/X/status/2025501372066693383)
-
-how it feels when your banger hits 10k likes https://t.co/0a2RV69hjD
-
-[video](https://video.twimg.com/amplify_video/2025311592376569856/vid/avc1/2510x1482/uYGT5Fx3p8NOOtkf.mp4?tag=21)

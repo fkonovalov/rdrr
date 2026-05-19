@@ -1,6 +1,6 @@
 import type { FxAuthor, FxStatus, NormalizedFacet, NormalizedMedia, NormalizedQuote } from "../_twitter/types"
 
-export type { FxAuthor, FxStatus, NormalizedFacet, NormalizedMedia, NormalizedQuote }
+export type { FxAuthor, FxStatus, NormalizedFacet, NormalizedQuote }
 
 // Profile-API responses (not the single-status ones).
 export interface FxStatusesResponse {

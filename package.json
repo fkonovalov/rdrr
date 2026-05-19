@@ -78,17 +78,17 @@
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "@types/node": "22.15.3",
-    "@vitest/coverage-v8": "4.1.4",
+    "@types/node": "25.9.0",
+    "@vitest/coverage-v8": "4.1.6",
     "commander": "14.0.3",
-    "knip": "6.4.1",
+    "knip": "6.14.1",
     "linkedom": "0.18.12",
-    "oxfmt": "0.45.0",
-    "oxlint": "1.60.0",
-    "tsdown": "0.21.9",
+    "oxfmt": "0.50.0",
+    "oxlint": "1.65.0",
+    "tsdown": "0.22.0",
     "turndown": "7.2.4",
-    "typescript": "6.0.2",
-    "vitest": "4.1.4"
+    "typescript": "6.0.3",
+    "vitest": "4.1.6"
   },
   "optionalDependencies": {
     "unpdf": "1.6.2"
