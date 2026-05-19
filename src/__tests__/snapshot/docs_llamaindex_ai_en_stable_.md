@@ -1,6 +1,6 @@
 ---
 title: "Welcome to LlamaIndex 🦙 !"
-site: "LlamaIndex OSS Documentation"
+site: "Developer Documentation"
 source: "https://docs.llamaindex.ai/en/stable/"
 domain: "developers.llamaindex.ai"
 language: "en"

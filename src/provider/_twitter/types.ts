@@ -42,7 +42,7 @@ export interface FxRawText {
   facets?: FxFacet[]
 }
 
-export interface FxMediaItem {
+interface FxMediaItem {
   type: "photo" | "video" | "gif" | string
   url: string
   thumbnail_url?: string
