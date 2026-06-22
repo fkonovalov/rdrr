@@ -79,16 +79,16 @@
   },
   "devDependencies": {
     "@types/node": "25.9.0",
-    "@vitest/coverage-v8": "4.1.6",
+    "@vitest/coverage-v8": "4.1.9",
     "commander": "14.0.3",
-    "knip": "6.14.1",
+    "knip": "6.17.1",
     "linkedom": "0.18.12",
-    "oxfmt": "0.50.0",
-    "oxlint": "1.65.0",
-    "tsdown": "0.22.0",
+    "oxfmt": "0.55.0",
+    "oxlint": "1.70.0",
+    "tsdown": "0.22.3",
     "turndown": "7.2.4",
     "typescript": "6.0.3",
-    "vitest": "4.1.6"
+    "vitest": "4.1.9"
   },
   "optionalDependencies": {
     "unpdf": "1.6.2"
