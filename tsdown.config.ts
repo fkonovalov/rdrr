@@ -5,12 +5,12 @@ import { defineConfig } from "tsdown"
 const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf-8")) as { version: string }
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/cli.ts", "src/extract/index.ts"],
+  entry: ["src/index.ts", "src/cli.ts", "src/mcp.ts", "src/extract/index.ts"],
   target: "es2022",
   format: ["esm"],
   platform: "node",
   minify: true,
-  sourcemap: true,
+  sourcemap: false,
   hash: false,
   dts: true,
   clean: true,
@@ -21,7 +21,7 @@ export default defineConfig({
     "@mixmark-io/domino": fileURLToPath(new URL("./src/domino-shim.ts", import.meta.url)),
   },
   deps: {
-    alwaysBundle: ["turndown", "linkedom", "commander"],
+    alwaysBundle: ["turndown", "linkedom", "commander", "@modelcontextprotocol/sdk", "zod"],
     onlyBundle: false,
   },
 })

@@ -30,13 +30,23 @@ const X_STATUS_BY_ID = /^\/i\/status\/(\d+)\/?$/
 
 const GITHUB_ISSUE_PR = /github\.com\/[^/]+\/[^/]+\/(issues|pull)\/\d+/
 const GITHUB_FILE = /github\.com\/[^/]+\/[^/]+\/blob\/.+/
-export type UrlType = "youtube" | "github-issue" | "github-file" | "pdf" | "x-profile" | "x-status" | "webpage"
+const GITHUB_DISCUSSION = /github\.com\/[^/]+\/[^/]+\/discussions\/\d+/
+export type UrlType =
+  | "youtube"
+  | "github-issue"
+  | "github-discussion"
+  | "github-file"
+  | "stackoverflow"
+  | "x-profile"
+  | "x-status"
+  | "webpage"
 
 export const detectUrlType = (url: string): UrlType => {
   if (isYouTube(url)) return "youtube"
   if (GITHUB_ISSUE_PR.test(url)) return "github-issue"
+  if (GITHUB_DISCUSSION.test(url)) return "github-discussion"
   if (GITHUB_FILE.test(url)) return "github-file"
-  if (isPdf(url)) return "pdf"
+  if (isStackOverflowQuestion(url)) return "stackoverflow"
   if (isXStatus(url)) return "x-status"
   if (isXProfile(url)) return "x-profile"
   return "webpage"
@@ -91,13 +101,30 @@ const isYouTube = (url: string): boolean => {
   }
 }
 
-const isPdf = (url: string): boolean => {
+const SO_HOSTS = new Set(["stackoverflow.com", "www.stackoverflow.com"])
+const SO_QUESTION = /^\/(?:questions|q)\/(\d+)/
+const SO_ANSWER = /^\/a\/(\d+)/
+
+export interface StackOverflowRef {
+  kind: "question" | "answer"
+  id: string
+}
+
+export const extractStackOverflowRef = (url: string): StackOverflowRef | null => {
   try {
-    return new URL(url).pathname.toLowerCase().endsWith(".pdf")
+    const u = new URL(url)
+    if (!SO_HOSTS.has(u.hostname)) return null
+    const question = u.pathname.match(SO_QUESTION)?.[1]
+    if (question) return { kind: "question", id: question }
+    const answer = u.pathname.match(SO_ANSWER)?.[1]
+    if (answer) return { kind: "answer", id: answer }
+    return null
   } catch {
-    return false
+    return null
   }
 }
+
+const isStackOverflowQuestion = (url: string): boolean => extractStackOverflowRef(url) !== null
 
 export const isValidUrl = (url: string): boolean => {
   try {

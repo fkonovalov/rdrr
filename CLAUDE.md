@@ -6,7 +6,7 @@ This file provides context for AI assistants working in this repository.
 
 `rdrr` is a TypeScript library and CLI that converts any URL into clean markdown. 10x fewer tokens for AI agents.
 
-Supports: webpages, YouTube transcripts, GitHub issues/PRs/files, PDFs, llms.txt.
+Supports: webpages, YouTube transcripts, GitHub issues/PRs/discussions/files, Stack Overflow, X/Twitter, llms.txt.
 
 - npm: `rdrr`
 - Homepage: https://rdrr.app

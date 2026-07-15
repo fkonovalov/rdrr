@@ -82,7 +82,11 @@ export const truncateToBudget = (content: string, budget: number): TruncateResul
   }
 }
 
-const splitParagraphs = (content: string): string[] => content.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean)
+const splitParagraphs = (content: string): string[] =>
+  content
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 
 const countFenceToggles = (para: string): number => {
   // Count only fence markers that sit at the start of a line; inline triple

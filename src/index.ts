@@ -2,11 +2,13 @@ export { parse } from "./rdrr"
 export { parseHtml, parseWeb, type ParseHtmlOptions } from "./provider/web"
 export { parseYouTube } from "./provider/youtube"
 export { parseGitHub } from "./provider/github"
-export { parsePdf } from "./provider/pdf"
+export { parseStackOverflow } from "./provider/stackoverflow"
 export { parseXProfile } from "./provider/x-profile"
 export { isProbablyReaderable } from "./extract/readerable"
 export type { ReaderableOptions } from "./extract/readerable"
 export { detectUrlType, extractVideoId, normalizeUrl } from "./detect"
+export { estimateTokens, truncateToBudget } from "./cli/budget"
+export { computeQuality, type QualityReport, type QualitySignals } from "./cli/quality"
 export type { UrlType } from "./detect"
 export { PrivateNetworkError } from "./security/ssrf"
 export type {
@@ -17,6 +19,6 @@ export type {
   YouTubeResult,
   WebpageResult,
   GitHubResult,
-  PdfResult,
+  StackOverflowResult,
   XProfileResult,
 } from "./types"

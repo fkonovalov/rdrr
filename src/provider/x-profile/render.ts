@@ -1,5 +1,5 @@
-import { escapeMarkdown, formatDate, safeUrl, sanitizeInline } from "../_twitter/render-utils"
 import type { NormalizedFacet, NormalizedQuote, NormalizedTweet, ProfileInfo } from "./types"
+import { escapeMarkdown, formatDate, safeUrl, sanitizeInline } from "../_twitter/render-utils"
 
 interface RenderInput {
   profile: ProfileInfo | null

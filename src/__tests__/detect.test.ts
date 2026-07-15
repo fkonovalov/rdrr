@@ -18,9 +18,21 @@ describe("detectUrlType", () => {
     expect(detectUrlType("https://github.com/user/repo/blob/main/src/index.ts")).toBe("github-file")
   })
 
-  it("classifies pdfs by pathname", () => {
-    expect(detectUrlType("https://example.com/report.pdf")).toBe("pdf")
-    expect(detectUrlType("https://example.com/REPORT.PDF")).toBe("pdf")
+  it("classifies github discussions", () => {
+    expect(detectUrlType("https://github.com/user/repo/discussions/19")).toBe("github-discussion")
+    expect(detectUrlType("https://github.com/user/repo/discussions")).toBe("webpage")
+  })
+
+  it("classifies stackoverflow questions and answers", () => {
+    expect(detectUrlType("https://stackoverflow.com/questions/11227809/why-is-processing")).toBe("stackoverflow")
+    expect(detectUrlType("https://stackoverflow.com/q/11227809")).toBe("stackoverflow")
+    expect(detectUrlType("https://stackoverflow.com/a/1732454")).toBe("stackoverflow")
+    expect(detectUrlType("https://stackoverflow.com/users/22656/jon-skeet")).toBe("webpage")
+    expect(detectUrlType("https://stackoverflow.com")).toBe("webpage")
+  })
+
+  it("classifies pdf urls as webpage (pdf support removed)", () => {
+    expect(detectUrlType("https://example.com/report.pdf")).toBe("webpage")
   })
 
   it("classifies x/twitter profile urls", () => {

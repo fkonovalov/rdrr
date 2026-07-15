@@ -38,9 +38,7 @@ const fetchPlayerMetadata = async (videoId: string): Promise<VideoMetadata | und
   const title = asString(details.title)
   if (!title) return undefined
   const thumbs = asArray(asRecord(details.thumbnail).thumbnails)
-  const bestThumb = thumbs
-    .map(asRecord)
-    .reduce<string | undefined>((best, t) => asString(t.url) ?? best, undefined)
+  const bestThumb = thumbs.map(asRecord).reduce<string | undefined>((best, t) => asString(t.url) ?? best, undefined)
   return {
     title,
     author: asString(details.author) ?? "",
@@ -114,10 +112,7 @@ const parseTimestamp = (timeStr: string): number => {
 const fetchPlayerData = async (videoId: string): Promise<unknown | undefined> => {
   // Race both client contexts in parallel. Android almost always wins and carries
   // captions; WEB is a safety net when YouTube rate-limits the Android client.
-  const attempts = [
-    tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA),
-    tryFetchPlayerData(videoId, WEB_CONTEXT),
-  ]
+  const attempts = [tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA), tryFetchPlayerData(videoId, WEB_CONTEXT)]
   const results = await Promise.all(attempts)
   for (const data of results) {
     if (data && getCaptionTracks(data).length > 0) return data

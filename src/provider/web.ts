@@ -1,6 +1,6 @@
 import { countWords, estimateReadTime, mergeSignals, safeDomain } from "@shared"
 import "../extract/sites/init"
-import type { ParseOptions, PdfResult, WebpageResult } from "../types"
+import type { ParseOptions, WebpageResult } from "../types"
 import { extractAsync } from "../extract/engine"
 import { toMarkdown } from "../extract/markdown"
 import { parseLinkedomHTML } from "../extract/utils/parse-html"
@@ -67,21 +67,22 @@ export const parseHtml = async (html: string, options?: ParseHtmlOptions): Promi
   }
 }
 
-export const parseWeb = async (url: string, options?: ParseOptions): Promise<WebpageResult | PdfResult> => {
+export const parseWeb = async (url: string, options?: ParseOptions): Promise<WebpageResult> => {
   const res = await fetchWithRedirects(url, options)
 
-  if (!res.ok) throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`)
+  if (!res.ok) throw new Error(fetchErrorMessage(res.status, res.statusText, url))
 
   const contentType = res.headers.get("content-type") ?? ""
+
+  // Check the pathname too: misconfigured servers ship .pdf files as
+  // text/plain, which would otherwise dump raw PDF binary into the output.
+  if (contentType.includes("application/pdf") || isPdfPath(url)) {
+    throw new Error("PDF parsing is not supported (removed in v0.5.0). Use a dedicated PDF tool for this URL.")
+  }
 
   if (isRawText(contentType, url)) {
     const text = await res.text()
     return rawTextResult(text, url, options?.wordsPerMinute)
-  }
-
-  if (contentType.includes("application/pdf")) {
-    const { parsePdf } = await import("./pdf")
-    return parsePdf(url, options)
   }
 
   if (!contentType.includes("text/html") && !contentType.includes("application/xhtml")) {
@@ -90,6 +91,29 @@ export const parseWeb = async (url: string, options?: ParseOptions): Promise<Web
 
   const html = await res.text()
   return parseHtml(html, { url, language: options?.language, wordsPerMinute: options?.wordsPerMinute })
+}
+
+const fetchErrorMessage = (status: number, statusText: string, url: string): string => {
+  const base = `Failed to fetch: ${status} ${statusText}`.trimEnd()
+  const domain = safeDomain(url)
+  if (status === 403 || status === 429) {
+    return `${base}. ${domain} blocks automated clients; rdrr cannot bypass this. Use a browser-based tool for this URL.`
+  }
+  if (status === 401) {
+    return `${base}. ${domain} requires authentication; rdrr only reads public pages.`
+  }
+  if (status >= 500) {
+    return `${base}. ${domain} returned a server error; retry later.`
+  }
+  return base
+}
+
+const isPdfPath = (url: string): boolean => {
+  try {
+    return new URL(url).pathname.toLowerCase().endsWith(".pdf")
+  } catch {
+    return false
+  }
 }
 
 const isRawText = (contentType: string, url: string): boolean =>
@@ -162,15 +186,28 @@ const tryFetch = async (url: string, userAgent: string, opts: FetchOpts): Promis
 
     if (!opts.allowPrivateNetworks) await assertPublicUrl(current)
 
-    const res = await fetch(current, {
-      headers: {
-        "User-Agent": userAgent,
-        "Accept": "text/html,application/xhtml+xml,*/*",
-        "Accept-Language": opts.language ?? "en-US,en;q=0.9",
-      },
-      signal: mergeSignals(opts.timeoutMs ?? DEFAULT_TIMEOUT_MS, opts.signal),
-      redirect: "manual",
-    })
+    const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS
+    let res: Response
+    try {
+      res = await fetch(current, {
+        headers: {
+          "User-Agent": userAgent,
+          "Accept": "text/html,application/xhtml+xml,*/*",
+          "Accept-Language": opts.language ?? "en-US,en;q=0.9",
+        },
+        signal: mergeSignals(timeoutMs, opts.signal),
+        redirect: "manual",
+      })
+    } catch (err) {
+      if (err instanceof Error && err.name === "TimeoutError") {
+        // Keep the TimeoutError name so programmatic consumers can branch on
+        // it; the CLI adds its --timeout hint at the presentation layer.
+        const timeout = new Error(`Timed out after ${timeoutMs}ms fetching ${safeDomain(current)}`)
+        timeout.name = "TimeoutError"
+        throw timeout
+      }
+      throw err
+    }
 
     if (res.status < 300 || res.status >= 400) return res
 
@@ -194,4 +231,3 @@ const tryFetch = async (url: string, userAgent: string, opts: FetchOpts): Promis
 
   return null
 }
-

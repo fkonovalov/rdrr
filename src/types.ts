@@ -26,7 +26,7 @@ export interface ParseOptions {
 }
 
 export interface ParseResult {
-  type: "youtube" | "webpage" | "github" | "pdf" | "x-profile" | "x-status"
+  type: "youtube" | "webpage" | "github" | "stackoverflow" | "x-profile" | "x-status"
   title: string
   author: string
   content: string
@@ -73,8 +73,11 @@ export interface GitHubResult extends ParseResult {
   type: "github"
 }
 
-export interface PdfResult extends ParseResult {
-  type: "pdf"
+export interface StackOverflowResult extends ParseResult {
+  type: "stackoverflow"
+  questionId: string
+  score: number
+  isAnswered: boolean
 }
 
 export interface XProfileResult extends ParseResult {

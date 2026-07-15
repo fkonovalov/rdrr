@@ -69,11 +69,9 @@ export const renderXml = (result: EnrichedResult, { source, fetchedAt }: XmlOpti
   return lines.join("\n") + "\n"
 }
 
-const escapeXml = (s: string): string =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+const escapeXml = (s: string): string => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
 
-const escapeAttr = (s: string): string =>
-  escapeXml(s).replace(/"/g, "&quot;").replace(/\n/g, " ")
+const escapeAttr = (s: string): string => escapeXml(s).replace(/"/g, "&quot;").replace(/\n/g, " ")
 
 // `]]>` would prematurely close the CDATA section; split it so the sequence
 // never appears literally inside the wrapper.

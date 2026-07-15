@@ -1,6 +1,6 @@
+import type { FetchOutcome } from "./types"
 import { fetchFromFxtwitter } from "./fetch-fxtwitter"
 import { fetchFromSyndication } from "./fetch-syndication"
-import type { FetchOutcome } from "./types"
 
 interface FetchStatusOptions {
   signal?: AbortSignal

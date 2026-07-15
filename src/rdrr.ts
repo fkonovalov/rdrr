@@ -36,13 +36,14 @@ const route = async (
       return parseYouTube(url, options)
     }
     case "github-issue":
+    case "github-discussion":
     case "github-file": {
       const { parseGitHub } = await import("./provider/github")
       return parseGitHub(url, options)
     }
-    case "pdf": {
-      const { parsePdf } = await import("./provider/pdf")
-      return parsePdf(url, options)
+    case "stackoverflow": {
+      const { parseStackOverflow } = await import("./provider/stackoverflow")
+      return parseStackOverflow(url, options)
     }
     case "x-profile": {
       const { parseXProfile } = await import("./provider/x-profile")
@@ -58,4 +59,3 @@ const route = async (
     }
   }
 }
-

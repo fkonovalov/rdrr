@@ -1,6 +1,6 @@
 {
   "name": "rdrr",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": false,
   "description": "Convert any URL to clean markdown for AI agents.",
   "keywords": [
@@ -17,6 +17,9 @@
     "youtube-transcript"
   ],
   "homepage": "https://rdrr.app",
+  "bugs": {
+    "url": "https://github.com/fkonovalov/rdrr/issues"
+  },
   "license": "MIT",
   "author": {
     "name": "Finn Paketborsha",
@@ -26,12 +29,9 @@
     "type": "git",
     "url": "git+https://github.com/fkonovalov/rdrr.git"
   },
-  "bugs": {
-    "url": "https://github.com/fkonovalov/rdrr/issues"
-  },
-  "packageManager": "pnpm@9.15.1",
   "bin": {
-    "rdrr": "./dist/cli.mjs"
+    "rdrr": "./dist/cli.mjs",
+    "rdrr-mcp": "./dist/mcp.mjs"
   },
   "files": [
     "dist",
@@ -78,6 +78,7 @@
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "1.29.0",
     "@types/node": "25.9.0",
     "@vitest/coverage-v8": "4.1.6",
     "commander": "14.0.3",
@@ -88,12 +89,11 @@
     "tsdown": "0.22.0",
     "turndown": "7.2.4",
     "typescript": "6.0.3",
-    "vitest": "4.1.6"
-  },
-  "optionalDependencies": {
-    "unpdf": "1.6.2"
+    "vitest": "4.1.6",
+    "zod": "4.4.3"
   },
   "engines": {
     "node": ">=20.17.0"
-  }
+  },
+  "packageManager": "pnpm@9.15.1"
 }

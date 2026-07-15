@@ -73,7 +73,10 @@ describe("renderXml", () => {
     expect(out).not.toContain("before ]]> after")
     // The body should still round-trip to the expected logical text.
     const match = out.match(/<content>(.*)<\/content>/s)
-    const cdataContent = match![1]!.replace(/]]]]><!\[CDATA\[>/g, "]]>").replace(/^<!\[CDATA\[/, "").replace(/]]>$/, "")
+    const cdataContent = match![1]!
+      .replace(/]]]]><!\[CDATA\[>/g, "]]>")
+      .replace(/^<!\[CDATA\[/, "")
+      .replace(/]]>$/, "")
     expect(cdataContent).toBe("before ]]> after")
   })
 })

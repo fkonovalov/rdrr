@@ -10,6 +10,8 @@ interface HistoryEntry {
   quality?: number
   durationMs: number
   args: string[]
+  /** Present when the call failed; holds the error message. */
+  error?: string
 }
 
 const MAX_ENTRIES = 1000
@@ -139,10 +141,13 @@ interface HistoryFilter {
   limit?: number
   search?: string
   since?: Date
+  /** Only entries that recorded an error. */
+  failures?: boolean
 }
 
 export const filterHistory = (entries: HistoryEntry[], filter: HistoryFilter = {}): HistoryEntry[] => {
   let out = entries
+  if (filter.failures) out = out.filter((e) => e.error !== undefined)
   if (filter.since) out = out.filter((e) => new Date(e.ts) >= filter.since!)
   if (filter.search) {
     const q = filter.search.toLowerCase()

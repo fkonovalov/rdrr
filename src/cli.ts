@@ -66,6 +66,9 @@ const buildFrontmatter = (result: ParseResult, source: string): string => {
     ["dir", result.dir],
     ["description", result.description],
     ["word_count", result.wordCount],
+    // Explicit signal for agents: a frontmatter-only document is a failed
+    // extraction, not a page with no content.
+    ["extraction", result.content.trim() === "" ? "empty" : undefined],
   ]
 
   const lines = fields
@@ -131,6 +134,7 @@ program
   .option("--quality", "include a quality/readability report (score 0-100) in JSON output")
   .option("--no-history", "skip logging this call to ~/.local/state/rdrr/history.jsonl")
   .option("--allow-private-networks", "allow fetches against RFC1918/loopback/link-local (SSRF-unsafe)")
+  .option("--strict", "exit with code 3 when no content could be extracted")
   .option("--debug", "print pipeline diagnostics to stderr")
   .action(
     async (
@@ -154,6 +158,7 @@ program
         quality?: boolean
         history?: boolean
         allowPrivateNetworks?: boolean
+        strict?: boolean
         debug?: boolean
       },
     ) => {
@@ -194,6 +199,15 @@ program
 
         const output = formatOutput(scored, source, opts)
 
+        const isEmptyExtraction = scored.content.trim() === ""
+        if (isEmptyExtraction) {
+          process.stderr.write(
+            `Warning: no content extracted from ${source}. ` +
+              "The page is likely JS-rendered (SPA) or behind a bot wall; rdrr does not execute JavaScript. " +
+              "Use a browser-based tool for this URL.\n",
+          )
+        }
+
         if (opts.output) {
           writeFileSync(opts.output, output, "utf-8")
           process.stderr.write(`Saved to ${opts.output}\n`)
@@ -223,13 +237,30 @@ program
             ...(scored.quality ? { quality: scored.quality.score } : {}),
             durationMs,
             args: cleanArgs,
+            // Empty extraction is the failure mode --failures is for, even
+            // though the process exits 0 without --strict.
+            ...(isEmptyExtraction ? { error: "empty extraction" } : {}),
           })
         }
 
         debug("done", { ms: durationMs })
+        if (isEmptyExtraction && opts.strict) process.exit(3)
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error)
-        process.stderr.write(`Error: ${message}\n`)
+        const hint =
+          error instanceof Error && error.name === "TimeoutError" ? " Increase --timeout to wait longer." : ""
+        process.stderr.write(`Error: ${message}${hint}\n`)
+        if (looksLikeUrl(input) && opts.history !== false && !opts.check) {
+          recordHistory({
+            ts: new Date().toISOString(),
+            url: sanitiseUrl(ensureProtocol(input)),
+            title: "",
+            tokens: 0,
+            durationMs: Date.now() - started,
+            args: sanitiseArgs(process.argv.slice(2).filter((a) => a !== input)),
+            error: message,
+          })
+        }
         process.exit(1)
       }
     },
@@ -284,7 +315,7 @@ const applyBudget = (result: ParseResult, budget: number): EnrichedResult => {
 }
 
 const pickProperty = (result: ParseResult, property: string): unknown => {
-  // `ParseResult` variants (YouTube, PDF, GitHub, XProfile) each add their own
+  // `ParseResult` variants (YouTube, GitHub, XProfile) each add their own
   // fields. Route through a discriminated index instead of a blanket cast so
   // future additions surface via the type system.
   const record: Record<string, unknown> = { ...result }
@@ -325,9 +356,7 @@ const resolveFormat = (opts: { json?: boolean; format?: OutputFormat }): OutputF
   // legacy) — keeps modern usage predictable without breaking `-j`-only
   // scripts.
   if (opts.json && opts.format && opts.format !== "json") {
-    process.stderr.write(
-      `Warning: both --json and --format ${opts.format} given; using --format ${opts.format}\n`,
-    )
+    process.stderr.write(`Warning: both --json and --format ${opts.format} given; using --format ${opts.format}\n`)
     return opts.format
   }
   if (opts.json) return "json"
@@ -349,14 +378,26 @@ program
   .option("--limit <n>", "max entries to show (default 20)", parseLimitArg)
   .option("--search <q>", "substring match on title/url")
   .option("--since <date>", "only entries at or after this ISO date")
+  .option("--failures", "only failed fetches (entries with an error)")
   .action(function (this: CommandSelf) {
-    const opts = this.optsWithGlobals() as { json?: boolean; limit?: number; search?: string; since?: string }
+    const opts = this.optsWithGlobals() as {
+      json?: boolean
+      limit?: number
+      search?: string
+      since?: string
+      failures?: boolean
+    }
     const since = opts.since ? new Date(opts.since) : undefined
     if (since && Number.isNaN(since.getTime())) {
       process.stderr.write(`Invalid --since date: ${opts.since}\n`)
       process.exit(2)
     }
-    const entries = filterHistory(readHistory(), { limit: opts.limit ?? 20, search: opts.search, since })
+    const entries = filterHistory(readHistory(), {
+      limit: opts.limit ?? 20,
+      search: opts.search,
+      since,
+      failures: opts.failures,
+    })
     if (entries.length === 0) {
       process.stderr.write("no history yet\n")
       return
@@ -368,7 +409,10 @@ program
     for (const e of entries) {
       const ts = e.ts.replace("T", " ").slice(0, 19)
       const tokens = String(e.tokens).padStart(6)
-      process.stdout.write(`${ts}  ${tokens}t  ${e.title || "(untitled)"} — ${e.url}\n`)
+      // Failure lines keep the exact column layout of success lines so
+      // scripts that parse the output by position keep working.
+      const label = e.error ? `[FAIL: ${e.error}]` : e.title || "(untitled)"
+      process.stdout.write(`${ts}  ${tokens}t  ${label} — ${e.url}\n`)
     }
   })
 

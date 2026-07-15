@@ -21,14 +21,18 @@ describe("isProbablyReaderable (document input)", () => {
   })
 
   it("ignores hidden paragraphs", async () => {
-    const prose = "Enough body text to clear the 140 character minimum length threshold set by the heuristic. ".repeat(3)
+    const prose = "Enough body text to clear the 140 character minimum length threshold set by the heuristic. ".repeat(
+      3,
+    )
     const html = `<html><body><p style="display:none">${prose}</p></body></html>`
     const doc = parseLinkedomHTML(html, "https://example.com")
     expect(await isProbablyReaderable(doc)).toBe(false)
   })
 
   it("ignores paragraphs nested in <li>", async () => {
-    const prose = "Enough body text to clear the 140 character minimum length threshold set by the heuristic. ".repeat(3)
+    const prose = "Enough body text to clear the 140 character minimum length threshold set by the heuristic. ".repeat(
+      3,
+    )
     const html = `<html><body><ul><li><p>${prose}</p></li></ul></body></html>`
     const doc = parseLinkedomHTML(html, "https://example.com")
     expect(await isProbablyReaderable(doc)).toBe(false)
@@ -53,7 +57,10 @@ describe("isProbablyReaderable (url input)", () => {
   })
 
   it("throws on fetch failure", async () => {
-    vi.stubGlobal("fetch", vi.fn(async () => new Response("", { status: 500 })))
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("", { status: 500 })),
+    )
     await expect(isProbablyReaderable("https://public.example/")).rejects.toThrow(/Failed to fetch/)
   })
 })

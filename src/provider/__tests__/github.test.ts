@@ -46,7 +46,12 @@ describe("parseGitHub issue/PR", () => {
       "/issues/42/comments": () =>
         new Response(
           JSON.stringify([
-            { user: { login: "bob" }, created_at: "2025-01-16T09:00:00Z", body: "Thanks!", author_association: "MEMBER" },
+            {
+              user: { login: "bob" },
+              created_at: "2025-01-16T09:00:00Z",
+              body: "Thanks!",
+              author_association: "MEMBER",
+            },
           ]),
           { status: 200, headers: { "content-type": "application/json" } },
         ),
@@ -66,7 +71,7 @@ describe("parseGitHub issue/PR", () => {
     expect(result.domain).toBe("github.com")
   })
 
-  it("follows Link: rel=\"next\" for paginated comments", async () => {
+  it('follows Link: rel="next" for paginated comments', async () => {
     const firstPageLink = '<https://api.github.com/repos/acme/widget/issues/7/comments?page=2>; rel="next"'
     const responders = {
       "/issues/7": () =>
@@ -81,12 +86,16 @@ describe("parseGitHub issue/PR", () => {
         }),
       "/comments?per_page=100": () =>
         new Response(
-          JSON.stringify([{ user: { login: "u1" }, created_at: "2025-01-02T00:00:00Z", body: "a", author_association: "NONE" }]),
-          { status: 200, headers: { "content-type": "application/json", link: firstPageLink } },
+          JSON.stringify([
+            { user: { login: "u1" }, created_at: "2025-01-02T00:00:00Z", body: "a", author_association: "NONE" },
+          ]),
+          { status: 200, headers: { "content-type": "application/json", "link": firstPageLink } },
         ),
       "/comments?page=2": () =>
         new Response(
-          JSON.stringify([{ user: { login: "u2" }, created_at: "2025-01-03T00:00:00Z", body: "b", author_association: "NONE" }]),
+          JSON.stringify([
+            { user: { login: "u2" }, created_at: "2025-01-03T00:00:00Z", body: "b", author_association: "NONE" },
+          ]),
           { status: 200, headers: { "content-type": "application/json" } },
         ),
     }
@@ -107,18 +116,29 @@ describe("parseGitHub issue/PR", () => {
     await expect(parseGitHub("https://github.com/acme/widget/issues/99")).rejects.toThrow(/not found/i)
   })
 
-  it("throws rate-limit error on 403", async () => {
+  it("throws rate-limit error on 403 with exhausted quota", async () => {
+    makeFetch({
+      "/issues/1": () =>
+        new Response("", {
+          status: 403,
+          headers: { "x-ratelimit-remaining": "0", "x-ratelimit-reset": "1750000000" },
+        }),
+      "/comments": () => new Response("[]", { status: 200, headers: { "content-type": "application/json" } }),
+    })
+    await expect(parseGitHub("https://github.com/acme/widget/issues/1")).rejects.toThrow(/rate limit.*GITHUB_TOKEN/is)
+  })
+
+  it("throws forbidden error on 403 without exhausted quota", async () => {
     makeFetch({
       "/issues/1": () => new Response("", { status: 403 }),
       "/comments": () => new Response("[]", { status: 200, headers: { "content-type": "application/json" } }),
     })
-    await expect(parseGitHub("https://github.com/acme/widget/issues/1")).rejects.toThrow(/rate limit/i)
+    await expect(parseGitHub("https://github.com/acme/widget/issues/1")).rejects.toThrow(/private repository/i)
   })
 
   it("uses override github token over env", async () => {
     const { calls } = makeFetch({
-      "/issues/1/comments": () =>
-        new Response("[]", { status: 200, headers: { "content-type": "application/json" } }),
+      "/issues/1/comments": () => new Response("[]", { status: 200, headers: { "content-type": "application/json" } }),
       "/issues/1": () =>
         jsonResponse({
           title: "t",
@@ -132,7 +152,9 @@ describe("parseGitHub issue/PR", () => {
     })
 
     await parseGitHub("https://github.com/acme/widget/issues/1", { githubToken: "ghp_abc123" })
-    const authorized = calls.find((c) => (c.init?.headers as Record<string, string>)?.Authorization?.includes("ghp_abc123"))
+    const authorized = calls.find((c) =>
+      (c.init?.headers as Record<string, string>)?.Authorization?.includes("ghp_abc123"),
+    )
     expect(authorized).toBeDefined()
   })
 })
@@ -186,8 +208,102 @@ describe("parseGitHub file", () => {
   })
 })
 
+describe("parseGitHub discussions", () => {
+  it("renders discussion title, body, category, and comments", async () => {
+    makeFetch({
+      "/discussions/12/comments": () =>
+        jsonResponse([{ user: { login: "carol" }, created_at: "2025-03-02T08:00:00Z", body: "Same here." }]),
+      "/discussions/12": () =>
+        jsonResponse({
+          title: "Roadmap ideas",
+          number: 12,
+          state: "open",
+          user: { login: "dave" },
+          created_at: "2025-03-01T10:00:00Z",
+          body: "What should we build next?",
+          category: { name: "Ideas" },
+        }),
+    })
+
+    const result = await parseGitHub("https://github.com/acme/widget/discussions/12")
+    expect(result.type).toBe("github")
+    expect(result.title).toBe("Roadmap ideas #12")
+    expect(result.content).toContain("**Discussion** by **dave**")
+    expect(result.content).toContain("**Category:** Ideas")
+    expect(result.content).toContain("What should we build next?")
+    expect(result.content).toContain("carol")
+  })
+})
+
+describe("comment pagination truncation", () => {
+  it("marks comments as truncated when a page fails to load", async () => {
+    makeFetch({
+      "per_page=100": () =>
+        new Response(
+          JSON.stringify([
+            { user: { login: "u1" }, created_at: "2025-01-01T00:00:00Z", body: "First", author_association: "NONE" },
+          ]),
+          {
+            status: 200,
+            headers: {
+              "content-type": "application/json",
+              "link": '<https://api.github.com/repos/acme/widget/issues/8/comments?page=2>; rel="next"',
+            },
+          },
+        ),
+      "comments?page=2": () => new Response("", { status: 500 }),
+      "/issues/8": () =>
+        jsonResponse({
+          title: "Big thread",
+          number: 8,
+          state: "open",
+          user: { login: "alice" },
+          created_at: "2025-01-01T00:00:00Z",
+          body: "Body",
+          labels: [],
+        }),
+    })
+
+    const result = await parseGitHub("https://github.com/acme/widget/issues/8")
+    expect(result.content).toContain("truncated")
+    expect(result.content).toContain("comments could not be fetched completely")
+  })
+
+  it("still notes truncation when the very first comments page fails", async () => {
+    makeFetch({
+      "/issues/9/comments": () => new Response("", { status: 403 }),
+      "/issues/9": () =>
+        jsonResponse({
+          title: "Hot thread",
+          number: 9,
+          state: "open",
+          user: { login: "alice" },
+          created_at: "2025-01-01T00:00:00Z",
+          body: "Body",
+          labels: [],
+        }),
+    })
+
+    const result = await parseGitHub("https://github.com/acme/widget/issues/9")
+    expect(result.content).toContain("Comments (0+, truncated)")
+    expect(result.content).toContain("comments could not be fetched completely")
+  })
+
+  it("reports 429 as a secondary rate limit, not a private repository", async () => {
+    makeFetch({
+      "/issues/1/comments": () => jsonResponse([]),
+      "/issues/1": () => new Response("", { status: 429, headers: { "retry-after": "60" } }),
+    })
+    await expect(parseGitHub("https://github.com/acme/widget/issues/1")).rejects.toThrow(
+      /secondary rate limit.*after 60s/is,
+    )
+  })
+})
+
 describe("parseGitHub routing", () => {
   it("throws for unsupported github paths", async () => {
-    await expect(parseGitHub("https://github.com/acme/widget")).rejects.toThrow(/Not a GitHub issue\/PR\/file/)
+    await expect(parseGitHub("https://github.com/acme/widget")).rejects.toThrow(
+      /Not a GitHub issue\/PR\/discussion\/file/,
+    )
   })
 })
