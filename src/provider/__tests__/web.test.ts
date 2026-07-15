@@ -76,9 +76,7 @@ describe("parseWeb", () => {
   })
 
   it("rejects unsupported content types", async () => {
-    stubFetch(
-      () => new Response("zzz", { status: 200, headers: { "content-type": "audio/mpeg" } }),
-    )
+    stubFetch(() => new Response("zzz", { status: 200, headers: { "content-type": "audio/mpeg" } }))
     await expect(parseWeb("https://public.example/audio.mp3")).rejects.toThrow(/Unsupported content type/)
   })
 
@@ -92,9 +90,7 @@ describe("parseWeb", () => {
   })
 
   it("allows private networks when opted in", async () => {
-    stubFetch(() =>
-      htmlResponse("<html><body><article><h1>Local</h1><p>Body.</p></article></body></html>"),
-    )
+    stubFetch(() => htmlResponse("<html><body><article><h1>Local</h1><p>Body.</p></article></body></html>"))
     const result = await parseWeb("http://127.0.0.1/", { allowPrivateNetworks: true })
     expect(result.type).toBe("webpage")
   })
@@ -104,7 +100,8 @@ describe("parseWeb", () => {
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => {
-        if (step++ === 0) return new Response("", { status: 301, headers: { location: "http://public.example/downgraded" } })
+        if (step++ === 0)
+          return new Response("", { status: 301, headers: { location: "http://public.example/downgraded" } })
         return htmlResponse("<html><body><p>should never reach</p></body></html>")
       }),
     )
@@ -114,5 +111,27 @@ describe("parseWeb", () => {
   it("throws descriptive error on 3xx without Location", async () => {
     stubFetch(() => new Response("", { status: 302 }))
     await expect(parseWeb("https://public.example/")).rejects.toThrow(/Redirect \(302\)/)
+  })
+
+  it("rejects .pdf urls even when the server lies about the content type", async () => {
+    stubFetch(() => new Response("%PDF-1.7 binary...", { status: 200, headers: { "content-type": "text/plain" } }))
+    await expect(parseWeb("https://public.example/paper.pdf")).rejects.toThrow(/PDF parsing is not supported/)
+  })
+
+  it("preserves the TimeoutError name for programmatic consumers", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => {
+        throw new DOMException("The operation timed out", "TimeoutError")
+      }),
+    )
+    const failure = await parseWeb("https://public.example/slow", { timeoutMs: 1234 }).then(
+      () => null,
+      (err: unknown) => err as Error,
+    )
+    expect(failure).toBeInstanceOf(Error)
+    expect(failure!.name).toBe("TimeoutError")
+    expect(failure!.message).toContain("Timed out after 1234ms")
+    expect(failure!.message).not.toContain("--timeout")
   })
 })

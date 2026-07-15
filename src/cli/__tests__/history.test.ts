@@ -29,11 +29,7 @@ describe("sanitiseUrl", () => {
 
 describe("sanitiseArgs", () => {
   it("redacts the value after --github-token", () => {
-    expect(sanitiseArgs(["--github-token", "ghp_XXXXXXXX", "--json"])).toEqual([
-      "--github-token",
-      "REDACTED",
-      "--json",
-    ])
+    expect(sanitiseArgs(["--github-token", "ghp_XXXXXXXX", "--json"])).toEqual(["--github-token", "REDACTED", "--json"])
   })
 
   it("redacts --flag=value form", () => {
@@ -116,14 +112,61 @@ describe("history store", () => {
   it("filters by search/since and applies limit", () => {
     const now = Date.now()
     const entries = [
-      { ts: new Date(now - 60_000).toISOString(), url: "https://react.dev", title: "React", tokens: 1, durationMs: 1, args: [] },
-      { ts: new Date(now - 30_000).toISOString(), url: "https://vue.dev", title: "Vue", tokens: 1, durationMs: 1, args: [] },
-      { ts: new Date(now).toISOString(), url: "https://react.dev/learn", title: "React Learn", tokens: 1, durationMs: 1, args: [] },
+      {
+        ts: new Date(now - 60_000).toISOString(),
+        url: "https://react.dev",
+        title: "React",
+        tokens: 1,
+        durationMs: 1,
+        args: [],
+      },
+      {
+        ts: new Date(now - 30_000).toISOString(),
+        url: "https://vue.dev",
+        title: "Vue",
+        tokens: 1,
+        durationMs: 1,
+        args: [],
+      },
+      {
+        ts: new Date(now).toISOString(),
+        url: "https://react.dev/learn",
+        title: "React Learn",
+        tokens: 1,
+        durationMs: 1,
+        args: [],
+      },
     ]
     const filtered = filterHistory(entries, { search: "react", limit: 1 })
     expect(filtered).toHaveLength(1)
     expect(filtered[0]!.url).toBe("https://react.dev/learn")
     const since = filterHistory(entries, { since: new Date(now - 45_000) })
     expect(since).toHaveLength(2)
+  })
+
+  it("filters failures only", () => {
+    const now = Date.now()
+    const entries = [
+      {
+        ts: new Date(now - 60_000).toISOString(),
+        url: "https://ok.dev",
+        title: "OK",
+        tokens: 1,
+        durationMs: 1,
+        args: [],
+      },
+      {
+        ts: new Date(now).toISOString(),
+        url: "https://blocked.dev",
+        title: "",
+        tokens: 0,
+        durationMs: 1,
+        args: [],
+        error: "Failed to fetch: 403 Forbidden",
+      },
+    ]
+    const failures = filterHistory(entries, { failures: true })
+    expect(failures).toHaveLength(1)
+    expect(failures[0]!.url).toBe("https://blocked.dev")
   })
 })

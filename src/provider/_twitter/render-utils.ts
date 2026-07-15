@@ -43,7 +43,12 @@ export const escapeMarkdown = (s: string): string => s.replace(/([\\`*_[\]])/g, 
  * forge additional structure, then applies the standard inline escape.
  */
 export const sanitizeInline = (s: string): string =>
-  escapeMarkdown(s.replace(/[\r\n]+/g, " ").replace(/^[\s#>*-]+/, "").trim())
+  escapeMarkdown(
+    s
+      .replace(/[\r\n]+/g, " ")
+      .replace(/^[\s#>*-]+/, "")
+      .trim(),
+  )
 
 const pad = (n: number): string => n.toString().padStart(2, "0")
 

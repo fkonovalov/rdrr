@@ -1,7 +1,7 @@
 import { mergeSignals } from "@shared"
-import { applyDisplayRange, extractMedia, normalizeQuote } from "../_twitter/normalize"
 import type { FxStatus } from "../_twitter/types"
 import type { NormalizedStatus } from "./types"
+import { applyDisplayRange, extractMedia, normalizeQuote } from "../_twitter/normalize"
 
 const BASE = "https://api.fxtwitter.com"
 const USER_AGENT = "Mozilla/5.0 (compatible; rdrr/1.0; +https://rdrr.app)"

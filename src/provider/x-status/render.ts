@@ -1,5 +1,5 @@
-import { escapeMarkdown, formatDate, safeUrl, sanitizeInline } from "../_twitter/render-utils"
 import type { NormalizedFacet, NormalizedQuote, NormalizedStatus } from "./types"
+import { escapeMarkdown, formatDate, safeUrl, sanitizeInline } from "../_twitter/render-utils"
 
 export const renderStatus = (status: NormalizedStatus): string => {
   const lines: string[] = []
@@ -73,4 +73,3 @@ const applyFacets = (text: string, facets: NormalizedFacet[]): string => {
   if (pos < text.length) out += escapeMarkdown(text.slice(pos))
   return out
 }
-

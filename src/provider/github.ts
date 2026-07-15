@@ -5,6 +5,7 @@ const DEFAULT_TIMEOUT_MS = 15000
 
 const ISSUE_PR_RE = /github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)/
 const FILE_RE = /github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)/
+const DISCUSSION_RE = /github\.com\/([^/]+)\/([^/]+)\/discussions\/(\d+)/
 
 interface Issue {
   title: string
@@ -20,13 +21,47 @@ interface Comment {
   user: { login: string } | null
   created_at: string
   body: string
-  author_association: string
+  /** Absent on discussion comments. */
+  author_association?: string
 }
 
 export const parseGitHub = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
   if (ISSUE_PR_RE.test(url)) return parseIssue(url, options)
+  if (DISCUSSION_RE.test(url)) return parseDiscussion(url, options)
   if (FILE_RE.test(url)) return parseFile(url, options)
-  throw new Error(`Not a GitHub issue/PR/file URL: ${url}`)
+  throw new Error(`Not a GitHub issue/PR/discussion/file URL: ${url}`)
+}
+
+/**
+ * Convert a non-ok GitHub API response into an actionable error. A 403 is only
+ * a rate limit when the quota is actually exhausted; otherwise it means the
+ * resource is private or the token lacks access.
+ */
+const ghApiError = (res: Response, what: string): Error => {
+  if (res.status === 404) return new Error(`${what} not found`)
+  if (res.status === 403 || res.status === 429) {
+    if (res.headers.get("x-ratelimit-remaining") === "0") {
+      const reset = Number(res.headers.get("x-ratelimit-reset"))
+      const resetsAt = Number.isFinite(reset) && reset > 0 ? new Date(reset * 1000).toISOString() : null
+      return new Error(
+        `GitHub API rate limit exceeded${resetsAt ? ` (resets at ${resetsAt})` : ""}. ` +
+          "Set $GITHUB_TOKEN or pass --github-token to raise the limit from 60 to 5000 requests/hour.",
+      )
+    }
+    // 429 and retry-after signal GitHub's secondary (abuse) rate limit, which
+    // does not zero out x-ratelimit-remaining.
+    const retryAfter = res.headers.get("retry-after")
+    if (res.status === 429 || retryAfter) {
+      return new Error(
+        `GitHub API secondary rate limit (${res.status}). ` +
+          `Retry ${retryAfter ? `after ${retryAfter}s` : "later"}, or set $GITHUB_TOKEN to raise the limits.`,
+      )
+    }
+    return new Error(
+      `GitHub API access forbidden (403) for ${what}: private repository, blocked token, or rate limiting`,
+    )
+  }
+  return new Error(`GitHub API error: ${res.status}`)
 }
 
 const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
@@ -36,16 +71,12 @@ const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubRe
   const headers = ghHeaders(options?.githubToken)
   const signal = mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal)
 
-  const [issueRes, comments] = await Promise.all([
+  const [issueRes, { comments, truncated }] = await Promise.all([
     fetch(`${api}/issues/${number}`, { headers, signal }),
     fetchAllComments(`${api}/issues/${number}/comments`, headers, options),
   ])
 
-  if (!issueRes.ok) {
-    if (issueRes.status === 404) throw new Error("Issue/PR not found")
-    if (issueRes.status === 403) throw new Error("GitHub API rate limit exceeded")
-    throw new Error(`GitHub API error: ${issueRes.status}`)
-  }
+  if (!issueRes.ok) throw ghApiError(issueRes, "Issue/PR")
 
   const issue = (await issueRes.json()) as Issue
 
@@ -72,14 +103,7 @@ const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubRe
     lines.push(issue.body.trim(), "")
   }
 
-  if (comments.length > 0) {
-    lines.push("---", "", `## Comments (${comments.length})`, "")
-    for (const c of comments) {
-      const badge = ROLE_BADGES[c.author_association] ?? ""
-      lines.push(`### ${c.user?.login ?? "unknown"}${badge} · ${c.created_at.split("T")[0]}`, "")
-      if (c.body) lines.push(c.body.trim(), "")
-    }
-  }
+  appendComments(lines, comments, truncated)
 
   const content = lines.join("\n")
   const wc = countWords(content)
@@ -93,6 +117,83 @@ const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubRe
     domain: "github.com",
     siteName: `GitHub - ${owner}/${repo}`,
     published: issue.created_at,
+    wordCount: wc,
+    readTime: estimateReadTime(wc, options?.wordsPerMinute),
+  }
+}
+
+const appendComments = (lines: string[], comments: Comment[], truncated: boolean): void => {
+  if (comments.length === 0 && !truncated) return
+  lines.push("---", "", `## Comments (${comments.length}${truncated ? "+, truncated" : ""})`, "")
+  for (const c of comments) {
+    const badge = ROLE_BADGES[c.author_association ?? ""] ?? ""
+    lines.push(`### ${c.user?.login ?? "unknown"}${badge} · ${c.created_at.split("T")[0]}`, "")
+    if (c.body) lines.push(c.body.trim(), "")
+  }
+  if (truncated) {
+    lines.push("_Note: comments could not be fetched completely; the list above is incomplete or missing._", "")
+  }
+}
+
+interface Discussion {
+  title: string
+  number: number
+  state: string
+  user: { login: string } | null
+  created_at: string
+  body: string | null
+  category?: { name: string } | null
+}
+
+const parseDiscussion = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
+  const match = url.match(DISCUSSION_RE)!
+  const [, owner, repo, number] = match
+  const api = `https://api.github.com/repos/${owner}/${repo}/discussions/${number}`
+  const headers = ghHeaders(options?.githubToken)
+  const signal = mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal)
+
+  const [discussionRes, { comments, truncated }] = await Promise.all([
+    fetch(api, { headers, signal }),
+    fetchAllComments(`${api}/comments`, headers, options),
+  ])
+
+  if (!discussionRes.ok) throw ghApiError(discussionRes, "Discussion")
+
+  const discussion = (await discussionRes.json()) as Discussion
+  const author = discussion.user?.login ?? "unknown"
+
+  const lines: string[] = [
+    `# ${discussion.title} #${discussion.number}`,
+    "",
+    [
+      `**Discussion** by **${author}**`,
+      `**Created:** ${discussion.created_at.split("T")[0]}`,
+      `**State:** ${discussion.state}`,
+      ...(discussion.category?.name ? [`**Category:** ${discussion.category.name}`] : []),
+    ].join(" · "),
+    "",
+    "---",
+    "",
+  ]
+
+  if (discussion.body) {
+    lines.push(discussion.body.trim(), "")
+  }
+
+  appendComments(lines, comments, truncated)
+
+  const content = lines.join("\n")
+  const wc = countWords(content)
+
+  return {
+    type: "github",
+    title: `${discussion.title} #${discussion.number}`,
+    author,
+    content,
+    description: (discussion.body ?? "").replace(/\s+/g, " ").trim().slice(0, 140),
+    domain: "github.com",
+    siteName: `GitHub - ${owner}/${repo}`,
+    published: discussion.created_at,
     wordCount: wc,
     readTime: estimateReadTime(wc, options?.wordsPerMinute),
   }
@@ -114,7 +215,7 @@ const parseFile = async (url: string, options?: ParseOptions): Promise<GitHubRes
 
   if (!res.ok) {
     if (res.status === 404) throw new Error(`File not found: ${filePath}`)
-    throw new Error(`GitHub raw fetch error: ${res.status}`)
+    throw ghApiError(res, `File ${filePath}`)
   }
 
   const contentType = res.headers.get("content-type") ?? ""
@@ -206,11 +307,17 @@ const detectLang = (filename: string): string => {
 // We cap pages to avoid runaway loops on issues with thousands of comments.
 const MAX_COMMENT_PAGES = 10
 
+interface CommentsPage {
+  comments: Comment[]
+  /** True when a page failed to load or the page cap was hit: the list is incomplete. */
+  truncated: boolean
+}
+
 const fetchAllComments = async (
   baseUrl: string,
   headers: Record<string, string>,
   options?: ParseOptions,
-): Promise<Comment[]> => {
+): Promise<CommentsPage> => {
   const collected: Comment[] = []
   let nextUrl: string | null = `${baseUrl}?per_page=100`
   let pages = 0
@@ -220,14 +327,14 @@ const fetchAllComments = async (
       headers,
       signal: mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal),
     })
-    if (!res.ok) break
+    if (!res.ok) return { comments: collected, truncated: true }
     const page = (await res.json()) as Comment[]
     collected.push(...page)
     pages++
     nextUrl = parseNextLink(res.headers.get("link"))
   }
 
-  return collected
+  return { comments: collected, truncated: nextUrl !== null }
 }
 
 const parseNextLink = (link: string | null): string | null => {

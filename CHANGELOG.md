@@ -7,6 +7,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.5.0] - 2026-07-15
+
+The "agents can trust what rdrr tells them" release.
+
+### Added
+
+- **MCP server.** New `rdrr-mcp` binary (STDIO transport) with four tools: `fetch` (budget, pagination via `startIndex`, `fields` filter, quality score), `parallel_fetch`, `check`, and `extract_html`. Responses carry a markdown text block plus `structuredContent` validated by an output schema; results are cached for 5 minutes with single-flight dedup; known errors return `isError: true` instead of crashing the server. Register with `claude mcp add rdrr -- npx -y --package=rdrr rdrr-mcp`.
+- **GitHub Discussions.** `rdrr https://github.com/…/discussions/123` now uses the REST API (title, body, category, comments) instead of scraping the SPA shell, which used to produce "Uh oh! There was an error while loading" garbage.
+- **Stack Overflow.** Question pages go through the StackExchange API (anonymous quota: 300 req/day per IP) with top-voted answers. stackoverflow.com blocks plain HTTP clients with 403, so this is the only reliable path.
+- **Empty-extraction signal.** When nothing could be extracted (JS-only SPA, bot wall) the frontmatter now carries `extraction: "empty"` and a warning is printed to stderr. New `--strict` flag turns that into exit code 3.
+- **Failure history.** Failed fetches are now logged to history with their error message. New `rdrr history --failures` filter shows them.
+- **Actionable errors.** 403/429 from bot-walled sites now say so and suggest a browser-based fallback; timeouts name the timeout and suggest `--timeout`; GitHub 403 distinguishes real rate limiting (with reset time and a `$GITHUB_TOKEN` hint) from private/forbidden repositories.
+
+### Changed
+
+- **Package size: 505 kB → 147 kB tarball (1.9 MB → 437 kB unpacked).** Sourcemaps are no longer published.
+- **GitHub issue/PR comments truncation is now visible.** When pagination fails or the page cap is hit, the output says so instead of silently dropping comments.
+- **Reddit degrades gracefully.** Reddit blocks non-browser TLS fingerprints on all endpoints (old.reddit, JSON API, embed). When the old.reddit comment fetch fails, rdrr now falls back to whatever the main page carried instead of failing the whole parse.
+
+### Removed
+
+- **PDF parsing.** BREAKING. `parsePdf`, the `pdf` URL type, and the optional `unpdf` dependency (2 MB) are gone. PDF URLs now fail with a clear error. Use a dedicated PDF tool.
+
 ## [0.4.1] - 2026-04-19
 
 ### Fixed

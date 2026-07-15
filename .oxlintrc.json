@@ -15,5 +15,13 @@
     "vitest/require-local-test-context-for-concurrent-snapshots": "error",
     "vitest/valid-describe-callback": "error",
     "vitest/valid-expect": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["src/mcp.ts", "src/mcp/**/*.ts"],
+      "rules": {
+        "no-console": ["error", { "allow": ["error"] }]
+      }
+    }
+  ]
 }

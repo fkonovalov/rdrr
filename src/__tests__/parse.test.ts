@@ -23,11 +23,12 @@ describe("parse input validation", () => {
     // Will fail at the network step, but only after ensureProtocol promoted it.
     vi.stubGlobal(
       "fetch",
-      vi.fn(async () =>
-        new Response(
-          "<html><head><title>T</title></head><body><article><p>hi</p></article></body></html>",
-          { status: 200, headers: { "content-type": "text/html" } },
-        ),
+      vi.fn(
+        async () =>
+          new Response("<html><head><title>T</title></head><body><article><p>hi</p></article></body></html>", {
+            status: 200,
+            headers: { "content-type": "text/html" },
+          }),
       ),
     )
     const result = await parse("example.com")
@@ -45,7 +46,16 @@ describe("parse routing", () => {
           return new Response(
             JSON.stringify({
               code: 200,
-              user: { screen_name: "someone", name: "Someone", description: "bio", followers: 0, following: 0, tweets: 0, joined: "", url: "" },
+              user: {
+                screen_name: "someone",
+                name: "Someone",
+                description: "bio",
+                followers: 0,
+                following: 0,
+                tweets: 0,
+                joined: "",
+                url: "",
+              },
             }),
             { status: 200, headers: { "content-type": "application/json" } },
           )

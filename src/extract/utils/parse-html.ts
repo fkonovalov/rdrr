@@ -12,7 +12,7 @@ const COMPUTED_STYLE_STUB: ProxyHandler<Record<string, unknown>> = {
   has: () => true,
 }
 
-const makeComputedStyleStub = (): () => Record<string, unknown> => () =>
+const makeComputedStyleStub = (): (() => Record<string, unknown>) => () =>
   new Proxy({}, COMPUTED_STYLE_STUB) as Record<string, unknown>
 
 export const parseLinkedomHTML = (html: string, url?: string): Document => {

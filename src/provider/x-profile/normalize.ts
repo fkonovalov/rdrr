@@ -1,5 +1,5 @@
-import { applyDisplayRange, extractMedia, normalizeQuote } from "../_twitter/normalize"
 import type { FxAuthor, FxStatus, NormalizedTweet, ProfileInfo } from "./types"
+import { applyDisplayRange, extractMedia, normalizeQuote } from "../_twitter/normalize"
 
 export const normalizeProfile = (user: FxAuthor): ProfileInfo => ({
   handle: user.screen_name,

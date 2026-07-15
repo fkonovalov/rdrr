@@ -64,7 +64,7 @@ interface SynFetchOptions {
 export const fetchFromSyndication = async (id: string, opts: SynFetchOptions = {}): Promise<NormalizedStatus> => {
   const url = `${BASE}?id=${encodeURIComponent(id)}&token=${SYNDICATION_TOKEN}&lang=en`
   const res = await fetch(url, {
-    headers: { "User-Agent": opts.userAgent ?? USER_AGENT, Accept: "application/json" },
+    headers: { "User-Agent": opts.userAgent ?? USER_AGENT, "Accept": "application/json" },
     signal: mergeSignals(opts.timeoutMs ?? REQUEST_TIMEOUT_MS, opts.signal),
   })
   if (!res.ok) throw new Error(`syndication ${res.status} ${res.statusText}`)

@@ -7,16 +7,16 @@ source: "https://en.wikipedia.org/wiki/TypeScript"
 domain: "en.wikipedia.org"
 language: "en"
 dir: "ltr"
-word_count: 3183
+word_count: 3082
 ---
 
-**TypeScript** (**TS**) is a [high-level](https://en.wikipedia.org/wiki/High-level_programming_language "High-level programming language") [programming language](https://en.wikipedia.org/wiki/Programming_language "Programming language") that adds [static typing](https://en.wikipedia.org/wiki/Static_typing "Static typing") with optional type [annotations](https://en.wikipedia.org/wiki/Annotation#Software_and_engineering "Annotation") to [JavaScript](https://en.wikipedia.org/wiki/JavaScript "JavaScript"). It is designed for developing large applications. It [transpiles](https://en.wikipedia.org/wiki/Source-to-source_compiler "Source-to-source compiler") to JavaScript.[^7] It is developed by [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft") as [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software "Free and open-source software") released under an [Apache License 2.0](https://en.wikipedia.org/wiki/Apache_License_2.0 "Apache License 2.0").
+**TypeScript** (**TS**) is a [high-level](https://en.wikipedia.org/wiki/High-level_programming_language "High-level programming language") [programming language](https://en.wikipedia.org/wiki/Programming_language "Programming language") that adds [static typing](https://en.wikipedia.org/wiki/Static_typing "Static typing") with optional type [annotations](https://en.wikipedia.org/wiki/Annotation#Software_and_engineering "Annotation") to [JavaScript](https://en.wikipedia.org/wiki/JavaScript "JavaScript"). It is designed for developing large applications. It [transpiles](https://en.wikipedia.org/wiki/Source-to-source_compiler "Source-to-source compiler") to JavaScript.[^6] It is developed by [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft") as [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software "Free and open-source software") released under an [Apache License 2.0](https://en.wikipedia.org/wiki/Apache_License_2.0 "Apache License 2.0").
 
-TypeScript may be used to develop JavaScript applications for both [client-side](https://en.wikipedia.org/wiki/Client-side "Client-side") and [server-side](https://en.wikipedia.org/wiki/Server-side "Server-side") execution (as with [React.js](https://en.wikipedia.org/wiki/React.js "React.js"), [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js"), [Deno](https://en.wikipedia.org/wiki/Deno_\(software\) "Deno (software)") or [Bun](https://en.wikipedia.org/wiki/Bun_\(software\) "Bun (software)")). Multiple options are available for transpiling. The default TypeScript Compiler can be used,[^8] or the [Babel](https://en.wikipedia.org/wiki/Babel_\(transcompiler\) "Babel (transcompiler)") compiler can be invoked to convert TypeScript to JavaScript.
+TypeScript may be used to develop JavaScript applications for both [client-side](https://en.wikipedia.org/wiki/Client-side "Client-side") and [server-side](https://en.wikipedia.org/wiki/Server-side "Server-side") execution (as with [React.js](https://en.wikipedia.org/wiki/React.js "React.js"), [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js"), [Deno](https://en.wikipedia.org/wiki/Deno_\(software\) "Deno (software)") or [Bun](https://en.wikipedia.org/wiki/Bun_\(software\) "Bun (software)")). Multiple options are available for transpiling. The default TypeScript Compiler can be used,[^7] or the [Babel](https://en.wikipedia.org/wiki/Babel_\(transcompiler\) "Babel (transcompiler)") compiler can be invoked to convert TypeScript to JavaScript.
 
-TypeScript supports definition files that can contain type information of existing JavaScript [libraries](https://en.wikipedia.org/wiki/Library_\(computing\) "Library (computing)"), much like [C++](https://en.wikipedia.org/wiki/C%2B%2B "C++") [header files](https://en.wikipedia.org/wiki/Include_directive "Include directive") can describe the structure of existing [object files](https://en.wikipedia.org/wiki/Object_file "Object file"). This enables other programs to use the values defined in the files as if they were statically typed TypeScript entities. There are third-party header files for popular libraries such as [jQuery](https://en.wikipedia.org/wiki/JQuery "JQuery"), [MongoDB](https://en.wikipedia.org/wiki/MongoDB "MongoDB"), and [D3.js](https://en.wikipedia.org/wiki/D3.js "D3.js"). TypeScript headers for the [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js") library modules are also available, allowing development of Node.js programs within TypeScript.[^9]
+TypeScript supports definition files that can contain type information of existing JavaScript [libraries](https://en.wikipedia.org/wiki/Library_\(computing\) "Library (computing)"), much like [C++](https://en.wikipedia.org/wiki/C++ "C++") [header files](https://en.wikipedia.org/wiki/Include_directive#Header_file "Include directive") can describe the structure of existing [object files](https://en.wikipedia.org/wiki/Object_file "Object file"). This enables other programs to use the values defined in the files as if they were statically typed TypeScript entities. There are third-party header files for popular libraries such as [jQuery](https://en.wikipedia.org/wiki/JQuery "JQuery"), [MongoDB](https://en.wikipedia.org/wiki/MongoDB "MongoDB"), and [D3.js](https://en.wikipedia.org/wiki/D3.js "D3.js"). TypeScript headers for the [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js") library modules are also available, allowing development of Node.js programs within TypeScript.[^8]
 
-The TypeScript compiler is [written in TypeScript](https://en.wikipedia.org/wiki/Self-hosting_\(compilers\) "Self-hosting (compilers)") and [compiled](https://en.wikipedia.org/wiki/Source-to-source_compiler "Source-to-source compiler") to JavaScript. It is licensed under the [Apache License 2.0](https://en.wikipedia.org/wiki/Apache_License_2.0 "Apache License 2.0"). [Anders Hejlsberg](https://en.wikipedia.org/wiki/Anders_Hejlsberg "Anders Hejlsberg"), lead architect of [C#](https://en.wikipedia.org/wiki/C_Sharp_\(programming_language\) "C Sharp (programming language)") and creator of [Delphi](https://en.wikipedia.org/wiki/Delphi_\(software\) "Delphi (software)") and [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal "Turbo Pascal"), has worked on developing TypeScript.[^10] [^11] [^12] [^13]
+Before TypeScript 7.0, the TypeScript compiler was [written in TypeScript](https://en.wikipedia.org/wiki/Self-hosting_\(compilers\) "Self-hosting (compilers)") and [compiled](https://en.wikipedia.org/wiki/Source-to-source_compiler "Source-to-source compiler") to JavaScript. In TypeScript 7.0, it was rewritten in [Go](https://en.wikipedia.org/wiki/Go_\(programming_language\) "Go (programming language)").[^9] It is licensed under the [Apache License 2.0](https://en.wikipedia.org/wiki/Apache_License_2.0 "Apache License 2.0"). [Anders Hejlsberg](https://en.wikipedia.org/wiki/Anders_Hejlsberg "Anders Hejlsberg"), lead architect of [C#](https://en.wikipedia.org/wiki/C_Sharp_\(programming_language\) "C Sharp (programming language)") and creator of [Delphi](https://en.wikipedia.org/wiki/Delphi_\(software\) "Delphi (software)") and [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal "Turbo Pascal"), has worked on developing TypeScript.[^10] [^11] [^12] [^13]
 
 ## History
 
@@ -24,7 +24,7 @@ TypeScript was released to the public in October 2012, with version 0.8, after t
 
 TypeScript 1.0 was released at Microsoft's [Build](https://en.wikipedia.org/wiki/Build_\(developer_conference\) "Build (developer conference)") developer conference in 2014.[^21] [Visual Studio 2013](https://en.wikipedia.org/wiki/Visual_Studio_2013 "Visual Studio 2013") Update 2 provided built-in support for TypeScript.[^22] Further improvement were made in July 2014, when the development team announced a new TypeScript compiler, asserted to have a five-fold performance increase. Simultaneously, the source code, which was initially hosted on [CodePlex](https://en.wikipedia.org/wiki/CodePlex "CodePlex"), was moved to [GitHub](https://en.wikipedia.org/wiki/GitHub "GitHub").[^23]
 
-On 22 September 2016, TypeScript 2.0 was released, introducing several features, including the ability for programmers to optionally enforce [null safety](https://en.wikipedia.org/wiki/Null_safety "Null safety"),[^24] to mitigate what's sometimes referred to as the [billion-dollar mistake](https://en.wikipedia.org/wiki/Null_pointer#History "Null pointer").
+On 22 September 2016, TypeScript 2.0 was released, introducing several features, including the ability for programmers to optionally enforce [null safety](https://en.wikipedia.org/wiki/Null_safety "Null safety").[^24]
 
 TypeScript 3.0 was released on 30 July 2018,[^25] bringing many language additions like tuples in rest parameters and spread expressions, rest parameters with tuple types, generic rest parameters and so on.[^26]
 
@@ -53,7 +53,6 @@ TypeScript adds the following syntax extensions to JavaScript:
 - [Generics](https://en.wikipedia.org/wiki/Generic_programming "Generic programming")
 - [Namespaces](https://en.wikipedia.org/wiki/Namespace "Namespace")
 - [Tuples](https://en.wikipedia.org/wiki/Tuple "Tuple")
-- [Explicit resource management](https://en.wikipedia.org/wiki/Resource_management_\(computing\) "Resource management (computing)") [^33]
 
 Syntactically, TypeScript is very similar to [JScript.NET](https://en.wikipedia.org/wiki/JScript_.NET "JScript .NET"), another Microsoft implementation of the ECMA-262 language standard that added support for static typing and classical object-oriented language features such as classes, inheritance, interfaces, and namespaces. Other inspirations include [Java](https://en.wikipedia.org/wiki/Java_\(programming_language\) "Java (programming language)") and [C#](https://en.wikipedia.org/wiki/C_Sharp_\(programming_language\) "C Sharp (programming language)").
 
@@ -61,23 +60,23 @@ Syntactically, TypeScript is very similar to [JScript.NET](https://en.wikipedia.
 
 As TypeScript is simply a superset of JavaScript, existing JavaScript can be adapted to TypeScript and TypeScript program can seamlessly consume JavaScript. The compiler can target all ECMAScript versions 5 and above, transpiling modern features like classes and arrow functions to their older counterparts.
 
-With TypeScript, it is possible to use existing JavaScript code, incorporate popular JavaScript libraries, and call TypeScript-generated code from other JavaScript.[^34] Type declarations for these libraries are usually provided with the source code but can be declared or installed separately if needed.
+With TypeScript, it is possible to use existing JavaScript code, incorporate popular JavaScript libraries, and call TypeScript-generated code from other JavaScript.[^33] Type declarations for these libraries are usually provided with the source code but can be declared or installed separately if needed.
 
 ## Development tools
 
 ### Compiler
 
-The TypeScript compiler, named `tsc`, is [written in TypeScript](https://en.wikipedia.org/wiki/Self-hosting_\(compilers\) "Self-hosting (compilers)"). As a result, it can be compiled into regular JavaScript and can then be executed in any JavaScript engine (e.g. a browser). The compiler package comes bundled with a script host that can execute the compiler. It is also available as a [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js") package that uses Node.js as a host. The compiler is currently being rewritten in [Go](https://en.wikipedia.org/wiki/Go_\(programming_language\) "Go (programming language)") for version 7.[^35]
+The TypeScript compiler, named `tsc`, is [written in TypeScript](https://en.wikipedia.org/wiki/Self-hosting_\(compilers\) "Self-hosting (compilers)"). As a result, it can be compiled into regular JavaScript and can then be executed in any JavaScript engine (e.g. a browser). The compiler package comes bundled with a script host that can execute the compiler. It is also available as a [Node.js](https://en.wikipedia.org/wiki/Node.js "Node.js") package that uses Node.js as a host. The compiler is currently being ported to [Go](https://en.wikipedia.org/wiki/Go_\(programming_language\) "Go (programming language)") for version 7.[^34]
 
 The compiler can *target* a given edition of ECMAScript (such as [ECMAScript 5](https://en.wikipedia.org/wiki/ECMAScript_version_history "ECMAScript version history") for legacy browser compatibility), but by default compiles for the latest standards.
 
 ### IDE and editor support
 
-- [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft") provides a [plug-in](https://en.wikipedia.org/wiki/Plug-in_\(computing\) "Plug-in (computing)") for [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2012 and [WebMatrix](https://en.wikipedia.org/wiki/Microsoft_WebMatrix "Microsoft WebMatrix"), full integrated support in [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2013, [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2015, and basic text editor support for [Emacs](https://en.wikipedia.org/wiki/Emacs "Emacs") and [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\) "Vim (text editor)").[^36]
+- [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft") provides a [plug-in](https://en.wikipedia.org/wiki/Plug-in_\(computing\) "Plug-in (computing)") for [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2012 and [WebMatrix](https://en.wikipedia.org/wiki/Microsoft_WebMatrix "Microsoft WebMatrix"), full integrated support in [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2013, [Visual Studio](https://en.wikipedia.org/wiki/Visual_Studio "Visual Studio") 2015, and basic text editor support for [Emacs](https://en.wikipedia.org/wiki/Emacs "Emacs") and [Vim](https://en.wikipedia.org/wiki/Vim_\(text_editor\) "Vim (text editor)").[^35]
 - [Visual Studio Code](https://en.wikipedia.org/wiki/Visual_Studio_Code "Visual Studio Code") supports TypeScript in addition to several other languages, and offers features like debugging and intelligent [code completion](https://en.wikipedia.org/wiki/Code_completion "Code completion").
 - alm.tools is an open source cloud IDE for TypeScript built using TypeScript, ReactJS and TypeStyle.
-- [JetBrains](https://en.wikipedia.org/wiki/JetBrains "JetBrains") supports TypeScript with code completion, refactoring and debugging in its IDEs built on IntelliJ platform, such as [PhpStorm](https://en.wikipedia.org/wiki/PhpStorm "PhpStorm") 6, [WebStorm](https://en.wikipedia.org/wiki/WebStorm "WebStorm") 6, and [IntelliJ IDEA](https://en.wikipedia.org/wiki/IntelliJ_IDEA "IntelliJ IDEA"),[^37] as well as their Visual Studio Add-in and extension, ReSharper 8.1.[^38] [^39]
-- [Atom](https://en.wikipedia.org/wiki/Atom_\(text_editor\) "Atom (text editor)") has a TypeScript plugin with support for code completion, navigation, formatting, and fast compilation.[^40]
+- [JetBrains](https://en.wikipedia.org/wiki/JetBrains "JetBrains") supports TypeScript with code completion, refactoring and debugging in its IDEs built on IntelliJ platform, such as [PhpStorm](https://en.wikipedia.org/wiki/PhpStorm "PhpStorm") 6, [WebStorm](https://en.wikipedia.org/wiki/WebStorm "WebStorm") 6, and [IntelliJ IDEA](https://en.wikipedia.org/wiki/IntelliJ_IDEA "IntelliJ IDEA"),[^36] as well as their Visual Studio Add-in and extension, ReSharper 8.1.[^37] [^38]
+- [Atom](https://en.wikipedia.org/wiki/Atom_\(text_editor\) "Atom (text editor)") has a TypeScript plugin with support for code completion, navigation, formatting, and fast compilation.[^39]
 - The online [Cloud9 IDE](https://en.wikipedia.org/wiki/Cloud9_IDE "Cloud9 IDE") and [Codenvy](https://en.wikipedia.org/wiki/Codenvy "Codenvy") support TypeScript.
 - A plugin is available for the [NetBeans](https://en.wikipedia.org/wiki/NetBeans "NetBeans") IDE.
 - A plugin is available for the [Eclipse IDE](https://en.wikipedia.org/wiki/Eclipse_\(software\) "Eclipse (software)") (version Kepler)
@@ -89,11 +88,11 @@ The compiler can *target* a given edition of ECMAScript (such as [ECMAScript 5](
 
 ### Integration with build automation tools
 
-Using [plug-ins](https://en.wikipedia.org/wiki/Plug-in_\(computing\) "Plug-in (computing)"), TypeScript can be integrated with [build automation](https://en.wikipedia.org/wiki/Build_automation "Build automation") tools, including Grunt (grunt-ts [^41]), [Apache Maven](https://en.wikipedia.org/wiki/Apache_Maven "Apache Maven") (TypeScript Maven Plugin [^42]), Gulp (gulp-typescript [^43]) and [Gradle](https://en.wikipedia.org/wiki/Gradle "Gradle") (TypeScript Gradle Plugin [^44]).
+Using [plug-ins](https://en.wikipedia.org/wiki/Plug-in_\(computing\) "Plug-in (computing)"), TypeScript can be integrated with [build automation](https://en.wikipedia.org/wiki/Build_automation "Build automation") tools, including Grunt (grunt-ts [^40]), [Apache Maven](https://en.wikipedia.org/wiki/Apache_Maven "Apache Maven") (TypeScript Maven Plugin [^41]), Gulp (gulp-typescript [^42]) and [Gradle](https://en.wikipedia.org/wiki/Gradle "Gradle") (TypeScript Gradle Plugin [^43]).
 
 ### Linting tools
 
-TSLint [^45] scans TypeScript code for conformance to a set of standards and guidelines. [ESLint](https://en.wikipedia.org/wiki/ESLint "ESLint"), a standard JavaScript linter, also provided some support for TypeScript via community plugins. However, ESLint's inability to leverage TypeScript's language services precluded certain forms of semantic linting and program-wide analysis.[^46] In early 2019, the TSLint team announced the linter's deprecation in favor of `typescript-eslint`, a joint effort of the TSLint, ESLint and TypeScript teams to consolidate linting under the ESLint umbrella for improved performance, community unity and developer accessibility.[^47]
+[ESLint](https://en.wikipedia.org/wiki/ESLint "ESLint"), a standard JavaScript linter, also provides support for TypeScript via the `typescript-eslint` plugin.[^44]
 
 ## Release history
 
@@ -104,10 +103,6 @@ Unsupported
 Supported
 
 **Latest version**
-
-Preview version
-
-Future version
 
 | Version number | Release date | Significant changes |
 | --- | --- | --- |
@@ -162,25 +157,34 @@ Future version
 | 5.8 | 28 February 2025 |  |
 | 5.9 | 31 July 2025 |  |
 | 6.0 | 23 March 2026 | Introduce some deprecations and breaking changes to align with the upcoming native codebase. Strict mode is now enabled by default. Last version with compiler and language service based on JavaScript before rewrite to Go language. |
-| 7.0 |  | Rewrite in Go with faster performance. |
+| 7.0 (go) | 8 July 2026 | Rewrite in Go with faster performance. |
+
+## References
+
+### Citations
+
+### Sources
+
+- ["Webclipse: Eclipse Plugin"](https://www.genuitec.com/products/webclipse/) [Archived](https://web.archive.org/web/20161216150734/https://www.genuitec.com/products/webclipse/) 16 December 2016 at the [Wayback Machine](https://en.wikipedia.org/wiki/Wayback_Machine "Wayback Machine") Genuitec. Retrieved 9 November 2016.
+- ["Angular IDE by Webclipse: Standalone IDE"](https://www.genuitec.com/products/angular-ide/) [Archived](https://web.archive.org/web/20161110043934/https://www.genuitec.com/products/angular-ide/) 10 November 2016 at the [Wayback Machine](https://en.wikipedia.org/wiki/Wayback_Machine "Wayback Machine") Genuitec. Retrieved 9 November 2016.
 
 [^1]: ["TypeScript"](https://web.archive.org/web/20150403224440/https://typescript.codeplex.com/releases/view/95554). *[CodePlex](https://en.wikipedia.org/wiki/CodePlex "CodePlex")*. Archived from [the original](https://typescript.codeplex.com/releases/view/95554) on 3 April 2015. Retrieved 26 April 2015.
 
-[^2]: . 16 April 2026. Retrieved 17 April 2026.
+[^2]: ["Announcing TypeScript 7.0"](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/).
 
-[^3]: [https://github.com/microsoft/TypeScript/releases](https://github.com/microsoft/TypeScript/releases)
+[^3]: ["Releases · microsoft/TypeScript"](https://github.com/microsoft/TypeScript/releases). *GitHub*.
 
 [^4]: ["Type Compatibility"](https://www.typescriptlang.org/docs/handbook/type-compatibility.html). *TypeScript*. [Archived](https://web.archive.org/web/20180312103740/http://www.typescriptlang.org/docs/handbook/type-compatibility.html) from the original on 12 March 2018. Retrieved 21 March 2018.
 
 [^5]: ["The Early History of F#"](https://fsharp.org/history/hopl-final/hopl-fsharp.pdf) (PDF). [Archived](https://web.archive.org/web/20240809075047/https://fsharp.org/history/hopl-final/hopl-fsharp.pdf) (PDF) from the original on 9 August 2024. Retrieved 5 February 2024. TypeScript was directly influenced by F#: one of the originators of TypeScript was Luke Hoban, who began TypeScript (then called Strada) immediately after working on F# 2.0. Recently he noted the influence of F# on early parts of the TypeScript design \[Hoban 2017\].
 
-[^6]: Nelson, Gary (28 April 2020). ["How ActionScript foreshadowed TypeScript"](https://javascript.plainenglish.io/how-actionscript-foreshadowed-typescript-149cdb764de9). *Medium*. [Archived](https://web.archive.org/web/20240809080212/https://javascript.plainenglish.io/how-actionscript-foreshadowed-typescript-149cdb764de9?gi=8d034fbd408d) from the original on 9 August 2024. Retrieved 9 July 2022.
+[^6]: Bright, Peter (3 October 2012). ["Microsoft TypeScript: the JavaScript we need, or a solution looking for a problem?"](https://arstechnica.com/information-technology/2012/10/microsoft-typescript-the-javascript-we-need-or-a-solution-looking-for-a-problem/). *[Ars Technica](https://en.wikipedia.org/wiki/Ars_Technica "Ars Technica")*. [Condé Nast](https://en.wikipedia.org/wiki/Cond%C3%A9_Nast "Condé Nast"). [Archived](https://web.archive.org/web/20181009164414/https://arstechnica.com/information-technology/2012/10/microsoft-typescript-the-javascript-we-need-or-a-solution-looking-for-a-problem/) from the original on 9 October 2018. Retrieved 26 April 2015.
 
-[^7]: Bright, Peter (3 October 2012). ["Microsoft TypeScript: the JavaScript we need, or a solution looking for a problem?"](https://arstechnica.com/information-technology/2012/10/microsoft-typescript-the-javascript-we-need-or-a-solution-looking-for-a-problem/). *[Ars Technica](https://en.wikipedia.org/wiki/Ars_Technica "Ars Technica")*. [Condé Nast](https://en.wikipedia.org/wiki/Cond%C3%A9_Nast "Condé Nast"). [Archived](https://web.archive.org/web/20181009164414/https://arstechnica.com/information-technology/2012/10/microsoft-typescript-the-javascript-we-need-or-a-solution-looking-for-a-problem/) from the original on 9 October 2018. Retrieved 26 April 2015.
+[^7]: ["TypeScript Programming with Visual Studio Code"](https://code.visualstudio.com/docs/languages/typescript). *code.visualstudio.com*. [Archived](https://web.archive.org/web/20220922080247/https://code.visualstudio.com/docs/languages/typescript) from the original on 22 September 2022. Retrieved 12 February 2019.
 
-[^8]: ["TypeScript Programming with Visual Studio Code"](https://code.visualstudio.com/docs/languages/typescript). *code.visualstudio.com*. [Archived](https://web.archive.org/web/20220922080247/https://code.visualstudio.com/docs/languages/typescript) from the original on 22 September 2022. Retrieved 12 February 2019.
+[^8]: ["borisyankov/DefinitelyTyped"](https://github.com/borisyankov/DefinitelyTyped). *[GitHub](https://en.wikipedia.org/wiki/GitHub "GitHub")*. [Archived](https://web.archive.org/web/20151101104210/https://github.com/borisyankov/DefinitelyTyped) from the original on 1 November 2015. Retrieved 26 April 2015.
 
-[^9]: ["borisyankov/DefinitelyTyped"](https://github.com/borisyankov/DefinitelyTyped). *[GitHub](https://en.wikipedia.org/wiki/GitHub "GitHub")*. [Archived](https://web.archive.org/web/20151101104210/https://github.com/borisyankov/DefinitelyTyped) from the original on 1 November 2015. Retrieved 26 April 2015.
+[^9]: Rosenwasser, Daniel (8 July 2026). ["Announcing TypeScript 7.0"](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/). *TypeScript*. Retrieved 14 July 2026.
 
 [^10]: Foley, Mary Jo (1 October 2012). ["Microsoft takes the wraps off TypeScript, a superset of JavaScript"](https://www.zdnet.com/article/microsoft-takes-the-wraps-off-typescript-a-superset-of-javascript/). *[ZDNet](https://en.wikipedia.org/wiki/ZDNet "ZDNet")*. [CBS Interactive](https://en.wikipedia.org/wiki/CBS_Interactive "CBS Interactive"). [Archived](https://web.archive.org/web/20141113161248/http://www.zdnet.com/microsoft-takes-the-wraps-off-typescript-a-superset-of-javascript-7000004993/) from the original on 13 November 2014. Retrieved 26 April 2015.
 
@@ -200,7 +204,7 @@ Future version
 
 [^18]: ["TypeStrong: The only TypeScript package you will ever need"](https://github.com/TypeStrong/atom-typescript). *[GitHub](https://en.wikipedia.org/wiki/GitHub "GitHub")*. [Archived](https://web.archive.org/web/20181219102240/https://github.com/TypeStrong/atom-typescript) from the original on 19 December 2018. Retrieved 21 July 2016.
 
-[^19]: Hillar, Gastón (14 May 2013). ["Working with TypeScript in Visual Studio 2012"](http://www.drdobbs.com/windows/working-with-typescript-in-visual-studio/240154792). *[Dr. Dobb's Journal](https://en.wikipedia.org/wiki/Dr._Dobb%27s_Journal "Dr. Dobb's Journal")*. [Archived](https://web.archive.org/web/20180929115630/http://www.drdobbs.com/windows/working-with-typescript-in-visual-studio/240154792) from the original on 29 September 2018. Retrieved 26 April 2015.
+[^19]: Hillar, Gastón (14 May 2013). ["Working with TypeScript in Visual Studio 2012"](http://www.drdobbs.com/windows/working-with-typescript-in-visual-studio/240154792). *[Dr. Dobb's Journal](https://en.wikipedia.org/wiki/Dr._Dobb's_Journal "Dr. Dobb's Journal")*. [Archived](https://web.archive.org/web/20180929115630/http://www.drdobbs.com/windows/working-with-typescript-in-visual-studio/240154792) from the original on 29 September 2018. Retrieved 26 April 2015.
 
 [^20]: ["TypeScript 0.9 arrives with new compiler, support for generics"](https://www.theregister.co.uk/2013/06/18/typescript_update_0_9/). *[The Register](https://en.wikipedia.org/wiki/The_Register "The Register")*. 18 June 2013. [Archived](https://web.archive.org/web/20180311081207/https://www.theregister.co.uk/2013/06/18/typescript_update_0_9/) from the original on 11 March 2018. Retrieved 26 April 2015.
 
@@ -228,32 +232,26 @@ Future version
 
 [^32]: Somasegar, S. (1 October 2012). ["TypeScript: JavaScript Development at Application Scale"](http://blogs.msdn.com/b/somasegar/archive/2012/10/01/typescript-javascript-development-at-application-scale.aspx). msdn.com. [Archived](https://web.archive.org/web/20150422145537/http://blogs.msdn.com/b/somasegar/archive/2012/10/01/typescript-javascript-development-at-applicatio) from the original on 22 April 2015. Retrieved 27 November 2013.
 
-[^33]: ["Documentation – TypeScript 5.2"](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html). *www.typescriptlang.org*. [Archived](https://web.archive.org/web/20240809080229/https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-2.html) from the original on 9 August 2024. Retrieved 9 November 2023.
+[^33]: ["Welcome to TypeScript"](http://www.typescriptlang.org/). *typescriptlang.org*. [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft"). [Archived](https://web.archive.org/web/20180310153413/https://www.typescriptlang.org/) from the original on 10 March 2018. Retrieved 26 April 2015.
 
-[^34]: ["Welcome to TypeScript"](http://www.typescriptlang.org/). *typescriptlang.org*. [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft"). [Archived](https://web.archive.org/web/20180310153413/https://www.typescriptlang.org/) from the original on 10 March 2018. Retrieved 26 April 2015.
+[^34]: Lawson, Darryl K. Taft, Loraine (12 March 2025). ["Go Power: Microsoft's Bold Bet on Faster TypeScript Tools"](https://thenewstack.io/go-power-microsofts-bold-bet-on-faster-typescript-tools/). *The New Stack*. Retrieved 6 January 2026.
 
-[^35]: Lawson, Darryl K. Taft, Loraine (12 March 2025). ["Go Power: Microsoft's Bold Bet on Faster TypeScript Tools"](https://thenewstack.io/go-power-microsofts-bold-bet-on-faster-typescript-tools/). *The New Stack*. Retrieved 6 January 2026.
+[^35]: Bloch, Olivier (1 October 2012). ["Sublime Text, Vi, Emacs: TypeScript enabled!"](http://blogs.msdn.com/b/interoperability/archive/2012/10/01/sublime-text-vi-emacs-typescript-enabled.aspx). [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft"). [Archived](https://web.archive.org/web/20121029094413/http://blogs.msdn.com/b/interoperability/archive/2012/10/01/sublime-text-vi-emacs-typescript-enabled.aspx) from the original on 29 October 2012. Retrieved 28 October 2012.
 
-[^36]: Bloch, Olivier (1 October 2012). ["Sublime Text, Vi, Emacs: TypeScript enabled!"](http://blogs.msdn.com/b/interoperability/archive/2012/10/01/sublime-text-vi-emacs-typescript-enabled.aspx). [Microsoft](https://en.wikipedia.org/wiki/Microsoft "Microsoft"). [Archived](https://web.archive.org/web/20121029094413/http://blogs.msdn.com/b/interoperability/archive/2012/10/01/sublime-text-vi-emacs-typescript-enabled.aspx) from the original on 29 October 2012. Retrieved 28 October 2012.
+[^36]: ["TypeScript support in WebStorm 6"](http://blog.jetbrains.com/webide/2013/02/typescript-support-in-webstorm-6). JetBrains. 27 February 2013. [Archived](https://web.archive.org/web/20160602072057/http://blog.jetbrains.com/webide/2013/02/typescript-support-in-webstorm-6/) from the original on 2 June 2016. Retrieved 20 April 2013.
 
-[^37]: ["TypeScript support in WebStorm 6"](http://blog.jetbrains.com/webide/2013/02/typescript-support-in-webstorm-6). JetBrains. 27 February 2013. [Archived](https://web.archive.org/web/20160602072057/http://blog.jetbrains.com/webide/2013/02/typescript-support-in-webstorm-6/) from the original on 2 June 2016. Retrieved 20 April 2013.
+[^37]: ["TypeScript support in ReSharper 8.1"](http://blog.jetbrains.com/dotnet/2013/10/28/typescript-support-resharper-81/). JetBrains. 28 October 2013. [Archived](https://web.archive.org/web/20140202124541/http://blog.jetbrains.com/dotnet/2013/10/28/typescript-support-resharper-81/) from the original on 2 February 2014. Retrieved 21 January 2014.
 
-[^38]: ["TypeScript support in ReSharper 8.1"](http://blog.jetbrains.com/dotnet/2013/10/28/typescript-support-resharper-81/). JetBrains. 28 October 2013. [Archived](https://web.archive.org/web/20140202124541/http://blog.jetbrains.com/dotnet/2013/10/28/typescript-support-resharper-81/) from the original on 2 February 2014. Retrieved 21 January 2014.
+[^38]: ["ReSharper: The Visual Studio Extension for.NET Developers by JetBrains"](https://www.jetbrains.com/resharper/). *JetBrains*.
 
-[^39]: ["ReSharper: The Visual Studio Extension for.NET Developers by JetBrains"](https://www.jetbrains.com/resharper/). *JetBrains*.
+[^39]: ["atom-typescript"](https://atom.io/packages/atom-typescript). *Atom*. [Archived](https://web.archive.org/web/20161004165736/https://atom.io/packages/atom-typescript) from the original on 4 October 2016. Retrieved 9 January 2020.
 
-[^40]: ["atom-typescript"](https://atom.io/packages/atom-typescript). *Atom*. [Archived](https://web.archive.org/web/20161004165736/https://atom.io/packages/atom-typescript) from the original on 4 October 2016. Retrieved 9 January 2020.
+[^40]: ["TypeStrong/grunt-ts"](https://github.com/basarat/grunt-ts). *GitHub*. [Archived](https://web.archive.org/web/20200416143221/https://github.com/TypeStrong/grunt-ts) from the original on 16 April 2020. Retrieved 26 April 2015.
 
-[^41]: ["TypeStrong/grunt-ts"](https://github.com/basarat/grunt-ts). *GitHub*. [Archived](https://web.archive.org/web/20200416143221/https://github.com/TypeStrong/grunt-ts) from the original on 16 April 2020. Retrieved 26 April 2015.
+[^41]: ["ppedregal/typescript-maven-plugin"](https://github.com/ppedregal/typescript-maven-plugin). *GitHub*. [Archived](https://web.archive.org/web/20180611002148/https://github.com/ppedregal/typescript-maven-plugin) from the original on 11 June 2018. Retrieved 26 April 2015.
 
-[^42]: ["ppedregal/typescript-maven-plugin"](https://github.com/ppedregal/typescript-maven-plugin). *GitHub*. [Archived](https://web.archive.org/web/20180611002148/https://github.com/ppedregal/typescript-maven-plugin) from the original on 11 June 2018. Retrieved 26 April 2015.
+[^42]: ["ivogabe/gulp-typescript"](https://github.com/ivogabe/gulp-typescript). *GitHub*. [Archived](https://web.archive.org/web/20180611024633/https://github.com/ivogabe/gulp-typescript) from the original on 11 June 2018. Retrieved 14 July 2017.
 
-[^43]: ["ivogabe/gulp-typescript"](https://github.com/ivogabe/gulp-typescript). *GitHub*. [Archived](https://web.archive.org/web/20180611024633/https://github.com/ivogabe/gulp-typescript) from the original on 11 June 2018. Retrieved 14 July 2017.
+[^43]: ["sothmann/typescript-gradle-plugin"](https://github.com/sothmann/typescript-gradle-plugin). *GitHub*. [Archived](https://web.archive.org/web/20180611010933/https://github.com/sothmann/typescript-gradle-plugin) from the original on 11 June 2018. Retrieved 26 April 2015.
 
-[^44]: ["sothmann/typescript-gradle-plugin"](https://github.com/sothmann/typescript-gradle-plugin). *GitHub*. [Archived](https://web.archive.org/web/20180611010933/https://github.com/sothmann/typescript-gradle-plugin) from the original on 11 June 2018. Retrieved 26 April 2015.
-
-[^45]: ["TSLint"](https://palantir.github.io/tslint/). *palantir.github.io*. [Archived](https://web.archive.org/web/20221221214353/https://palantir.github.io/tslint/) from the original on 21 December 2022. Retrieved 11 February 2019.
-
-[^46]: Palantir (19 February 2019). ["TSLint in 2019"](https://medium.com/palantir/tslint-in-2019-1a144c2317a9). *Medium*. Retrieved 24 April 2019.
-
-[^47]: ["TSLint Deprecated to Focus Support on typescript-eslint"](https://www.infoq.com/news/2019/02/tslint-deprecated-eslint). *InfoQ*. [Archived](https://web.archive.org/web/20240809080105/https://www.infoq.com/news/2019/02/tslint-deprecated-eslint/) from the original on 9 August 2024. Retrieved 24 April 2019.
+[^44]: ["typescript-eslint - Powerful static analysis for JavaScript and TypeScript"](https://typescript-eslint.io/). Retrieved 7 July 2026.

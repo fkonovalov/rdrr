@@ -1,6 +1,6 @@
 import type { ParseResult } from "../types"
 
-interface QualitySignals {
+export interface QualitySignals {
   textDensity: number
   linkRatio: number
   paragraphCount: number
@@ -10,7 +10,7 @@ interface QualitySignals {
   boilerplateRatio: number
 }
 
-interface QualityReport {
+export interface QualityReport {
   score: number
   signals: QualitySignals
   verdict: "good" | "partial" | "poor"

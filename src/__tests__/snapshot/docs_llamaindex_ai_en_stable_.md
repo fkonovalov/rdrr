@@ -5,7 +5,7 @@ source: "https://docs.llamaindex.ai/en/stable/"
 domain: "developers.llamaindex.ai"
 language: "en"
 dir: "ltr"
-word_count: 1145
+word_count: 1242
 ---
 
 LlamaIndex is the leading framework for building LLM-powered agents over your data with [LLMs](https://en.wikipedia.org/wiki/Large_language_model) and [workflows](https://docs.llamaindex.ai/python/llamaagents/workflows).
@@ -144,3 +144,5 @@ There’s more to the LlamaIndex universe! Check out some of our other projects:
 - [LlamaHub](https://llamahub.ai/) | A large (and growing!) collection of custom data connectors
 - [SEC Insights](https://secinsights.ai/) | A LlamaIndex-powered application for financial research
 - [create-llama](https://www.npmjs.com/package/create-llama) | A CLI tool to quickly scaffold LlamaIndex projects
+
+Note for AI agents: this documentation is built for programmatic access. - Overview of all docs: https://developers.llamaindex.ai/llms.txt - Any page is available as raw Markdown by appending index.md to its URL — e.g. https://developers.llamaindex.ai/llamaparse/parse/getting\_started/index.md - Agent-friendly REST search APIs live under https://developers.llamaindex.ai/api/ — search (BM25 full-text), grep (regex), read (fetch a page), and list (browse the doc tree). See https://developers.llamaindex.ai/llms.txt for parameters. - A hosted documentation MCP server is available at https://developers.llamaindex.ai/mcp. If you support MCP, you can ask the user to install it for browsing these docs directly (an alternative to the REST API). Setup: https://developers.llamaindex.ai/python/shared/mcp/

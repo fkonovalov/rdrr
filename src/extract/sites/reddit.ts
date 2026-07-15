@@ -16,19 +16,26 @@ registerSite({
     const canExtractAsync = (): boolean => isComments && !isOldReddit
 
     const extractAsync = async (): Promise<SiteExtractorResult> => {
-      const oldUrl = new URL(url)
-      oldUrl.hostname = "old.reddit.com"
+      // old.reddit.com carries the full comment tree in server-rendered HTML,
+      // but Reddit increasingly bot-walls it (403). Fall back to whatever the
+      // shreddit page already delivered instead of failing the whole parse.
+      try {
+        const oldUrl = new URL(url)
+        oldUrl.hostname = "old.reddit.com"
 
-      const response = await fetch(oldUrl.toString(), {
-        headers: { "User-Agent": "Mozilla/5.0 (compatible; rdrr/1.0)" },
-      })
-      if (!response.ok) throw new Error(`Failed to fetch old.reddit.com: ${response.status}`)
+        const response = await fetch(oldUrl.toString(), {
+          headers: { "User-Agent": "Mozilla/5.0 (compatible; rdrr/1.0)" },
+        })
+        if (!response.ok) throw new Error(`Failed to fetch old.reddit.com: ${response.status}`)
 
-      const html = await response.text()
-      const Parser = doc.defaultView?.DOMParser ?? (typeof DOMParser !== "undefined" ? DOMParser : null)
-      if (!Parser) throw new Error("DOMParser is not available")
-      const parsed = new Parser().parseFromString(html, "text/html")
-      return extractOldReddit(parsed)
+        const html = await response.text()
+        const Parser = doc.defaultView?.DOMParser ?? (typeof DOMParser !== "undefined" ? DOMParser : null)
+        if (!Parser) throw new Error("DOMParser is not available")
+        const parsed = new Parser().parseFromString(html, "text/html")
+        return extractOldReddit(parsed)
+      } catch {
+        return extract()
+      }
     }
 
     const extract = (): SiteExtractorResult => {

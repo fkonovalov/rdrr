@@ -1,4 +1,5 @@
 import { countWords, safeDomain } from "@shared"
+import type { SiteExtractorResult } from "./sites/types"
 import type { ExtractOptions, ExtractResult } from "./types"
 import { stripUnsafeElements, resolveRelativeUrls, countHtmlWords } from "./cleanup"
 import { flattenShadowRoots, resolveStreamedContent, evaluateMediaQueries, applyMobileStyles } from "./compat"
@@ -15,7 +16,6 @@ import { normaliseContent } from "./normalise"
 import { extractSchemaOrg, getSchemaText, findElementBySchemaText, collectMetaTags } from "./schema"
 import { findMainContent } from "./select"
 import { findSiteExtractor, findAsyncSiteExtractor } from "./sites/registry"
-import type { SiteExtractorResult } from "./sites/types"
 import { serializeHTML } from "./utils/dom"
 
 /**
