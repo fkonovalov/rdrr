@@ -1,7 +1,7 @@
 import { countWords, estimateReadTime, mergeSignals } from "@shared"
 import type { GitHubResult, ParseOptions } from "../types"
 
-const DEFAULT_TIMEOUT_MS = 15000
+const DEFAULT_TIMEOUT_MS = 25000
 
 const ISSUE_PR_RE = /github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)/
 const FILE_RE = /github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)/

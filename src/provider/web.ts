@@ -10,7 +10,7 @@ const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
 const SIMPLE_UA = "rdrr/1.0 (reader)"
 const MAX_REDIRECTS = 10
-const DEFAULT_TIMEOUT_MS = 15000
+const DEFAULT_TIMEOUT_MS = 25000
 
 interface FetchOpts {
   language?: string
@@ -102,10 +102,45 @@ const fetchErrorMessage = (status: number, statusText: string, url: string): str
   if (status === 401) {
     return `${base}. ${domain} requires authentication; rdrr only reads public pages.`
   }
+  if (status === 404) {
+    return `${base}. Nothing exists at this path on ${domain}; the URL itself is likely wrong (typo, moved page, or a guessed link).`
+  }
   if (status >= 500) {
     return `${base}. ${domain} returned a server error; retry later.`
   }
   return base
+}
+
+const NETWORK_ERROR_HINTS: Record<string, string> = {
+  ENOTFOUND: "DNS lookup failed; the domain may not exist",
+  EAI_AGAIN: "temporary DNS failure; retry",
+  ECONNREFUSED: "the server refused the connection",
+  ECONNRESET: "the server dropped the connection",
+  ETIMEDOUT: "TCP connection timed out",
+  EHOSTUNREACH: "host unreachable",
+  ENETUNREACH: "network unreachable",
+  UND_ERR_CONNECT_TIMEOUT: "connection timed out",
+  UND_ERR_SOCKET: "the connection was closed mid-response",
+  CERT_HAS_EXPIRED: "the site's TLS certificate has expired",
+  DEPTH_ZERO_SELF_SIGNED_CERT: "the site uses a self-signed TLS certificate",
+  SELF_SIGNED_CERT_IN_CHAIN: "the site's TLS chain contains a self-signed certificate",
+  UNABLE_TO_VERIFY_LEAF_SIGNATURE: "the site's TLS certificate could not be verified",
+  ERR_TLS_CERT_ALTNAME_INVALID: "the TLS certificate does not match the hostname",
+}
+
+/**
+ * Node's fetch throws a bare `TypeError: fetch failed` with the real reason
+ * buried in `cause`. Surface the errno and a plain-language hint so callers
+ * (and agents reading stderr) can pick the right next step.
+ */
+const describeNetworkError = (err: unknown, url: string): Error => {
+  const cause = (err as { cause?: { code?: unknown; message?: unknown } }).cause
+  const code = typeof cause?.code === "string" ? cause.code : ""
+  const detail = code || (typeof cause?.message === "string" ? cause.message : "") || "network error"
+  const hint = NETWORK_ERROR_HINTS[code]
+  const wrapped = new Error(`Could not fetch ${safeDomain(url)}: ${detail}${hint ? ` (${hint})` : ""}`)
+  wrapped.cause = err
+  return wrapped
 }
 
 const isPdfPath = (url: string): boolean => {
@@ -206,6 +241,7 @@ const tryFetch = async (url: string, userAgent: string, opts: FetchOpts): Promis
         timeout.name = "TimeoutError"
         throw timeout
       }
+      if (err instanceof TypeError) throw describeNetworkError(err, current)
       throw err
     }
 

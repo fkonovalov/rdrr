@@ -3,7 +3,7 @@ import type { ParseOptions, StackOverflowResult } from "../types"
 import { extractStackOverflowRef } from "../detect"
 import { toMarkdown } from "../extract/markdown"
 
-const DEFAULT_TIMEOUT_MS = 15000
+const DEFAULT_TIMEOUT_MS = 25000
 const API = "https://api.stackexchange.com/2.3"
 // stackoverflow.com blocks plain HTTP clients with 403, so we go through the
 // StackExchange API instead (anonymous quota: 300 requests/day per IP).

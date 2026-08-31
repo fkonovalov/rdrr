@@ -47,7 +47,7 @@ const timeoutMs = z
   .positive()
   .max(60_000)
   .optional()
-  .describe("Per-request timeout in milliseconds. Default 15000")
+  .describe("Per-request timeout in milliseconds. Default 25000")
 
 const force = z.boolean().default(false).describe("Bypass the per-session in-memory cache")
 

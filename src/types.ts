@@ -19,7 +19,7 @@ export interface ParseOptions {
   wordsPerMinute?: number
   /** Abort signal forwarded to every underlying fetch. */
   signal?: AbortSignal
-  /** Per-request timeout in milliseconds. Defaults to 15000. */
+  /** Per-request timeout in milliseconds. Defaults to 25000. */
   timeoutMs?: number
   /** Override the outbound User-Agent header. */
   userAgent?: string

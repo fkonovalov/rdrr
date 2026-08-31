@@ -126,7 +126,7 @@ program
   .option("--order <order>", "for aggregate URLs: newest|oldest", parseOrderArg, "newest")
   .option("--check", "check if URL is probably readerable (exit 0/1 without parsing)")
   .option("--llms", "append the site's /llms.txt to the output if available")
-  .option("--timeout <ms>", "per-request timeout in milliseconds (default 15000)", parseLimitArg)
+  .option("--timeout <ms>", "per-request timeout in milliseconds (default 25000)", parseLimitArg)
   .option("--user-agent <ua>", "override the outbound User-Agent header")
   .option("--github-token <token>", "GitHub API token (falls back to $GITHUB_TOKEN)")
   .option("--wpm <n>", "words-per-minute used for readTime estimation (default 200)", parseLimitArg)
