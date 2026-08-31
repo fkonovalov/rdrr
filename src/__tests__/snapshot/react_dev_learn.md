@@ -6,7 +6,7 @@ domain: "react.dev"
 language: "en"
 dir: "ltr"
 description: "The library for web and native user interfaces"
-word_count: 1942
+word_count: 1944
 ---
 
 [Learn React](https://react.dev/learn)
@@ -472,6 +472,8 @@ function MyButton({ count, onClick }) {
   );
 }
 ```
+
+## Next Steps
 
 By now, you know the basics of how to write React code!
 
