@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest"
-import { detectUrlType, extractVideoId, extractXHandle, extractXStatus, isValidUrl, normalizeUrl } from "../detect"
+import {
+  detectUrlType,
+  extractNpmPackage,
+  extractVideoId,
+  extractXHandle,
+  extractXStatus,
+  isValidUrl,
+  normalizeUrl,
+} from "../detect"
 
 describe("detectUrlType", () => {
   it("classifies youtube variants", () => {
@@ -178,5 +186,50 @@ describe("normalizeUrl", () => {
   it("is idempotent", () => {
     const u = "https://example.com/article"
     expect(normalizeUrl(normalizeUrl(u))).toBe(u)
+  })
+})
+
+describe("extractNpmPackage", () => {
+  it("classifies npm package pages", () => {
+    expect(detectUrlType("https://www.npmjs.com/package/hash-wasm")).toBe("npm")
+    expect(detectUrlType("https://npmjs.com/package/rdrr")).toBe("npm")
+    expect(detectUrlType("https://www.npmjs.com/package/@types/node")).toBe("npm")
+    expect(detectUrlType("https://www.npmjs.com/package/zod/v/4.5.4")).toBe("npm")
+  })
+
+  it("leaves non-package npm pages as webpage", () => {
+    expect(detectUrlType("https://www.npmjs.com/")).toBe("webpage")
+    expect(detectUrlType("https://www.npmjs.com/search?q=markdown")).toBe("webpage")
+    expect(detectUrlType("https://www.npmjs.com/~sindresorhus")).toBe("webpage")
+  })
+
+  it("extracts name and version", () => {
+    expect(extractNpmPackage("https://www.npmjs.com/package/zod")).toEqual({ name: "zod", version: null })
+    expect(extractNpmPackage("https://www.npmjs.com/package/@scope/pkg/v/1.0.0")).toEqual({
+      name: "@scope/pkg",
+      version: "1.0.0",
+    })
+  })
+
+  it("accepts legacy uppercase names", () => {
+    expect(detectUrlType("https://www.npmjs.com/package/JSONStream")).toBe("npm")
+    expect(extractNpmPackage("https://www.npmjs.com/package/JSONStream")).toEqual({
+      name: "JSONStream",
+      version: null,
+    })
+  })
+
+  it("accepts leading-hyphen names", () => {
+    expect(detectUrlType("https://www.npmjs.com/package/-")).toBe("npm")
+    expect(extractNpmPackage("https://www.npmjs.com/package/@scope/-pkg")).toEqual({
+      name: "@scope/-pkg",
+      version: null,
+    })
+  })
+
+  it("rejects names that fail npm naming rules", () => {
+    expect(extractNpmPackage("https://www.npmjs.com/package/..%2F..%2Fevil")).toBeNull()
+    expect(extractNpmPackage("https://www.npmjs.com/package/_private")).toBeNull()
+    expect(extractNpmPackage("https://www.npmjs.com/package/.dotfile")).toBeNull()
   })
 })

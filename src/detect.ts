@@ -37,6 +37,7 @@ export type UrlType =
   | "github-discussion"
   | "github-file"
   | "stackoverflow"
+  | "npm"
   | "x-profile"
   | "x-status"
   | "webpage"
@@ -47,6 +48,7 @@ export const detectUrlType = (url: string): UrlType => {
   if (GITHUB_DISCUSSION.test(url)) return "github-discussion"
   if (GITHUB_FILE.test(url)) return "github-file"
   if (isStackOverflowQuestion(url)) return "stackoverflow"
+  if (isNpmPackage(url)) return "npm"
   if (isXStatus(url)) return "x-status"
   if (isXProfile(url)) return "x-profile"
   return "webpage"
@@ -125,6 +127,33 @@ export const extractStackOverflowRef = (url: string): StackOverflowRef | null =>
 }
 
 const isStackOverflowQuestion = (url: string): boolean => extractStackOverflowRef(url) !== null
+
+const NPM_HOSTS = new Set(["npmjs.com", "www.npmjs.com", "npmjs.org", "www.npmjs.org"])
+// Legacy unscoped names may contain uppercase (JSONStream) and names may
+// start with "-" (the package `-` exists); leading "." and "_" are banned by
+// npm. Tight enough to reject traversal/encodings before the registry URL.
+const NPM_NAME = /^(?:@[a-z0-9~-][a-z0-9._~-]*\/)?[A-Za-z0-9~-][A-Za-z0-9._~-]*$/
+
+export interface NpmPackageRef {
+  name: string
+  version: string | null
+}
+
+export const extractNpmPackage = (url: string): NpmPackageRef | null => {
+  try {
+    const u = new URL(url)
+    if (!NPM_HOSTS.has(u.hostname)) return null
+    const match = u.pathname.match(/^\/package\/((?:@[^/]+\/)?[^/]+)(?:\/v\/([^/]+))?\/?$/)
+    if (!match?.[1]) return null
+    const name = decodeURIComponent(match[1])
+    if (!NPM_NAME.test(name)) return null
+    return { name, version: match[2] ? decodeURIComponent(match[2]) : null }
+  } catch {
+    return null
+  }
+}
+
+const isNpmPackage = (url: string): boolean => extractNpmPackage(url) !== null
 
 export const isValidUrl = (url: string): boolean => {
   try {

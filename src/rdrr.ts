@@ -2,6 +2,7 @@ import { ensureProtocol } from "@shared"
 import type { ParseOptions, ParseResult } from "./types"
 import { detectUrlType, isValidUrl, normalizeUrl } from "./detect"
 import { detectLlmsTxt } from "./provider/llms-txt"
+import { parseWeb } from "./provider/web"
 
 export const parse = async (url: string, options?: ParseOptions): Promise<ParseResult> => {
   if (!url) throw new Error("URL is required")
@@ -45,6 +46,10 @@ const route = async (
       const { parseStackOverflow } = await import("./provider/stackoverflow")
       return parseStackOverflow(url, options)
     }
+    case "npm": {
+      const { parseNpm } = await import("./provider/npm")
+      return parseNpm(url, options)
+    }
     case "x-profile": {
       const { parseXProfile } = await import("./provider/x-profile")
       return parseXProfile(url, options)
@@ -54,7 +59,6 @@ const route = async (
       return parseXStatus(url, options)
     }
     case "webpage": {
-      const { parseWeb } = await import("./provider/web")
       return parseWeb(url, options)
     }
   }

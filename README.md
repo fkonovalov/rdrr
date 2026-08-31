@@ -15,7 +15,7 @@ npx rdrr https://react.dev/learn
 - **Fast**: no headless browser, lightweight
 - **Smart**: 20+ site-specific extractors (Wiki, Reddit, X, MDN, Claude, Substack ...)
 - **LLM-ready**: strips ads, navigation, footers; keeps code blocks, tables, math
-- **Versatile**: webpages, GitHub issues/PRs/discussions, Stack Overflow, X profiles, YouTube transcripts
+- **Versatile**: webpages, GitHub issues/PRs/discussions, Stack Overflow, npm packages, X profiles, YouTube transcripts
 
 ## Install
 
@@ -46,6 +46,9 @@ rdrr https://github.com/mozilla/readability/issues/1
 
 # Stack Overflow question with top answers
 rdrr https://stackoverflow.com/questions/11227809
+
+# npm package README (bypasses the npmjs.com bot wall via the registry API)
+rdrr https://www.npmjs.com/package/hash-wasm
 
 # X timeline
 rdrr https://x.com/discotune -n 10
@@ -145,8 +148,9 @@ Agent-relevant behavior:
 ### Known limitations
 
 - No JavaScript execution: client-side-rendered SPAs yield `extraction: "empty"`.
-- Reddit, npmjs.com, and Cloudflare-protected sites block non-browser clients
+- Reddit and Cloudflare-protected sites block non-browser clients
   (TLS fingerprinting); rdrr degrades gracefully but cannot bypass this.
+  npmjs.com package pages are served via the open registry API instead.
 - PDF parsing was removed in v0.5.0; use a dedicated PDF tool.
 
 ### Library
@@ -179,7 +183,7 @@ result.siteName // "Wikipedia"
 | `--check`                | Probe if URL is readable (exit 0/1)                         |
 | `--strict`               | Exit with code 3 when no content could be extracted         |
 | `--llms`                 | Append site's `/llms.txt`                                   |
-| `--timeout <ms>`         | Per-request timeout (default 15000)                         |
+| `--timeout <ms>`         | Per-request timeout (default 25000)                         |
 | `--github-token <token>` | GitHub API token (falls back to `$GITHUB_TOKEN`)            |
 | `--user-agent <ua>`      | Override the outbound User-Agent header                     |
 | `--no-history`           | Skip logging this call to history                           |
@@ -231,7 +235,7 @@ import { isProbablyReaderable } from "rdrr"
 await isProbablyReaderable("https://example.com") // true | false
 ```
 
-Also available as direct imports: `parseWeb`, `parseYouTube`, `parseGitHub`, `parseStackOverflow`, `detectUrlType`, `extractVideoId`, `normalizeUrl`.
+Also available as direct imports: `parseWeb`, `parseYouTube`, `parseGitHub`, `parseStackOverflow`, `parseNpm`, `detectUrlType`, `extractVideoId`, `normalizeUrl`.
 
 ## Supported sources
 
