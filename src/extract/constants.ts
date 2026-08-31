@@ -131,7 +131,7 @@ export const CONTENT_ELEMENT_SELECTOR = [
 const HIDDEN_EXACT_SKIP_SELECTORS = ["[hidden]", '[aria-hidden="true"]', ".hidden", ".invisible"]
 
 const HIDDEN_EXACT_SELECTORS = HIDDEN_EXACT_SKIP_SELECTORS.map((s) =>
-  s === '[aria-hidden="true"]' ? '[aria-hidden="true"]:not([class*="math"])' : s,
+  s === '[aria-hidden="true"]' ? '[aria-hidden="true"]:not([class*="math"]):not(svg):not([class*="paywall"])' : s,
 )
 
 export const HIDDEN_EXACT_SELECTOR = HIDDEN_EXACT_SELECTORS.join(",")
@@ -143,7 +143,8 @@ const EXACT_SELECTORS = [
   "style",
   "meta",
   "link",
-  "audio:not([src])",
+  "audio:not([src]):not(:has(source))",
+  "video:not([src]):not(:has(source))",
   '.ad:not([class*="gradient"])',
   '[class^="ad-" i]',
   '[class$="-ad" i]',
@@ -230,7 +231,7 @@ const EXACT_SELECTORS = [
   '[role="option"]',
   "textarea",
   "[hidden]",
-  '[aria-hidden="true"]:not([class*="math"])',
+  '[aria-hidden="true"]:not([class*="math"]):not(svg):not([class*="paywall"])',
   ".hidden",
   ".invisible",
   "instaread-player",
@@ -272,6 +273,16 @@ const EXACT_SELECTORS = [
   '[data-orientation="vertical"]',
   ".gh-header-sticky",
   '[data-testid="issue-metadata-sticky"]',
+  ".jwplayer",
+  '[href*="source=promotion" i]',
+  'header[class~="fixed"]',
+  'header[class~="sticky"]',
+  "ignore",
+  'iframe[src*="blink.net"]',
+  'iframe[src*="giscus.app"]',
+  'iframe[src*="tinypass.com"]',
+  '[title^="Share on" i]',
+  "svg[data-icon]",
 ]
 
 export const EXACT_SELECTORS_JOINED = EXACT_SELECTORS.join(",")
@@ -288,6 +299,32 @@ const TEST_ATTRIBUTES = [
 ]
 
 const PARTIAL_SELECTORS = [
+  "about-author",
+  "adcontainer",
+  "adplacehold",
+  "article-continues",
+  "articleheader",
+  "beyondwords",
+  "cat-overlay",
+  "contactus",
+  "cookie.law",
+  "copy-tooltip",
+  "hawk-",
+  "icon-sidebar",
+  "inarticle-ad",
+  "media-card",
+  "navcontainer",
+  "osano-cm",
+  "pagefoot",
+  "ratingscontainer",
+  "reactions",
+  "-relance",
+  "relposts",
+  "rightcol",
+  "sidebar-element",
+  "sticky-social",
+  "vid_carousel",
+  "window__widget",
   "a-statement",
   "(?<!main-)access-wall",
   "activitypub",
@@ -694,7 +731,7 @@ const PARTIAL_SELECTORS = [
   "related",
   "relevant",
   "reversefootnote",
-  "robots-nocontent",
+  "\\bnocontent\\b",
   "_rss",
   "rss-link",
   "screen-reader-text",
@@ -754,7 +791,6 @@ const PARTIAL_SELECTORS = [
   "storysmall",
   "storypublishdate",
   "subject-label",
-  "subhead",
   "submenu",
   "-subscribe-",
   "subscriber-drive",
@@ -791,7 +827,6 @@ const PARTIAL_SELECTORS = [
   "trust-badge",
   "trust-project",
   "chakra-badge",
-  "twitter",
   "twiblock",
   "u-hide",
   "upsell",
@@ -806,6 +841,7 @@ const PARTIAL_SELECTORS = [
 ]
 
 export const PARTIAL_SELECTORS_REGEX = new RegExp(PARTIAL_SELECTORS.join("|"), "i")
+export const PARTIAL_SELECTORS_ANCHORED_REGEX = new RegExp(`^(?:${PARTIAL_SELECTORS.join("|")})$`, "i")
 export const TEST_ATTRIBUTES_SELECTOR = TEST_ATTRIBUTES.map((a) => `[${a}]`).join(",")
 
 export const FOOTNOTE_INLINE_REFERENCES = [
@@ -919,9 +955,11 @@ export const ALLOWED_ATTRIBUTES = new Set([
   "lang",
   "role",
   "rowspan",
+  "sandbox",
   "src",
   "srclang",
   "srcset",
+  "start",
   "title",
   "type",
   "width",

@@ -11,24 +11,27 @@ const INLINE_WS_PATTERN = /^[\n\r\t\u200C\u200B\u200D\u200E\u200F\uFEFF]*$/u
 /* eslint-enable no-misleading-character-class */
 
 export const normaliseSpaces = (element: Element): void => {
-  const walk = (node: Node): void => {
-    if (isElement(node)) {
-      const tag = node.tagName.toLowerCase()
-      if (tag === "pre" || tag === "code") return
-    }
+  walk(element)
+}
 
-    if (isTextNode(node)) {
-      const text = node.textContent ?? ""
-      const normalized = text.replace(/\xA0/g, " ")
-      if (normalized !== text) node.textContent = normalized
-    }
-
-    if (node.hasChildNodes()) {
-      for (const child of Array.from(node.childNodes)) walk(child)
-    }
+const walk = (node: Node): void => {
+  if (isElement(node)) {
+    const tag = node.tagName.toLowerCase()
+    if (tag === "pre" || tag === "code") return
   }
 
-  walk(element)
+  if (isTextNode(node)) {
+    const text = node.textContent ?? ""
+    const normalized = text.replace(/\xA0/g, " ")
+    if (normalized !== text) node.textContent = normalized
+  }
+
+  let child = node.firstChild
+  while (child) {
+    const next = child.nextSibling
+    walk(child)
+    child = next
+  }
 }
 
 export const removeEmptyLines = (element: Element, doc: Document): void => {

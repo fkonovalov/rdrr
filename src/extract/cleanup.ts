@@ -1,28 +1,43 @@
 import { countWords } from "@shared"
 import { isDangerousUrl } from "./utils/dom"
 
-export const stripUnsafeElements = (doc: Document): void => {
-  const body = doc.body
-  if (!body) return
+const UNSAFE_ELEMENTS_SELECTOR =
+  'script:not([type^="math/"]), style, noscript, frame, frameset, object, embed, applet, base, ' +
+  "animate, set, animatemotion, animatetransform, animatecolor, discard"
 
-  for (const el of body.querySelectorAll(
-    'script:not([type^="math/"]), style, noscript, frame, frameset, object, embed, applet, base',
-  )) {
-    el.remove()
-  }
+const URL_ATTRIBUTES = new Set(["href", "src", "action", "formaction", "xlink:href"])
 
-  for (const el of body.querySelectorAll("*")) {
+export const stripUnsafeElements = (root: Document | Element): void => {
+  // For a Document, body content is what gets serialized (innerHTML); for an
+  // Element the root's own attributes end up in the output via outerHTML.
+  const base = "body" in root ? root.body : root
+  if (!base) return
+
+  for (const el of base.querySelectorAll(UNSAFE_ELEMENTS_SELECTOR)) el.remove()
+
+  const elements = "body" in root ? base.querySelectorAll("*") : [base, ...base.querySelectorAll("*")]
+  for (const el of elements) {
     for (const attr of Array.from(el.attributes)) {
       const name = attr.name.toLowerCase()
       if (name.startsWith("on")) {
         el.removeAttribute(attr.name)
       } else if (name === "srcdoc") {
         el.removeAttribute(attr.name)
-      } else if (["href", "src", "action", "formaction", "xlink:href"].includes(name)) {
-        if (isDangerousUrl(attr.value)) el.removeAttribute(attr.name)
+      } else if (URL_ATTRIBUTES.has(name)) {
+        // An SVG document loaded into an iframe can execute script, so no
+        // data: URI is allowed there at all.
+        const allowInlineImage = !(name === "src" && el.tagName === "IFRAME")
+        if (isDangerousUrl(attr.value, allowInlineImage)) el.removeAttribute(attr.name)
       }
     }
   }
+}
+
+export const sanitizeHtmlFragment = (doc: Document, html: string): string => {
+  const container = doc.createElement("div")
+  container.innerHTML = html
+  stripUnsafeElements(container)
+  return container.innerHTML
 }
 
 export const resolveRelativeUrls = (element: Element, docUrl: string, doc: Document): void => {
@@ -73,16 +88,11 @@ export const resolveRelativeUrls = (element: Element, docUrl: string, doc: Docum
   }
 }
 
+const HTML_STRIP_RE = /<[^>]*>|&#\d+;|&(?:amp|lt|gt|quot);|&\w+;/gi
+const ENTITY_MAP: Record<string, string> = { "&amp;": "&", "&lt;": "<", "&gt;": ">", "&quot;": '"' }
+
 export const countHtmlWords = (content: string): number => {
-  const text = content
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/gi, " ")
-    .replace(/&amp;/gi, "&")
-    .replace(/&lt;/gi, "<")
-    .replace(/&gt;/gi, ">")
-    .replace(/&quot;/gi, '"')
-    .replace(/&#\d+;/g, " ")
-    .replace(/&\w+;/g, " ")
+  const text = content.replace(HTML_STRIP_RE, (m) => (m.startsWith("<") ? " " : (ENTITY_MAP[m.toLowerCase()] ?? " ")))
   return countWords(text)
 }
 

@@ -54,7 +54,9 @@ const isPermalink = (el: Element): boolean => {
   const cls = (el.getAttribute("class") ?? "").toLowerCase()
   const text = (el.textContent ?? "").trim()
 
-  if (href.startsWith("#") || href.includes("#")) return true
+  // Only fragment-only hrefs are permalinks: a real link that happens to
+  // carry an #anchor must survive inside headings.
+  if (href.startsWith("#")) return true
   if (title.includes("permalink")) return true
   if (cls.includes("permalink") || cls.includes("heading-anchor") || cls.includes("anchor-link")) return true
   if (PERMALINK_SYMBOLS.test(text)) return true

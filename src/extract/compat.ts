@@ -2,6 +2,14 @@ import { parseHTML } from "./utils/dom"
 
 const MOBILE_WIDTH = 600
 
+export const hasShadowRoots = (doc: Document): boolean => {
+  if (!doc.body) return false
+  for (const el of doc.body.querySelectorAll("*")) {
+    if (el.shadowRoot) return true
+  }
+  return false
+}
+
 export const flattenShadowRoots = (original: Document, clone: Document): void => {
   if (!original.body || !clone.body) return
 
@@ -39,12 +47,16 @@ export const flattenShadowRoots = (original: Document, clone: Document): void =>
   }
 }
 
-export const resolveStreamedContent = (doc: Document): void => {
-  const scripts = doc.querySelectorAll("script")
-  const swaps: Array<{ templateId: string; contentId: string }> = []
+export interface StreamSwap {
+  templateId: string
+  contentId: string
+}
+
+export const collectStreamSwaps = (doc: Document): StreamSwap[] => {
+  const swaps: StreamSwap[] = []
   const rcPattern = /\$RC\("(B:\d+)","(S:\d+)"\)/g
 
-  for (const script of scripts) {
+  for (const script of doc.querySelectorAll("script")) {
     const text = script.textContent ?? ""
     if (!text.includes("$RC(")) continue
     rcPattern.lastIndex = 0
@@ -53,7 +65,10 @@ export const resolveStreamedContent = (doc: Document): void => {
       swaps.push({ templateId: match[1]!, contentId: match[2]! })
     }
   }
+  return swaps
+}
 
+export const resolveStreamedContent = (doc: Document, swaps: StreamSwap[]): void => {
   if (swaps.length === 0) return
 
   for (const { templateId, contentId } of swaps) {

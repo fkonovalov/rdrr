@@ -2,40 +2,47 @@ import {
   EXACT_SELECTORS_JOINED,
   HIDDEN_EXACT_SELECTOR,
   HIDDEN_EXACT_SKIP_SELECTOR,
+  PARTIAL_SELECTORS_ANCHORED_REGEX,
   PARTIAL_SELECTORS_REGEX,
   TEST_ATTRIBUTES_SELECTOR,
   FOOTNOTE_LIST_SELECTORS,
 } from "../constants"
+import { closestByTag, collectAncestors, hasAncestorIn, safeQueryAll } from "../utils/dom"
 
 export { filterContentPatterns } from "./content-patterns"
 
+const PRE_CODE = new Set(["pre", "code"])
+const HEADING_TAGS = new Set(["h1", "h2", "h3", "h4", "h5", "h6"])
+
 export const filterBySelectors = (
-  doc: Document,
+  root: Document | Element,
   mainContent?: Element | null,
   skipHiddenExact: boolean = false,
 ): number => {
   let count = 0
-  count += filterExactSelectors(doc, mainContent, skipHiddenExact)
-  count += filterPartialSelectors(doc, mainContent)
+  count += filterExactSelectors(root, mainContent, skipHiddenExact)
+  count += filterPartialSelectors(root, mainContent)
   count += filterMetadataBlocks(mainContent)
   return count
 }
 
 const filterExactSelectors = (
-  doc: Document,
+  root: Document | Element,
   mainContent?: Element | null,
   skipHiddenExact: boolean = false,
 ): number => {
   let count = 0
-  for (const el of doc.querySelectorAll(EXACT_SELECTORS_JOINED)) {
+  const hiddenExact = skipHiddenExact ? new Set(safeQueryAll(root, HIDDEN_EXACT_SELECTOR)) : null
+  const hiddenSkip = skipHiddenExact ? new Set(safeQueryAll(root, HIDDEN_EXACT_SKIP_SELECTOR)) : null
+
+  for (const el of root.querySelectorAll(EXACT_SELECTORS_JOINED)) {
     if (!el.parentNode) continue
-    if (el.closest("pre, code")) continue
+    if (closestByTag(el, PRE_CODE)) continue
     if (mainContent && el.contains(mainContent)) continue
 
-    // When retrying with hidden content visible, skip hidden-attribute selectors
-    if (skipHiddenExact) {
+    if (hiddenExact && hiddenSkip) {
       const role = (el.getAttribute("role") ?? "").toLowerCase()
-      if (el.matches(HIDDEN_EXACT_SELECTOR) || (el.closest(HIDDEN_EXACT_SKIP_SELECTOR) && role === "dialog")) {
+      if (hiddenExact.has(el) || ((hiddenSkip.has(el) || hasAncestorIn(el, hiddenSkip)) && role === "dialog")) {
         continue
       }
     }
@@ -46,17 +53,17 @@ const filterExactSelectors = (
   return count
 }
 
-const filterPartialSelectors = (doc: Document, mainContent?: Element | null): number => {
+const filterPartialSelectors = (root: Document | Element, mainContent?: Element | null): number => {
   let count = 0
-  for (const el of doc.querySelectorAll(TEST_ATTRIBUTES_SELECTOR)) {
-    if (el.tagName === "CODE" || el.tagName === "PRE" || el.closest("code, pre")) continue
+  let footnotes: FootnoteSets | null = null
+
+  for (const el of root.querySelectorAll(TEST_ATTRIBUTES_SELECTOR)) {
+    if (closestByTag(el, PRE_CODE)) continue
     if (mainContent && el.contains(mainContent)) continue
 
-    const attrs = buildAttributeString(el)
-    if (!attrs) continue
-
-    if (PARTIAL_SELECTORS_REGEX.test(attrs)) {
-      if (isProtectedElement(el)) continue
+    if (matchesPartialSelectors(el)) {
+      footnotes ??= buildFootnoteSets(root)
+      if (isProtectedElement(el, footnotes)) continue
       el.remove()
       count++
     }
@@ -64,11 +71,24 @@ const filterPartialSelectors = (doc: Document, mainContent?: Element | null): nu
   return count
 }
 
-const buildAttributeString = (el: Element): string =>
-  (
-    (el.getAttribute("class") ?? "") +
-    " " +
-    (el.id ?? "") +
+// Headings match on class only, and a delimiter-less id must equal a whole
+// pattern: an id like `theroleofthings` contains `herol` but is not a hero.
+const matchesPartialSelectors = (el: Element): boolean => {
+  const isHeading = HEADING_TAGS.has(el.localName)
+  const attrs = buildAttributeString(el, isHeading)
+  if (attrs && PARTIAL_SELECTORS_REGEX.test(attrs)) return true
+  if (isHeading) return false
+
+  const id = (el.id ?? "").toLowerCase().trim()
+  if (!id) return false
+  return /[-_\s]/.test(id) ? PARTIAL_SELECTORS_REGEX.test(id) : PARTIAL_SELECTORS_ANCHORED_REGEX.test(id)
+}
+
+const buildAttributeString = (el: Element, classOnly: boolean): string => {
+  const cls = el.getAttribute("class") ?? ""
+  if (classOnly) return cls.toLowerCase().trim()
+  return (
+    cls +
     " " +
     (el.getAttribute("data-component") ?? "") +
     " " +
@@ -84,15 +104,23 @@ const buildAttributeString = (el: Element): string =>
   )
     .toLowerCase()
     .trim()
+}
 
-const isProtectedElement = (el: Element): boolean => {
-  if (el.tagName === "A" && el.closest("h1, h2, h3, h4, h5, h6")) return true
-  try {
-    if (el.matches(FOOTNOTE_LIST_SELECTORS) || el.querySelector(FOOTNOTE_LIST_SELECTORS)) return true
-    const parent = el.parentElement
-    if (parent?.matches(FOOTNOTE_LIST_SELECTORS)) return true
-  } catch {}
-  return false
+interface FootnoteSets {
+  matches: Set<Element>
+  ancestors: Set<Element>
+}
+
+const buildFootnoteSets = (root: Document | Element): FootnoteSets => {
+  const matches = new Set(safeQueryAll(root, FOOTNOTE_LIST_SELECTORS))
+  return { matches, ancestors: collectAncestors(matches) }
+}
+
+const isProtectedElement = (el: Element, footnotes: FootnoteSets): boolean => {
+  if (el.tagName === "A" && closestByTag(el, HEADING_TAGS)) return true
+  if (footnotes.matches.has(el) || footnotes.ancestors.has(el)) return true
+  const parent = el.parentElement
+  return parent !== null && footnotes.matches.has(parent)
 }
 
 const DATE_RE =

@@ -66,3 +66,20 @@ describe("isDangerousUrl", () => {
     expect(isDangerousUrl("./relative")).toBe(false)
   })
 })
+
+describe("isDangerousUrl hardening", () => {
+  it("rejects blob: URLs", () => {
+    expect(isDangerousUrl("blob:https://example.com/uuid")).toBe(true)
+  })
+
+  it("rejects non-image data: URLs of any type", () => {
+    expect(isDangerousUrl("data:application/pdf;base64,AAAA")).toBe(true)
+    expect(isDangerousUrl("data:text/plain,hello")).toBe(true)
+    expect(isDangerousUrl("data:application/xhtml+xml,<html>")).toBe(true)
+  })
+
+  it("rejects every data: URL when inline images are not allowed (iframe src)", () => {
+    expect(isDangerousUrl("data:image/png;base64,iVBOR...", false)).toBe(true)
+    expect(isDangerousUrl("data:image/gif;base64,AAAA", false)).toBe(true)
+  })
+})

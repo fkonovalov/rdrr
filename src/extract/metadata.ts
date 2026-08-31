@@ -471,51 +471,50 @@ const metas = (tags: MetaTag[], attr: "name" | "property", value: string): strin
     .filter((t) => (attr === "name" ? t.name : t.property)?.toLowerCase() === value.toLowerCase())
     .map((t) => t.content?.trim() ?? "")
 
-const schema = (data: unknown, property: string): string => {
-  if (!data) return ""
+const searchSchema = (obj: unknown, props: string[], isExact: boolean = true): string[] => {
+  if (typeof obj === "string") return props.length === 0 ? [obj] : []
+  if (!obj || typeof obj !== "object") return []
 
-  const search = (obj: unknown, props: string[], isExact: boolean = true): string[] => {
-    if (typeof obj === "string") return props.length === 0 ? [obj] : []
-    if (!obj || typeof obj !== "object") return []
-
-    if (Array.isArray(obj)) {
-      const cur = props[0]
-      if (cur && /^\[\d+\]$/.test(cur)) {
-        const index = parseInt(cur.slice(1, -1))
-        if ((obj as unknown[])[index]) return search((obj as unknown[])[index], props.slice(1), isExact)
-        return []
-      }
-      if (props.length === 0 && obj.every((i) => typeof i === "string" || typeof i === "number")) return obj.map(String)
-      return obj.flatMap((item) => search(item, props, isExact))
-    }
-
-    const [cur, ...rest] = props
-    if (!cur) {
-      if (typeof obj === "string") return [obj]
-      if (Object.hasOwn(obj as object, "name") && typeof (obj as Record<string, unknown>).name === "string") {
-        return [(obj as Record<string, unknown>).name as string]
-      }
+  if (Array.isArray(obj)) {
+    const cur = props[0]
+    if (cur && /^\[\d+\]$/.test(cur)) {
+      const index = parseInt(cur.slice(1, -1))
+      if ((obj as unknown[])[index]) return searchSchema((obj as unknown[])[index], props.slice(1), isExact)
       return []
     }
+    if (props.length === 0 && obj.every((i) => typeof i === "string" || typeof i === "number")) return obj.map(String)
+    return obj.flatMap((item) => searchSchema(item, props, isExact))
+  }
 
-    if (Object.hasOwn(obj as object, cur)) return search((obj as Record<string, unknown>)[cur], rest, true)
-
-    // Fuzzy fallback: search nested objects
-    if (!isExact) {
-      const nested: string[] = []
-      for (const key of Object.keys(obj as object)) {
-        const val = (obj as Record<string, unknown>)[key]
-        if (typeof val === "object" && val !== null) {
-          nested.push(...search(val, props, false))
-        }
-      }
-      if (nested.length > 0) return nested
+  const [cur, ...rest] = props
+  if (!cur) {
+    if (typeof obj === "string") return [obj]
+    if (Object.hasOwn(obj as object, "name") && typeof (obj as Record<string, unknown>).name === "string") {
+      return [(obj as Record<string, unknown>).name as string]
     }
-
     return []
   }
 
-  let results = search(data, property.split("."), true)
-  if (results.length === 0) results = search(data, property.split("."), false)
+  if (Object.hasOwn(obj as object, cur)) return searchSchema((obj as Record<string, unknown>)[cur], rest, true)
+
+  // Fuzzy fallback: search nested objects
+  if (!isExact) {
+    const nested: string[] = []
+    for (const key of Object.keys(obj as object)) {
+      const val = (obj as Record<string, unknown>)[key]
+      if (typeof val === "object" && val !== null) {
+        nested.push(...searchSchema(val, props, false))
+      }
+    }
+    if (nested.length > 0) return nested
+  }
+
+  return []
+}
+
+const schema = (data: unknown, property: string): string => {
+  if (!data) return ""
+  let results = searchSchema(data, property.split("."), true)
+  if (results.length === 0) results = searchSchema(data, property.split("."), false)
   return results.filter(Boolean).join(", ")
 }

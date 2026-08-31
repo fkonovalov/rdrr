@@ -1,14 +1,14 @@
 import { ALLOWED_ATTRIBUTES, ALLOWED_EMPTY_ELEMENTS } from "./constants"
-import { isElement, isTextNode, transferContent } from "./utils/dom"
+import { hasVisibleText, isElement, isTextNode, transferContent } from "./utils/dom"
+
+const normalize = (text: string): string =>
+  text
+    .replace(/\u00A0/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase()
 
 export const normaliseHeadings = (element: Element, title: string, doc: Document): void => {
-  const normalize = (text: string): string =>
-    text
-      .replace(/\u00A0/g, " ")
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase()
-
   for (const h1 of Array.from(element.getElementsByTagName("h1"))) {
     const h2 = doc.createElement("h2")
     transferContent(h1, h2)
@@ -36,27 +36,27 @@ export const removeComments = (element: Element): void => {
 }
 
 export const stripAttributes = (element: Element): void => {
-  const process = (el: Element): void => {
-    if (el.tagName.toLowerCase() === "svg" || el.namespaceURI === "http://www.w3.org/2000/svg") return
+  stripElementAttributes(element)
+  for (const el of element.querySelectorAll("*")) stripElementAttributes(el)
+}
 
-    for (const attr of Array.from(el.attributes)) {
-      const name = attr.name.toLowerCase()
-      const value = attr.value
+const stripElementAttributes = (el: Element): void => {
+  if (el.tagName.toLowerCase() === "svg" || el.namespaceURI === "http://www.w3.org/2000/svg") return
 
-      const isPreserved =
-        (name === "id" && (value.startsWith("fnref:") || value.startsWith("fn:") || value === "footnotes")) ||
-        (name === "class" &&
-          ((el.tagName === "CODE" && value.startsWith("language-")) ||
-            value === "footnote-backref" ||
-            /^callout(?:-|$)/.test(value)))
+  for (const attr of Array.from(el.attributes)) {
+    const name = attr.name.toLowerCase()
+    const value = attr.value
 
-      if (isPreserved) continue
-      if (!ALLOWED_ATTRIBUTES.has(name)) el.removeAttribute(attr.name)
-    }
+    const isPreserved =
+      (name === "id" && (value.startsWith("fnref:") || value.startsWith("fn:") || value === "footnotes")) ||
+      (name === "class" &&
+        ((el.tagName === "CODE" && value.startsWith("language-")) ||
+          value === "footnote-backref" ||
+          /^callout(?:-|$)/.test(value)))
+
+    if (isPreserved) continue
+    if (!ALLOWED_ATTRIBUTES.has(name)) el.removeAttribute(attr.name)
   }
-
-  process(element)
-  for (const el of element.querySelectorAll("*")) process(el)
 }
 
 export const removeEmptyElements = (element: Element): void => {
@@ -86,8 +86,7 @@ export const removeEmptyElements = (element: Element): void => {
       }
     }
 
-    const text = el.textContent ?? ""
-    if (text.trim().length > 0 || text.includes("\u00A0")) continue
+    if (hasVisibleText(el, true)) continue
 
     if (!el.hasChildNodes()) {
       el.remove()
@@ -114,13 +113,11 @@ export const removeEmptyElements = (element: Element): void => {
 
 export const removeTrailingHeadings = (element: Element): void => {
   const hasContentAfter = (el: Element): boolean => {
-    let text = ""
     let sibling = el.nextSibling
     while (sibling) {
-      text += sibling.textContent ?? ""
+      if ((sibling.textContent ?? "").trim()) return true
       sibling = sibling.nextSibling
     }
-    if (text.trim()) return true
     const parent = el.parentElement
     return parent && parent !== element ? hasContentAfter(parent) : false
   }

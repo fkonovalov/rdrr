@@ -1,19 +1,25 @@
+import { collectAncestors } from "../utils/dom"
+
 const HIDDEN_STYLE = /(?:^|;\s*)(?:display\s*:\s*none|visibility\s*:\s*hidden|opacity\s*:\s*0)(?:\s*;|\s*$)/i
 
 const HIDDEN_CSS_TOKENS = new Set(["hidden", "invisible"])
 
-export const filterHiddenElements = (doc: Document): number => {
-  const targets = new Map<Element, string>()
+const MATH_MARKUP_SELECTOR = "math, [data-mathml], .katex-mathml"
 
-  for (const el of doc.querySelectorAll("*")) {
-    if (containsMath(el)) continue
+export const filterHiddenElements = (root: Document | Element): number => {
+  let mathAncestors: Set<Element> | undefined
+  const targets: Element[] = []
 
+  for (const el of root.querySelectorAll("*")) {
     const reason = detectHiddenReason(el)
-    if (reason) targets.set(el, reason)
+    if (!reason) continue
+    mathAncestors ??= collectAncestors(root.querySelectorAll(MATH_MARKUP_SELECTOR))
+    if (el.tagName.toLowerCase() === "math" || mathAncestors.has(el)) continue
+    targets.push(el)
   }
 
-  for (const el of targets.keys()) el.remove()
-  return targets.size
+  for (const el of targets) el.remove()
+  return targets.length
 }
 
 const detectHiddenReason = (el: Element): string | null => {
@@ -34,6 +40,3 @@ const detectHiddenReason = (el: Element): string | null => {
 
   return null
 }
-
-const containsMath = (el: Element): boolean =>
-  el.tagName.toLowerCase() === "math" || el.querySelector("math, [data-mathml], .katex-mathml") !== null

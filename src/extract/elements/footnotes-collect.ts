@@ -330,6 +330,16 @@ const collectWordFootnotes = (
 
 const FOOTNOTE_SECTION_RE = /^(foot\s*notes?|end\s*notes?|notes?|references?)$/i
 
+const parseNum = (el: Element): number | null => {
+  const first = el.firstElementChild
+  if (!first) return null
+  const tag = first.tagName.toLowerCase()
+  if (tag !== "sup" && tag !== "strong") return null
+  const text = first.textContent?.trim() ?? ""
+  const n = parseInt(text, 10)
+  return !isNaN(n) && n >= 1 && String(n) === text ? n : null
+}
+
 const collectLooseFootnotes = (
   root: Element,
   footnotes: FootnoteMap,
@@ -340,16 +350,6 @@ const collectLooseFootnotes = (
   const allPs = Array.from(root.querySelectorAll("p"))
   const container = allPs.length > 0 ? (allPs.at(-1)?.parentElement ?? root) : root
   const children = Array.from(container.children)
-
-  const parseNum = (el: Element): number | null => {
-    const first = el.firstElementChild
-    if (!first) return null
-    const tag = first.tagName.toLowerCase()
-    if (tag !== "sup" && tag !== "strong") return null
-    const text = first.textContent?.trim() ?? ""
-    const n = parseInt(text, 10)
-    return !isNaN(n) && n >= 1 && String(n) === text ? n : null
-  }
 
   const crossValidate = (paragraphs: Array<{ num: number; el: Element }>): boolean => {
     const nums = new Set(paragraphs.map((p) => p.num))

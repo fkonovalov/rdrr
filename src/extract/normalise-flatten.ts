@@ -66,10 +66,12 @@ const processTopLevel = (element: Element, doc: Document): boolean => {
 }
 
 const processDeepest = (element: Element, doc: Document): boolean => {
-  const sorted = Array.from(element.querySelectorAll(BLOCK_ELEMENTS_SELECTOR)).sort((a, b) => depth(b) - depth(a))
+  const sorted = Array.from(element.querySelectorAll(BLOCK_ELEMENTS_SELECTOR))
+    .map((el) => ({ el, depth: depth(el) }))
+    .sort((a, b) => b.depth - a.depth)
 
   let modified = false
-  for (const el of sorted) {
+  for (const { el } of sorted) {
     if (processElement(el, element, doc)) modified = true
   }
   return modified

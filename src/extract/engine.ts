@@ -1,8 +1,16 @@
 import { countWords, safeDomain } from "@shared"
 import type { SiteExtractorResult } from "./sites/types"
 import type { ExtractOptions, ExtractResult } from "./types"
-import { stripUnsafeElements, resolveRelativeUrls, countHtmlWords } from "./cleanup"
-import { flattenShadowRoots, resolveStreamedContent, evaluateMediaQueries, applyMobileStyles } from "./compat"
+import { stripUnsafeElements, sanitizeHtmlFragment, resolveRelativeUrls, countHtmlWords } from "./cleanup"
+import {
+  type StreamSwap,
+  flattenShadowRoots,
+  hasShadowRoots,
+  collectStreamSwaps,
+  resolveStreamedContent,
+  evaluateMediaQueries,
+  applyMobileStyles,
+} from "./compat"
 import { HIDDEN_EXACT_SKIP_SELECTOR } from "./constants"
 import { normaliseCallouts } from "./elements/callouts"
 import { normaliseFootnotes } from "./elements/footnotes"
@@ -102,8 +110,6 @@ const runPipeline = (doc: Document, url: string, options: ExtractOptions): Extra
   if (result.wordCount < MIN_ACCEPTABLE_WORDS) result = retryWithLowScoringKept(result, opts, tryExtract)
   if (result.wordCount < MIN_ACCEPTABLE_WORDS) result = bestOfAttempts(result, attempts)
 
-  stripUnsafeElements(doc)
-
   return rescueFromSchemaOrg(result, doc, url, opts, cache.schemaOrg)
 }
 
@@ -164,12 +170,14 @@ const rescueFromSchemaOrg = (
   const schemaText = getSchemaText(schemaOrg)
   if (!schemaText || countWords(schemaText) <= current.wordCount * 1.5) return current
 
+  stripUnsafeElements(doc)
   const bestMatch = doc.body ? findElementBySchemaText(doc.body, schemaText) : null
   if (bestMatch) {
     const selector = getSelector(bestMatch, doc)
     return extractInternal(doc, url, { ...opts, contentSelector: selector })
   }
-  return { ...current, content: schemaText, wordCount: countWords(schemaText) }
+  const safe = sanitizeHtmlFragment(doc, schemaText)
+  return { ...current, content: safe, wordCount: countHtmlWords(safe) }
 }
 
 /**
@@ -234,6 +242,8 @@ interface ExtractionCache {
   meta: ReturnType<typeof extractMetadata>
   mobileStyles: ReturnType<typeof evaluateMediaQueries>
   smallImages: ReturnType<typeof filterSmallImages>
+  shadowRoots: boolean
+  streamSwaps: StreamSwap[]
 }
 
 const getOrCreateCache = (doc: Document, existing?: ExtractionCache): ExtractionCache => {
@@ -243,7 +253,15 @@ const getOrCreateCache = (doc: Document, existing?: ExtractionCache): Extraction
   const meta = extractMetadata(doc, schemaOrg, metaTags)
   const mobileStyles = evaluateMediaQueries(doc)
   const smallImages = filterSmallImages(doc)
-  return { schemaOrg, metaTags, meta, mobileStyles, smallImages }
+  return {
+    schemaOrg,
+    metaTags,
+    meta,
+    mobileStyles,
+    smallImages,
+    shadowRoots: hasShadowRoots(doc),
+    streamSwaps: collectStreamSwaps(doc),
+  }
 }
 
 const extractInternal = (doc: Document, url: string, options: InternalOptions = {}): ExtractResult => {
@@ -259,8 +277,8 @@ const extractInternal = (doc: Document, url: string, options: InternalOptions = 
   const clone = doc.cloneNode(true) as Document
   clone.body?.normalize()
 
-  flattenShadowRoots(doc, clone)
-  resolveStreamedContent(clone)
+  if (cache.shadowRoots) flattenShadowRoots(doc, clone)
+  resolveStreamedContent(clone, cache.streamSwaps)
   applyMobileStyles(clone, mobileStyles)
 
   const mainContent = findMainContent(clone, contentSelector)
@@ -276,14 +294,19 @@ const extractInternal = (doc: Document, url: string, options: InternalOptions = 
   normaliseFootnotes(mainContent)
   normaliseCallouts(mainContent)
 
-  if (shouldRemoveHidden) filterHiddenElements(clone)
-  filterBySelectors(clone, mainContent, !shouldRemoveHidden)
-  if (removeLowScoring) filterLowScoringBlocks(clone, mainContent)
+  // scoped to mainContent: removals elsewhere never affect the serialized output
+  if (shouldRemoveHidden) filterHiddenElements(mainContent)
+  filterBySelectors(mainContent, mainContent, !shouldRemoveHidden)
+  if (removeLowScoring) filterLowScoringBlocks(mainContent, mainContent)
   filterContentPatterns(mainContent, url)
 
   normaliseContent(mainContent, meta.title, clone)
 
   if (url) resolveRelativeUrls(mainContent, url, doc)
+
+  // Unconditional sanitization boundary: every step above is skippable via
+  // options, and mainContent is serialized below via outerHTML.
+  stripUnsafeElements(mainContent)
 
   const content = mainContent.outerHTML
   return {

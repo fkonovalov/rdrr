@@ -1,5 +1,13 @@
 import { countWords } from "@shared"
 import { CONTENT_ELEMENT_SELECTOR } from "../constants"
+import { closestByTag, collectAncestors } from "../utils/dom"
+
+const PRE_CODE = new Set(["pre", "code"])
+
+const boundedIndexOf = (haystack: string, needle: string, limit: number): number => {
+  const idx = haystack.slice(0, limit + needle.length).indexOf(needle)
+  return idx === -1 ? Number.MAX_SAFE_INTEGER : idx
+}
 
 const CONTENT_DATE_PATTERN = /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{1,2}/i
 const CONTENT_READ_TIME_PATTERN = /\d+\s*min(?:ute)?s?\s+read\b/i
@@ -22,8 +30,11 @@ const NEWSLETTER_PATTERN =
 const RELATED_HEADING_PATTERN =
   /^(?:related (?:posts?|articles?|content|stories|reads?|reading)|you (?:might|may|could) (?:also )?(?:like|enjoy|be interested in)|read (?:next|more|also)|further reading|see also|more (?:from|articles?|posts?|like this)|more to (?:read|explore)|about (?:the )?author)$/i
 
+const METADATA_LABEL_PATTERN = /^(?:date|published|updated|posted|from|to|subject)\s*:/i
+
 const METADATA_STRIP_BASE = [
   /\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\b/gi,
+  /\b(?:Mon(?:day)?|Tue(?:s(?:day)?)?|Wed(?:nesday)?|Thu(?:rs(?:day)?)?|Fri(?:day)?|Sat(?:urday)?|Sun(?:day)?)\b/gi,
   /\b\d+(?:st|nd|rd|th)?\b/g,
 ]
 
@@ -31,11 +42,11 @@ const READ_TIME_STRIP_PATTERNS = [...METADATA_STRIP_BASE, /\bmin(?:ute)?s?\b/gi,
 
 const BYLINE_STRIP_PATTERNS = [...METADATA_STRIP_BASE, /\bby\b/gi, /[/|·•—–\-,]+/g]
 
-const isNewsletterElement = (el: Element, maxWords: number): boolean => {
+const isNewsletterElement = (el: Element, maxWords: number, contentAncestors: ReadonlySet<Element>): boolean => {
   const text = el.textContent?.trim() ?? ""
   const words = countWords(text)
   if (words < 2 || words > maxWords) return false
-  if (el.querySelector(CONTENT_ELEMENT_SELECTOR)) return false
+  if (contentAncestors.has(el)) return false
   const normalized = text.replace(/([a-z])([A-Z])/g, "$1 $2")
   return NEWSLETTER_PATTERN.test(normalized)
 }
@@ -214,18 +225,24 @@ export const filterContentPatterns = (mainContent: Element, url: string): number
     const words = countWords(text)
 
     if (words > 15 || words === 0) continue
-    if (el.closest("pre, code")) continue
+    if (closestByTag(el, PRE_CODE)) continue
 
     const tag = el.tagName
     const hasDate = CONTENT_DATE_PATTERN.test(text)
-    let pos = -2
-    const getPos = () => {
-      if (pos === -2) pos = contentText.indexOf(text)
-      return pos
-    }
+    let pos: number | undefined
+    // all getPos() consumers compare <= 600, so the scan is capped there
+    const getPos = () => (pos ??= boundedIndexOf(contentText, text, 600))
 
     // Remove article metadata header blocks (DIV only) near the top
-    if (tag === "DIV" && words >= 1 && words <= 10 && hasDate && !/[.!?]/.test(text) && getPos() <= 400) {
+    if (
+      tag === "DIV" &&
+      words >= 1 &&
+      words <= 10 &&
+      hasDate &&
+      !METADATA_LABEL_PATTERN.test(text) &&
+      !/[.!?]/.test(text) &&
+      getPos() <= 400
+    ) {
       if (
         !Array.from(el.querySelectorAll("p, h1, h2, h3, h4, h5, h6")).some((b) => countWords(b.textContent ?? "") > 8)
       ) {
@@ -622,10 +639,11 @@ export const filterContentPatterns = (mainContent: Element, url: string): number
   }
 
   // Remove newsletter signup sections
+  const contentElAncestors = collectAncestors(mainContent.querySelectorAll(CONTENT_ELEMENT_SELECTOR))
   for (const el of mainContent.querySelectorAll("div, section, aside")) {
     if (!el.parentNode) continue
-    if (el.closest("pre, code")) continue
-    if (!isNewsletterElement(el, 60)) continue
+    if (closestByTag(el, PRE_CODE)) continue
+    if (!isNewsletterElement(el, 60, contentElAncestors)) continue
 
     const elWords = countWords(el.textContent?.trim() ?? "")
     let target: Element = el
@@ -643,7 +661,7 @@ export const filterContentPatterns = (mainContent: Element, url: string): number
   // Remove newsletter signup lists
   for (const el of mainContent.querySelectorAll("ul")) {
     if (!el.parentNode) continue
-    if (!isNewsletterElement(el, 30)) continue
+    if (!isNewsletterElement(el, 30, contentElAncestors)) continue
 
     el.remove()
     count++

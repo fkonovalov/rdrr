@@ -1,5 +1,6 @@
 import { countWords } from "@shared"
 import { BLOCK_ELEMENTS_SELECTOR, FOOTNOTE_LIST_SELECTORS, FOOTNOTE_INLINE_REFERENCES } from "../constants"
+import { closestByTag, collectAncestors, hasAncestorIn, safeQueryAll } from "../utils/dom"
 
 const CONTENT_SIGNALS = [
   "admonition",
@@ -91,36 +92,80 @@ const DATE_PATTERN = /(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\
 const NAV_HEADING_RE = new RegExp(NAVIGATION_WORDS.map((w) => w.replace(/\s+/g, "\\s+")).join("|"), "i")
 const NAV_WORD_RES = NAVIGATION_WORDS.map((w) => new RegExp(`\\b${w.replace(/\s+/g, "\\s+")}\\b`))
 
-export const filterLowScoringBlocks = (doc: Document, mainContent?: Element | null): number => {
-  const targets = new Map<Element, number>()
+const PRE_TAG = new Set(["pre"])
+const HEADING_TAGS = ["h1", "h2", "h3", "h4", "h5", "h6"]
 
-  for (const el of doc.querySelectorAll(BLOCK_ELEMENTS_SELECTOR)) {
-    if (targets.has(el)) continue
-    if (mainContent && el.contains(mainContent)) continue
-    if (el.closest("pre")) continue
-    if (isLikelyContent(el)) continue
-
-    const score = scoreBlock(el)
-    if (score < 0) targets.set(el, score)
-  }
-
-  for (const el of targets.keys()) el.remove()
-  return targets.size
+interface LazyText {
+  text: () => string
+  words: () => number
 }
 
-export const scoreElement = (el: Element): number => {
+const makeLazyText = (el: Element): LazyText => {
+  let text: string | undefined
+  let words: number | undefined
+  return {
+    text: () => (text ??= el.textContent ?? ""),
+    words: () => (words ??= countWords((text ??= el.textContent ?? ""))),
+  }
+}
+
+interface BlockContext {
+  footnoteMatches: Set<Element>
+  footnoteAncestors: Set<Element>
+  preTableAncestors: Set<Element>
+}
+
+const buildBlockContext = (root: Document | Element): BlockContext => {
+  const footnoteMatches = new Set(safeQueryAll(root, FOOTNOTE_LIST_SELECTORS))
+  const preTable = [...root.getElementsByTagName("pre"), ...root.getElementsByTagName("table")]
+  return {
+    footnoteMatches,
+    footnoteAncestors: collectAncestors(footnoteMatches),
+    preTableAncestors: collectAncestors(preTable),
+  }
+}
+
+export const filterLowScoringBlocks = (root: Document | Element, mainContent?: Element | null): number => {
+  const targets: Element[] = []
+  const ctx = buildBlockContext(root)
+
+  for (const el of root.querySelectorAll(BLOCK_ELEMENTS_SELECTOR)) {
+    if (mainContent && el.contains(mainContent)) continue
+    if (closestByTag(el, PRE_TAG)) continue
+    const lz = makeLazyText(el)
+    if (isLikelyContent(el, lz, ctx)) continue
+
+    const score = scoreBlock(el, lz, ctx)
+    if (score < 0) targets.push(el)
+  }
+
+  for (const el of targets) el.remove()
+  return targets.length
+}
+
+export interface ScoreContext {
+  inlineRefAncestors: ReadonlySet<Element>
+  listAncestors: ReadonlySet<Element>
+}
+
+export const buildScoreContext = (doc: Document): ScoreContext => ({
+  inlineRefAncestors: collectAncestors(safeQueryAll(doc, FOOTNOTE_INLINE_REFERENCES)),
+  listAncestors: collectAncestors(safeQueryAll(doc, FOOTNOTE_LIST_SELECTORS)),
+})
+
+export const scoreElement = (el: Element, ctx?: ScoreContext): number => {
   const text = el.textContent ?? ""
   const words = countWords(text)
   let score = words
 
   score += el.getElementsByTagName("p").length * 10
-  score += text.split(",").length - 1
+  score += countCommas(text)
 
   const images = el.getElementsByTagName("img").length
   score -= (images / (words || 1)) * 3
 
-  if (el.querySelector(FOOTNOTE_INLINE_REFERENCES)) score += 10
-  if (el.querySelector(FOOTNOTE_LIST_SELECTORS)) score += 10
+  if (ctx ? ctx.inlineRefAncestors.has(el) : el.querySelector(FOOTNOTE_INLINE_REFERENCES)) score += 10
+  if (ctx ? ctx.listAncestors.has(el) : el.querySelector(FOOTNOTE_LIST_SELECTORS)) score += 10
 
   score -= el.getElementsByTagName("table").length * 5
 
@@ -133,12 +178,12 @@ export const scoreElement = (el: Element): number => {
   return score
 }
 
-export const findBestElement = (elements: Element[], minScore = 50): Element | null => {
+export const findBestElement = (elements: Element[], minScore = 50, ctx?: ScoreContext): Element | null => {
   let best: Element | null = null
   let bestScore = 0
 
   for (const el of elements) {
-    const s = scoreElement(el)
+    const s = scoreElement(el, ctx)
     if (s > bestScore) {
       bestScore = s
       best = el
@@ -148,7 +193,15 @@ export const findBestElement = (elements: Element[], minScore = 50): Element | n
   return bestScore > minScore ? best : null
 }
 
-const isLikelyContent = (el: Element): boolean => {
+const countCommas = (text: string): number => {
+  let count = 0
+  for (let i = 0; i < text.length; i++) {
+    if (text.charCodeAt(i) === 44) count++
+  }
+  return count
+}
+
+const isLikelyContent = (el: Element, lz: LazyText, ctx: BlockContext): boolean => {
   const role = el.getAttribute("role")
   if (role && ["article", "main", "contentinfo"].includes(role)) return true
 
@@ -158,18 +211,21 @@ const isLikelyContent = (el: Element): boolean => {
     if (cls.includes(signal) || id.includes(signal)) return true
   }
 
-  if (el.querySelector("pre, table")) return true
+  if (ctx.preTableAncestors.has(el)) return true
 
-  const text = el.textContent ?? ""
-  const words = countWords(text)
+  const text = lz.text()
+  const words = lz.words()
 
   if (words < 1000) {
     let hasNavHeading = false
-    for (const h of el.querySelectorAll("h1, h2, h3, h4, h5, h6")) {
-      if (NAV_HEADING_RE.test((h.textContent ?? "").toLowerCase().trim())) {
-        hasNavHeading = true
-        break
+    for (const tag of HEADING_TAGS) {
+      for (const h of el.getElementsByTagName(tag)) {
+        if (NAV_HEADING_RE.test((h.textContent ?? "").toLowerCase().trim())) {
+          hasNavHeading = true
+          break
+        }
       }
+      if (hasNavHeading) break
     }
     if (hasNavHeading) {
       if (words < 200) return false
@@ -200,32 +256,26 @@ const isLikelyContent = (el: Element): boolean => {
   return false
 }
 
-const scoreBlock = (el: Element): number => {
-  try {
-    if (
-      el.matches(FOOTNOTE_LIST_SELECTORS) ||
-      el.querySelector(FOOTNOTE_LIST_SELECTORS) ||
-      el.closest(FOOTNOTE_LIST_SELECTORS)
-    )
-      return 0
-  } catch {}
+const scoreBlock = (el: Element, lz: LazyText, ctx: BlockContext): number => {
+  if (ctx.footnoteMatches.has(el) || ctx.footnoteAncestors.has(el) || hasAncestorIn(el, ctx.footnoteMatches)) {
+    return 0
+  }
 
-  // Cache everything we touch more than once. The block-level scoring runs across
-  // every candidate element on the page, so even small repeated DOM/string work
-  // adds up to double-digit ms on large documents.
-  const text = el.textContent ?? ""
-  const words = countWords(text)
+  const text = lz.text()
+  const words = lz.words()
   if (words < 3) return 0
 
   const textLen = text.length
   const linkEls = el.getElementsByTagName("a")
   const links = linkEls.length
 
-  let score = text.split(",").length - 1
+  let score = countCommas(text)
 
   const lower = text.toLowerCase()
-  for (const re of NAV_WORD_RES) {
-    if (re.test(lower)) score -= 10
+  if (NAV_HEADING_RE.test(lower)) {
+    for (const re of NAV_WORD_RES) {
+      if (re.test(lower)) score -= 10
+    }
   }
 
   if (links / (words || 1) > 0.5) score -= 15
@@ -264,10 +314,13 @@ const scoreBlock = (el: Element): number => {
 
 const isCardGrid = (el: Element, words: number): boolean => {
   if (words < 3 || words >= 500) return false
-  const headings = el.querySelectorAll("h2, h3, h4")
+  const headings = [
+    ...el.getElementsByTagName("h2"),
+    ...el.getElementsByTagName("h3"),
+    ...el.getElementsByTagName("h4"),
+  ]
   if (headings.length < 3) return false
-  const images = el.querySelectorAll("img")
-  if (images.length < 2) return false
+  if (el.getElementsByTagName("img").length < 2) return false
   let hw = 0
   for (const h of headings) hw += countWords(h.textContent ?? "")
   return (words - hw) / headings.length < 20
