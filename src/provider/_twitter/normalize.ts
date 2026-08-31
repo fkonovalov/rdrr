@@ -1,28 +1,51 @@
 import type { FxFacet, FxRawText, FxStatus, NormalizedFacet, NormalizedMedia, NormalizedQuote } from "./types"
 
 /**
+ * Twitter-side indices (facets, display_text_range, entity indices) count
+ * Unicode code points, while JS string ops count UTF-16 units — an emoji is 1
+ * there and 2 here, shifting every index after it. Returns a mapper from
+ * code-point position to UTF-16 offset (identity when no surrogates).
+ */
+export const codePointConverter = (text: string): ((index: number) => number) => {
+  const offsets = [0]
+  let acc = 0
+  for (const ch of text) {
+    acc += ch.length
+    offsets.push(acc)
+  }
+  if (offsets.length - 1 === text.length) return (index) => index
+  return (index) => offsets[Math.min(Math.max(index, 0), offsets.length - 1)] ?? acc
+}
+
+/**
  * Slice rawText by display_text_range and re-index facets into the sliced space.
  * Drops `media` facets (those are t.co placeholders Twitter puts in text).
- *
- * FxEmbed facet indices are UTF-16 code-units (matching JS String semantics),
- * so plain String#slice is correct.
  */
 export const applyDisplayRange = (rt: FxRawText): { text: string; facets: NormalizedFacet[] } => {
   const fullText = rt.text
-  const [rangeStart, rangeEnd] = rt.display_text_range ?? [0, fullText.length]
+  const toUtf16 = codePointConverter(fullText)
+  const range = rt.display_text_range
+  const rangeStart = range ? toUtf16(range[0]) : 0
+  const rangeEnd = range ? toUtf16(range[1]) : fullText.length
   const text = fullText.slice(rangeStart, rangeEnd)
 
   const facets: NormalizedFacet[] = []
   for (const facet of rt.facets ?? []) {
-    const normalized = normalizeFacet(facet, rangeStart, rangeEnd)
+    const normalized = normalizeFacet(facet, rangeStart, rangeEnd, toUtf16)
     if (normalized) facets.push(normalized)
   }
   facets.sort((a, b) => a.start - b.start)
   return { text, facets }
 }
 
-const normalizeFacet = (facet: FxFacet, rangeStart: number, rangeEnd: number): NormalizedFacet | null => {
-  const [fStart, fEnd] = facet.indices
+const normalizeFacet = (
+  facet: FxFacet,
+  rangeStart: number,
+  rangeEnd: number,
+  toUtf16: (index: number) => number,
+): NormalizedFacet | null => {
+  const fStart = toUtf16(facet.indices[0])
+  const fEnd = toUtf16(facet.indices[1])
   if (fEnd <= rangeStart || fStart >= rangeEnd) return null
   if (facet.type === "media") return null
 

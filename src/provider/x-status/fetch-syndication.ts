@@ -1,5 +1,6 @@
 import { mergeSignals } from "@shared"
 import type { NormalizedFacet, NormalizedMedia, NormalizedQuote, NormalizedStatus } from "./types"
+import { codePointConverter } from "../_twitter/normalize"
 
 const BASE = "https://cdn.syndication.twimg.com/tweet-result"
 const USER_AGENT = "Mozilla/5.0 (compatible; rdrr/1.0; +https://rdrr.app)"
@@ -75,9 +76,12 @@ export const fetchFromSyndication = async (id: string, opts: SynFetchOptions = {
 }
 
 const toNormalized = (tweet: SynTweet): NormalizedStatus => {
-  const [rangeStart, rangeEnd] = tweet.display_text_range ?? [0, tweet.text.length]
+  const toUtf16 = codePointConverter(tweet.text)
+  const range = tweet.display_text_range
+  const rangeStart = range ? toUtf16(range[0]) : 0
+  const rangeEnd = range ? toUtf16(range[1]) : tweet.text.length
   const text = tweet.text.slice(rangeStart, rangeEnd)
-  const facets = buildFacets(tweet, rangeStart, rangeEnd)
+  const facets = buildFacets(tweet, rangeStart, rangeEnd, toUtf16)
 
   return {
     id: tweet.id_str,
@@ -94,7 +98,10 @@ const toNormalized = (tweet: SynTweet): NormalizedStatus => {
 }
 
 const toQuote = (q: SynTweet): NormalizedQuote => {
-  const [rs, re] = q.display_text_range ?? [0, q.text.length]
+  const toUtf16 = codePointConverter(q.text)
+  const range = q.display_text_range
+  const rs = range ? toUtf16(range[0]) : 0
+  const re = range ? toUtf16(range[1]) : q.text.length
   return {
     author: { handle: q.user.screen_name, name: q.user.name },
     text: q.text.slice(rs, re),
@@ -102,7 +109,12 @@ const toQuote = (q: SynTweet): NormalizedQuote => {
   }
 }
 
-const buildFacets = (tweet: SynTweet, rangeStart: number, rangeEnd: number): NormalizedFacet[] => {
+const buildFacets = (
+  tweet: SynTweet,
+  rangeStart: number,
+  rangeEnd: number,
+  toUtf16: (index: number) => number,
+): NormalizedFacet[] => {
   const facets: NormalizedFacet[] = []
   const reindex = (fs: number, fe: number): [number, number] | null => {
     if (fe <= rangeStart || fs >= rangeEnd) return null
@@ -110,12 +122,12 @@ const buildFacets = (tweet: SynTweet, rangeStart: number, rangeEnd: number): Nor
   }
 
   for (const m of tweet.entities?.user_mentions ?? []) {
-    const r = reindex(m.indices[0], m.indices[1])
+    const r = reindex(toUtf16(m.indices[0]), toUtf16(m.indices[1]))
     if (!r || r[1] <= r[0]) continue
     facets.push({ type: "mention", start: r[0], end: r[1], handle: m.screen_name })
   }
   for (const u of tweet.entities?.urls ?? []) {
-    const r = reindex(u.indices[0], u.indices[1])
+    const r = reindex(toUtf16(u.indices[0]), toUtf16(u.indices[1]))
     if (!r || r[1] <= r[0] || !u.expanded_url) continue
     facets.push({ type: "url", start: r[0], end: r[1], href: u.expanded_url, display: u.display_url || u.expanded_url })
   }
