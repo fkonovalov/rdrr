@@ -18,12 +18,12 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node: [20, 22]
+        node: [22, 24]
         include:
           - os: macos-latest
-            node: 20
+            node: 22
           - os: windows-latest
-            node: 20
+            node: 22
 
     steps:
       - name: Checkout
@@ -51,11 +51,11 @@ jobs:
         run: pnpm test
 
       - name: Coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         run: pnpm test:coverage
 
       - name: Upload coverage artifact
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: actions/upload-artifact@v4
         with:
           name: coverage
@@ -67,7 +67,7 @@ jobs:
         run: pnpm pack --pack-destination /tmp
 
       - name: Check bundle size
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         shell: bash
         run: |
           file=$(ls /tmp/rdrr-*.tgz | head -1)
@@ -80,7 +80,7 @@ jobs:
           fi
 
       - name: Smoke-test published tarball
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 20
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         shell: bash
         run: |
           file=$(ls /tmp/rdrr-*.tgz | head -1)

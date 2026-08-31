@@ -17,5 +17,5 @@
       "unknown"
     ]
   },
-  "ignorePatterns": ["package-lock.json", "pnpm-lock.yaml"]
+  "ignorePatterns": ["package-lock.json", "pnpm-lock.yaml", "src/__tests__/snapshot/", "**/__tests__/fixtures/"]
 }

@@ -78,22 +78,22 @@
     "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
   },
   "devDependencies": {
-    "@modelcontextprotocol/sdk": "1.29.0",
-    "@types/node": "25.9.0",
-    "@vitest/coverage-v8": "4.1.6",
-    "commander": "14.0.3",
-    "knip": "6.14.1",
-    "linkedom": "0.18.12",
-    "oxfmt": "0.50.0",
-    "oxlint": "1.65.0",
-    "tsdown": "0.22.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@types/node": "26.4.0",
+    "@vitest/coverage-v8": "4.1.11",
+    "commander": "15.0.0",
+    "knip": "6.33.0",
+    "linkedom": "0.18.13",
+    "oxfmt": "0.65.0",
+    "oxlint": "1.80.0",
+    "tsdown": "0.22.14",
     "turndown": "7.2.4",
-    "typescript": "6.0.3",
-    "vitest": "4.1.6",
-    "zod": "4.4.3"
+    "typescript": "7.0.2",
+    "vitest": "4.1.11",
+    "zod": "4.5.4"
   },
   "engines": {
-    "node": ">=20.17.0"
+    "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@9.15.1"
+  "packageManager": "pnpm@11.24.0"
 }

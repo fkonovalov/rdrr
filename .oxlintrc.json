@@ -1,7 +1,16 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["vitest", "eslint", "typescript", "unicorn", "oxc"],
+  "categories": {
+    "suspicious": "warn",
+    "perf": "warn"
+  },
   "rules": {
+    "no-await-in-loop": "off",
+    "no-underscore-dangle": "off",
+    "unicorn/no-array-sort": "off",
+    "unicorn/no-array-reverse": "off",
+    "oxc/no-map-spread": "off",
     "vitest/expect-expect": "error",
     "vitest/no-commented-out-tests": "error",
     "vitest/no-conditional-expect": "error",
@@ -21,6 +30,12 @@
       "files": ["src/mcp.ts", "src/mcp/**/*.ts"],
       "rules": {
         "no-console": ["error", { "allow": ["error"] }]
+      }
+    },
+    {
+      "files": ["**/__tests__/**"],
+      "rules": {
+        "unicorn/consistent-function-scoping": "off"
       }
     }
   ]
