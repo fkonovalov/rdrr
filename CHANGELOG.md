@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.6.0] - 2026-09-01
+
+The "sharpened by its own usage logs" release: a year of agent sessions mined for real failures, plus upstream defuddle fixes ported.
+
+### Added
+
+- **npm packages.** `rdrr https://www.npmjs.com/package/<name>[/v/<version|tag>]` goes through the open registry API (npmjs.com serves 403 to non-browser clients): package facts plus README as markdown, relative README links anchored to the repository, 10 MB packument cap with a facts-only fallback for huge histories.
+
+### Changed
+
+- **Node >=22.12 required.** BREAKING. Node 20 is EOL since April 2026; CI now tests 22/24. Toolchain: TypeScript 7 (native tsc), commander 15, pnpm 11.
+- **~20% faster extraction.** Quadratic per-element subtree scans replaced with precomputed ancestor sets, filters scoped to the main-content subtree, one combined entry-point scan, Turndown singleton.
+- **Clearer network errors.** Bare `fetch failed` now names the errno with a hint (DNS, connection, TLS); 404 says the URL itself is likely wrong; default timeout 15s → 25s.
+
+### Fixed
+
+- Markdown: ragged and nested tables, links with whitespace in the destination, `<tag>`-like text escaping, `<ol start>` numbering.
+- X/Twitter: emoji no longer shift facet and display-range boundaries (code-point → UTF-16 index mapping in fxtwitter and syndication paths).
+- Extraction: delimiter-less ids match whole patterns only (no more `#theroleofthings` false removals), heading links carrying `#anchors` survive, weekday names no longer count as dates, paywalled `aria-hidden` content is kept.
+
+### Security
+
+- `blob:` and non-image `data:` URLs are stripped from output (no `data:` iframe src at all), SVG SMIL elements removed, sanitization runs unconditionally on the main output path, schema.org fallback text is sanitized.
+
 ## [0.5.0] - 2026-07-15
 
 The "agents can trust what rdrr tells them" release.
@@ -140,6 +164,8 @@ First public release.
 - Requires Node.js >=20.17.0.
 - API is considered experimental until `1.0.0`; breaking changes may land in `0.x.0` releases.
 
+[0.6.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.6.0
+[0.5.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.5.0
 [0.4.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.4.0
 [0.3.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.3.0
 [0.2.2]: https://github.com/fkonovalov/rdrr/releases/tag/v0.2.2
