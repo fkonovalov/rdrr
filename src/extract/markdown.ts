@@ -1,17 +1,29 @@
 import TurndownService from "turndown"
 import { addRules } from "./markdown-rules"
 
-export const toMarkdown = (html: string, _url?: string): string => {
-  const td = new TurndownService({
-    headingStyle: "atx",
-    hr: "---",
-    bulletListMarker: "-",
-    codeBlockStyle: "fenced",
-    emDelimiter: "*",
-    preformattedCode: true,
-  })
+let service: TurndownService | undefined
 
-  addRules(td)
+const getService = (): TurndownService => {
+  if (!service) {
+    service = new TurndownService({
+      headingStyle: "atx",
+      hr: "---",
+      bulletListMarker: "-",
+      codeBlockStyle: "fenced",
+      emDelimiter: "*",
+      preformattedCode: true,
+    })
+    addRules(service)
+    // Escape tag-openers in plain text ("<div" would otherwise parse as HTML
+    // downstream); autolinks and "a < b" comparisons are left intact.
+    const originalEscape = service.escape.bind(service)
+    service.escape = (text: string) => originalEscape(text).replace(/<(?=\/?[A-Za-z][A-Za-z0-9-]*(?:\s|\/?>))/g, "\\<")
+  }
+  return service
+}
+
+export const toMarkdown = (html: string, _url?: string): string => {
+  const td = getService()
 
   const cleaned = html.replace(/<wbr\s*\/?>/gi, "")
   let md = td.turndown(cleaned)

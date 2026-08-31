@@ -61,6 +61,14 @@ const extractLatex = (el: GenericEl): string => {
   return ""
 }
 
+// A destination with whitespace breaks the []() form; CommonMark's answer is
+// an angle-bracketed destination.
+const formatLinkDestination = (href: string): string =>
+  /\s/.test(href) ? `<${href.replace(/>/g, "\\>")}>` : href.replace(/([()])/g, "\\$1")
+
+const formatLinkTitle = (title: string | null): string =>
+  title ? ` "${title.replace(/(\n+\s*)+/g, "\n").replace(/"/g, '\\"')}"` : ""
+
 const isDirectTableChild = (el: Node, ancestor: Node): boolean => {
   let parent = el.parentNode
   while (parent && parent !== ancestor) {
@@ -71,6 +79,18 @@ const isDirectTableChild = (el: Node, ancestor: Node): boolean => {
 }
 
 export const addRules = (td: TurndownService): void => {
+  // Registered first so every more specific <a> rule below wins (turndown
+  // checks rules in reverse registration order).
+  td.addRule("inlineLink", {
+    filter: (node, options) =>
+      options.linkStyle === "inlined" && node.nodeName === "A" && !!(node as unknown as GenericEl).getAttribute("href"),
+    replacement: (content, node) => {
+      if (!isEl(node)) return content
+      const href = node.getAttribute("href") ?? ""
+      return `[${content}](${formatLinkDestination(href)}${formatLinkTitle(node.getAttribute("title"))})`
+    },
+  })
+
   td.addRule("table", {
     filter: "table",
     replacement: (content, node) => {
@@ -86,9 +106,13 @@ export const addRules = (td: TurndownService): void => {
         isDirectTableChild(r, node as unknown as Node),
       )
 
-      if (node.querySelector("table") || directCells.length <= 1) {
+      const hasNestedTable = Array.from(node.querySelectorAll("table")).some((t) => t !== (node as unknown as Element))
+      if (hasNestedTable || directCells.length <= 1) {
         const counts = directRows.map((tr) => directCells.filter((c) => c.parentNode === tr).length)
-        if (directRows.length > 0 && new Set(counts).size === 1 && (counts[0] ?? 0) <= 1) {
+        const isSingleCol = directRows.length > 0 && new Set(counts).size === 1 && (counts[0] ?? 0) <= 1
+        // A table wrapping another table is layout, not data: flatten it
+        // instead of emitting nested pipes as one broken row.
+        if (isSingleCol || hasNestedTable) {
           return "\n\n" + td.turndown(directCells.map((c) => serializeHTML(c)).join("")) + "\n\n"
         }
       }
@@ -101,20 +125,21 @@ export const addRules = (td: TurndownService): void => {
       const rowEls = (node as unknown as HTMLTableElement).rows?.length
         ? Array.from((node as unknown as HTMLTableElement).rows)
         : directRows
-      const rows = rowEls.map((row) => {
+      // Width comes from cell counts, not from splitting the rendered row on
+      // "|": escaped pipes and ragged rows would miscount the separator.
+      const rowCells = rowEls.map((row) => {
         const cellEls = (row as HTMLTableRowElement).cells?.length
           ? Array.from((row as HTMLTableRowElement).cells)
           : Array.from(row.querySelectorAll("td, th")).filter((c) => c.parentNode === row)
-        const mapped = cellEls.map((c) =>
-          td.turndown(serializeHTML(c)).replace(/\n/g, " ").trim().replace(/\|/g, "\\|"),
-        )
-        return `| ${mapped.join(" | ")} |`
+        return cellEls.map((c) => td.turndown(serializeHTML(c)).replace(/\n/g, " ").trim().replace(/\|/g, "\\|"))
       })
 
-      if (!rows.length) return content
-      const sep = `| ${Array((rows[0]?.split("|").length ?? 2) - 2)
-        .fill("---")
-        .join(" | ")} |`
+      if (!rowCells.length) return content
+      const width = Math.max(1, ...rowCells.map((r) => r.length))
+      const rows = rowCells.map(
+        (cellsInRow) => `| ${[...cellsInRow, ...Array(width - cellsInRow.length).fill("")].join(" | ")} |`,
+      )
+      const sep = `| ${Array(width).fill("---").join(" | ")} |`
       return `\n\n${[rows[0], sep, ...rows.slice(1)].join("\n")}\n\n`
     },
   })
