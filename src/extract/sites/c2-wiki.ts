@@ -1,4 +1,7 @@
 import type { SiteExtractor, SiteExtractorResult } from "./types"
+import { readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
+import { mergeSignals } from "../../shared"
 import { escapeHtml, isDangerousUrl } from "../utils/dom"
 import { registerSite } from "./registry"
 
@@ -18,10 +21,13 @@ registerSite({
       canExtract: () => false,
       extract: () => ({ content: "", contentHtml: "" }),
       canExtractAsync: () => pageTitle !== null,
-      extractAsync: async (): Promise<SiteExtractorResult> => {
+      extractAsync: async (options = {}): Promise<SiteExtractorResult> => {
         if (!pageTitle) return { content: "", contentHtml: "" }
 
-        const json = (await fetch(C2_API + pageTitle).then((res) => res.json())) as Record<string, unknown>
+        const json = (await fetch(C2_API + pageTitle, {
+          signal: mergeSignals(options.timeoutMs ?? 25000, options.signal),
+          headers: options.userAgent ? { "User-Agent": options.userAgent } : undefined,
+        }).then((res) => readResponseJson(res))) as Record<string, unknown>
         if (!json?.text) return { content: "", contentHtml: "" }
 
         const words = pageTitle.replace(/([a-z])([A-Z])/g, "$1 $2")

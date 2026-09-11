@@ -7,6 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.7.0] - 2026-09-11
+
+### Security
+
+- Validate DNS results at connection time using a bundled Undici dispatcher. Check redirects across providers and site extractors, reject HTTPS downgrades, and remove credentials on cross-origin redirects.
+- Bound HTTP response bodies, local HTML files, stdin and raw HTML to 20 MiB. Streaming reads count decompressed bytes and stop early. MCP reports oversized input as `input-too-large` within its separate 24 MiB serialized stdio buffer limit.
+- Cover the full IPv6 link-local range and validate llms.txt redirect targets.
+- Refresh affected transitive dependencies and pin patched Vite, PostCSS and nanoid versions for the development toolchain. Dependency audit on September 11, 2026 reported no known vulnerabilities.
+
+### Added
+
+- Hacker News continuation links and `nextPageUrl` metadata when more comments are available upstream.
+- `ParsedResult`, a discriminated union returned by `parse()`, plus the exported `XStatusResult` type. Existing `ParseResult` remains the common interface.
+- Deterministic extraction fidelity, connection security and input-boundary regression tests. Live snapshot updates now use `pnpm snapshots:update`.
+
+### Fixed
+
+- Preserve Stack Overflow timeout, cancellation and input-limit errors while reading API response bodies.
+- Keep MCP requests with different timeout policies in separate cache entries.
+- Preserve text-bearing heading anchors, including MDN section titles, while removing decorative permalinks.
+- Flag empty extraction in CLI JSON, JSONL and XML; return `readTime: "0 min"` for zero words.
+- Preserve original spoken-caption intervals and chapter assignments instead of merging speech and inventing segment end times.
+- Preserve explicit HTTP, trailing path slashes and query values; resolve relative links against the final redirect URL.
+- Validate the GitHub hostname before routing and exclude query strings from file paths.
+- Forward timeout, cancellation and User-Agent options through provider and asynchronous site requests. Preserve cancellation in the X fallback and successful YouTube caption fallbacks.
+- Treat unavailable YouTube captions as empty extracted content while retaining metadata.
+- Include npm in the MCP check schema and align CLI readability checks with provider routing.
+- Reject malformed numeric CLI options instead of accepting partial numbers.
+- Bound serialized MCP responses, including metadata and errors, and preserve emoji across page boundaries.
+- Prevent older in-flight requests from overwriting forced cache refreshes.
+- Ship the reference documentation linked from README and build before testing in the publish preflight.
+
+### Compatibility notes
+
+- Spoken YouTube transcripts now retain individual caption cues, so segment counts and Markdown size can increase. Lyric stanza grouping is unchanged.
+- Inputs above 20 MiB now fail explicitly. npm packuments retain the existing 10 MiB fallback; optional llms.txt has a 500,000-byte cap.
+- Protected requests use direct connections through rdrr's dispatcher. Custom global proxy dispatchers are not inherited; the global dispatcher itself is unchanged.
+- `normalizeUrl()` preserves explicit HTTP and trailing slashes. YouTube results without captions have an empty `content` field, so CLI `--strict` exits 3.
+- CLI `--budget` remains a soft body estimate. MCP adds an estimated 24,000-token serialized response guard; neither is a model-specific tokenizer limit.
+
 ## [0.6.0] - 2026-09-01
 
 The "sharpened by its own usage logs" release: a year of agent sessions mined for real failures, plus upstream defuddle fixes ported.

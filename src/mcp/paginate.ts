@@ -52,11 +52,12 @@ export const paginate = (content: string, startIndex: number, maxTokens: number)
 }
 
 const hardCut = (body: string, startIndex: number, maxTokens: number, total: number): Page => {
-  const keptChars = maxTokens * CHARS_PER_TOKEN
+  let keptChars = maxTokens * CHARS_PER_TOKEN
+  if (/[\uD800-\uDBFF][\uDC00-\uDFFF]/.test(body.slice(keptChars - 1, keptChars + 1))) keptChars--
   const nextStartIndex = startIndex + keptChars
   return {
     body: `${body.slice(0, keptChars)}\n\n[truncated mid-paragraph at the token budget]`,
-    truncated: { kept: maxTokens, total, nextStartIndex, hint: hintFor(nextStartIndex) },
+    truncated: { kept: estimateTokens(body.slice(0, keptChars)), total, nextStartIndex, hint: hintFor(nextStartIndex) },
   }
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "rdrr",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": false,
   "description": "Convert any URL to clean markdown for AI agents.",
   "keywords": [
@@ -36,6 +36,7 @@
   "files": [
     "dist",
     "README.md",
+    "docs/reference.md",
     "LICENSE",
     "CHANGELOG.md"
   ],
@@ -72,10 +73,11 @@
     "build": "tsc --noEmit && tsdown",
     "dev": "tsdown --watch",
     "test": "vitest run",
+    "snapshots:update": "vitest run --config vitest.live.config.ts",
     "test:coverage": "vitest run --coverage",
     "lint": "knip && oxlint ./src",
     "fmt": "oxfmt --write .",
-    "prepublishOnly": "pnpm lint && pnpm test && pnpm build"
+    "prepublishOnly": "pnpm lint && pnpm build && pnpm test"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "1.30.0",
@@ -89,6 +91,7 @@
     "tsdown": "0.22.14",
     "turndown": "7.2.4",
     "typescript": "7.0.2",
+    "undici": "7.29.1",
     "vitest": "4.1.11",
     "zod": "4.5.4"
   },

@@ -1,20 +1,25 @@
+import { mergeSignals } from "@shared"
+import type { ParseOptions } from "../../types"
 import type { FxProfileResponse, FxStatusesResponse } from "./types"
+import { readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
 
 const BASE = "https://api.fxtwitter.com"
 const USER_AGENT = "Mozilla/5.0 (compatible; rdrr/1.0; +https://rdrr.app)"
 const REQUEST_TIMEOUT_MS = 10_000
 
-export const fetchProfile = async (handle: string): Promise<FxProfileResponse | null> => {
+export const fetchProfile = async (handle: string, options?: ParseOptions): Promise<FxProfileResponse | null> => {
   try {
     const res = await fetch(`${BASE}/${encodeURIComponent(handle)}`, {
-      headers: { "User-Agent": USER_AGENT },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      headers: { "User-Agent": options?.userAgent ?? USER_AGENT },
+      signal: mergeSignals(options?.timeoutMs ?? REQUEST_TIMEOUT_MS, options?.signal),
     })
     if (!res.ok) return null
-    const json = (await res.json()) as FxProfileResponse
+    const json = (await readResponseJson(res)) as FxProfileResponse
     if (json.code !== 200 || !json.user) return null
     return json
   } catch {
+    options?.signal?.throwIfAborted()
     return null
   }
 }
@@ -28,6 +33,7 @@ export const fetchStatuses = async (
   handle: string,
   targetCount: number,
   maxPages: number,
+  options?: ParseOptions,
 ): Promise<FetchStatusesResult> => {
   const encoded = encodeURIComponent(handle)
   let cursor: string | undefined
@@ -40,8 +46,8 @@ export const fetchStatuses = async (
       : `${BASE}/2/profile/${encoded}/statuses`
 
     const res = await fetch(url, {
-      headers: { "User-Agent": USER_AGENT },
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      headers: { "User-Agent": options?.userAgent ?? USER_AGENT },
+      signal: mergeSignals(options?.timeoutMs ?? REQUEST_TIMEOUT_MS, options?.signal),
     })
 
     if (!res.ok) {
@@ -52,7 +58,7 @@ export const fetchStatuses = async (
       break
     }
 
-    const json = (await res.json()) as FxStatusesResponse
+    const json = (await readResponseJson(res)) as FxStatusesResponse
     pages++
 
     if (!Array.isArray(json.results) || json.results.length === 0) break

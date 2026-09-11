@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
+import { classifyError } from "../../mcp/errors"
 import { parseWeb } from "../web"
 
 const throwWithCause = (code: string): void => {
@@ -17,6 +18,13 @@ afterEach(() => {
 })
 
 describe("network error reporting", () => {
+  it("preserves the network error classification through the provider wrapper", async () => {
+    throwWithCause("ENOTFOUND")
+    const error = await parseWeb("https://missing.example/", { allowPrivateNetworks: true }).catch(
+      (cause: unknown) => cause,
+    )
+    expect(classifyError(error).kind).toBe("network")
+  })
   it("surfaces the errno and a hint instead of bare fetch failed", async () => {
     throwWithCause("ENOTFOUND")
 

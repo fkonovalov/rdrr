@@ -2,9 +2,8 @@
 
 import { ensureProtocol } from "@shared"
 import { Command, InvalidArgumentError } from "commander"
-import { existsSync, readFileSync, writeFileSync } from "node:fs"
+import { createReadStream, existsSync, writeFileSync } from "node:fs"
 import { resolve as resolvePath } from "node:path"
-import { text as readStdinText } from "node:stream/consumers"
 import { pathToFileURL } from "node:url"
 import type { ParseResult } from "./types"
 import { estimateTokens, truncateToBudget } from "./cli/budget"
@@ -16,6 +15,7 @@ import { detectUrlType } from "./detect"
 import { isProbablyReaderable } from "./extract/readerable"
 import { parseHtml } from "./provider/web"
 import { parse } from "./rdrr"
+import { readStreamText } from "./security/body"
 
 declare const __RDRR_VERSION__: string
 
@@ -36,13 +36,13 @@ const looksLikeUrl = (input: string): boolean =>
 
 const resolveInput = async (input: string): Promise<ResolvedInput> => {
   if (input === "-") {
-    const html = await readStdinText(process.stdin)
+    const html = await readStreamText(process.stdin)
     return { kind: "stdin", html, raw: input }
   }
 
   if (!looksLikeUrl(input) && existsSync(input)) {
     const absolute = resolvePath(input)
-    const html = readFileSync(absolute, "utf-8")
+    const html = await readStreamText(createReadStream(absolute))
     return { kind: "file", html, url: pathToFileURL(absolute).href, raw: input }
   }
 
@@ -61,6 +61,7 @@ const buildFrontmatter = (result: ParseResult, source: string): string => {
     ["site", result.siteName],
     ["published", result.published],
     ["source", source],
+    ["next_page", result.nextPageUrl],
     ["domain", result.domain],
     ["language", result.language],
     ["dir", result.dir],
@@ -87,8 +88,8 @@ const createDebug =
   }
 
 const parseLimitArg = (value: string): number => {
-  const parsed = Number.parseInt(value, 10)
-  if (!Number.isFinite(parsed) || parsed < 1) {
+  const parsed = Number(value)
+  if (!/^\d+$/.test(value) || !Number.isSafeInteger(parsed) || parsed < 1) {
     throw new InvalidArgumentError("must be a positive integer")
   }
   return parsed
@@ -173,7 +174,14 @@ program
           }
           const url = ensureProtocol(input)
           debug("check", { url })
-          const readable = await isProbablyReaderable(url)
+          const readable =
+            detectUrlType(url) !== "webpage" ||
+            (await isProbablyReaderable(url, {
+              allowPrivateNetworks: opts.allowPrivateNetworks,
+              timeoutMs: opts.timeout,
+              userAgent: opts.userAgent,
+              language: opts.language,
+            }))
           process.stdout.write(readable ? "readable\n" : "not readable\n")
           process.exit(readable ? 0 : 1)
         }
@@ -191,7 +199,8 @@ program
           contentChars: result.content.length,
         })
 
-        const budgeted: EnrichedResult = opts.budget ? applyBudget(result, opts.budget) : result
+        const extracted: EnrichedResult = result.content.trim() ? result : { ...result, extractionEmpty: true }
+        const budgeted = opts.budget ? applyBudget(extracted, opts.budget) : extracted
         if (opts.budget) debug("budget", { budget: opts.budget, contentChars: budgeted.content.length })
 
         const scored: EnrichedResult = opts.quality ? { ...budgeted, quality: computeQuality(budgeted) } : budgeted
@@ -203,8 +212,8 @@ program
         if (isEmptyExtraction) {
           process.stderr.write(
             `Warning: no content extracted from ${source}. ` +
-              "The page is likely JS-rendered (SPA) or behind a bot wall; rdrr does not execute JavaScript. " +
-              "Use a browser-based tool for this URL.\n",
+              "The source may require JavaScript, block automated access, or have no available transcript. " +
+              "Try a browser-based tool or another source.\n",
           )
         }
 
@@ -306,7 +315,7 @@ const runPipeline = async (
   return parseHtml(resolved.html!, { url: resolved.url, language: opts.language, wordsPerMinute: opts.wpm })
 }
 
-const applyBudget = (result: ParseResult, budget: number): EnrichedResult => {
+const applyBudget = (result: EnrichedResult, budget: number): EnrichedResult => {
   const { content, info } = truncateToBudget(result.content, budget)
   if (!info) return result
   // Attach `truncated` as an extra field so JSON output carries it; frontmatter/

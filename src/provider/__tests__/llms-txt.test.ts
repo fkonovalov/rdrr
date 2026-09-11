@@ -16,6 +16,15 @@ const setFetch = (handler: (url: string) => Response) => {
 }
 
 describe("detectLlmsTxt", () => {
+  it("does not follow redirects into private networks", async () => {
+    const fetchMock = vi.fn<(_url: string, init?: RequestInit) => Promise<Response>>(async (_url, init) => {
+      expect(init?.redirect).toBe("manual")
+      return new Response(null, { status: 302, headers: { location: "http://127.0.0.1/private" } })
+    })
+    vi.stubGlobal("fetch", fetchMock)
+    expect(await detectLlmsTxt("http://public.example/")).toBeNull()
+    expect(fetchMock.mock.calls.every(([url]) => new URL(url).hostname === "public.example")).toBe(true)
+  })
   it("returns content when /llms.txt exists", async () => {
     setFetch((url) => {
       if (url.endsWith("/llms.txt")) {

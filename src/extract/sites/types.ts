@@ -1,4 +1,6 @@
+import type { ExtractOptions } from "../types"
 export interface SiteExtractorResult {
+  nextPageUrl?: string
   content: string
   contentHtml: string
   contentSelector?: string
@@ -9,7 +11,7 @@ export interface SiteExtractor {
   canExtract: () => boolean
   extract: () => SiteExtractorResult
   canExtractAsync?: () => boolean
-  extractAsync?: () => Promise<SiteExtractorResult>
+  extractAsync?: (options?: ExtractOptions) => Promise<SiteExtractorResult>
 }
 
 export interface SiteExtractorFactory {

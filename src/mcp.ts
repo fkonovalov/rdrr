@@ -3,6 +3,7 @@
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { createIdleTimer, installProcessGuards } from "./mcp/guards"
 import { createServer } from "./mcp/server"
+import { MAX_INPUT_BYTES } from "./security/body"
 
 declare const __RDRR_VERSION__: string
 
@@ -25,7 +26,9 @@ const main = async (): Promise<void> => {
   process.on("SIGINT", shutdown)
   process.on("SIGTERM", shutdown)
 
-  await server.connect(new StdioServerTransport())
+  await server.connect(
+    new StdioServerTransport(process.stdin, process.stdout, { maxBufferSize: MAX_INPUT_BYTES + 4 * 1024 * 1024 }),
+  )
   console.error(`rdrr-mcp ${VERSION} listening on stdio`)
 }
 

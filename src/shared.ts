@@ -33,6 +33,7 @@ export const formatTime = (seconds: number): string => {
 const DEFAULT_WORDS_PER_MINUTE = 200
 
 export const estimateReadTime = (wordCount: number, wordsPerMinute = DEFAULT_WORDS_PER_MINUTE): string => {
+  if (wordCount <= 0) return "0 min"
   const wpm = wordsPerMinute > 0 ? wordsPerMinute : DEFAULT_WORDS_PER_MINUTE
   const minutes = Math.max(1, Math.ceil(wordCount / wpm))
   return `${minutes} min`

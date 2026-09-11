@@ -2,12 +2,12 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js"
 import { EventEmitter } from "node:events"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import type { ParseResult } from "../types"
+import type { ParsedResult, WebpageResult } from "../types"
 import { createIdleTimer, installProcessGuards } from "../mcp/guards"
 import { createServer } from "../mcp/server"
 import { PrivateNetworkError } from "../security/ssrf"
 
-vi.mock("../rdrr", () => ({ parse: vi.fn<() => Promise<ParseResult>>() }))
+vi.mock("../rdrr", () => ({ parse: vi.fn<() => Promise<ParsedResult>>() }))
 vi.mock("../extract/readerable", () => ({ isProbablyReaderable: vi.fn<() => Promise<boolean>>(async () => true) }))
 
 const { parse } = await import("../rdrr")
@@ -15,7 +15,7 @@ const { isProbablyReaderable } = await import("../extract/readerable")
 const parseMock = vi.mocked(parse)
 const readerableMock = vi.mocked(isProbablyReaderable)
 
-const webpage = (over: Partial<ParseResult> = {}): ParseResult => ({
+const webpage = (over: Partial<WebpageResult> = {}): WebpageResult => ({
   type: "webpage",
   title: "Sample Title",
   author: "Ada Lovelace",
@@ -66,6 +66,15 @@ describe("tool registration", () => {
 })
 
 describe("fetch", () => {
+  it("bounds error messages from upstream providers", async () => {
+    parseMock.mockRejectedValue(new Error("upstream ".repeat(20_000)))
+    const client = await connect()
+    const result = await client.callTool({ name: "fetch", arguments: { url: "https://example.com/a" } })
+    expect(result.isError).toBe(true)
+    expect(JSON.stringify(result).length).toBeLessThan(9000)
+    expect(result.structuredContent).toMatchObject({ error: { kind: "unknown" } })
+  })
+
   it("returns markdown text plus structured metadata", async () => {
     parseMock.mockResolvedValue(webpage())
     const client = await connect()
@@ -101,6 +110,22 @@ describe("fetch", () => {
 
     const options = parseMock.mock.calls[0]![1]
     expect(options?.signal).toBeUndefined()
+  })
+
+  it("keeps distinct timeout policies out of the same cache entry", async () => {
+    parseMock.mockImplementation(async (_url, options) => webpage({ title: `timeout ${options?.timeoutMs}` }))
+    const client = await connect()
+    try {
+      const [long, short] = await Promise.all([
+        structuredOf(client, "fetch", { url: "https://example.com/shared", timeoutMs: 1000 }),
+        structuredOf(client, "fetch", { url: "https://example.com/shared", timeoutMs: 10 }),
+      ])
+      expect(long.title).toBe("timeout 1000")
+      expect(short.title).toBe("timeout 10")
+      expect(parseMock).toHaveBeenCalledTimes(2)
+    } finally {
+      await client.close()
+    }
   })
 
   it("truncates to the token budget and paginates via startIndex", async () => {
@@ -243,6 +268,13 @@ describe("parallel_fetch", () => {
 })
 
 describe("check", () => {
+  it("returns schema-valid results for npm package URLs", async () => {
+    const client = await connect()
+    const structured = await structuredOf(client, "check", { url: "https://www.npmjs.com/package/rdrr" })
+    expect(structured.type).toBe("npm")
+    expect(structured.readable).toBe(true)
+    expect(readerableMock).not.toHaveBeenCalled()
+  })
   it("routes typed URLs without probing the network", async () => {
     const client = await connect()
 
@@ -259,11 +291,36 @@ describe("check", () => {
     const structured = await structuredOf(client, "check", { url: "http://example.com/article/" })
     expect(structured.type).toBe("webpage")
     expect(structured.readable).toBe(false)
-    expect(structured.normalizedUrl).toBe("https://example.com/article")
+    expect(structured.normalizedUrl).toBe("http://example.com/article/")
   })
 })
 
 describe("extract_html", () => {
+  it("bounds oversized metadata and lets the agent retry with content only", async () => {
+    const html = `<html><head><title>${"T".repeat(110000)}</title></head><body><article><p>Useful content.</p></article></body></html>`
+    const client = await connect()
+    const result = await client.callTool({ name: "extract_html", arguments: { html, maxTokens: 100 } })
+    expect(result.isError).toBe(true)
+    expect(result.structuredContent).toMatchObject({ error: { kind: "response-too-large" } })
+    expect(JSON.stringify(result).length).toBeLessThan(2000)
+    const retry = await client.callTool({
+      name: "extract_html",
+      arguments: { html, maxTokens: 100, fields: ["content"] },
+    })
+    expect(retry.isError).toBeFalsy()
+    expect(JSON.stringify(retry)).toContain("Useful content.")
+  })
+
+  it("keeps Unicode characters intact across hard pagination boundaries", async () => {
+    const html = `<article><p>${"abc😀".repeat(100)}</p></article>`
+    const client = await connect()
+    const first = await client.callTool({ name: "extract_html", arguments: { html, maxTokens: 1 } })
+    const next = (first.structuredContent as { truncated: { nextStartIndex: number } }).truncated.nextStartIndex
+    expect(next).toBe(3)
+    const second = await client.callTool({ name: "extract_html", arguments: { html, maxTokens: 1, startIndex: next } })
+    const secondText = (second.content as Array<{ text: string }>)[0]!.text
+    expect(secondText).toContain("😀")
+  })
   it("runs the extraction pipeline on provided HTML", async () => {
     const html =
       "<html><head><title>Smoke</title></head><body><article><h1>Smoke</h1>" +

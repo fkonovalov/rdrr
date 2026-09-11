@@ -3,7 +3,7 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 import { estimateTokens } from "../cli/budget"
 import { classifyError } from "./errors"
 import { cachedParse, type ToolDeps } from "./parse-cached"
-import { shapeFetchResult } from "./respond"
+import { boundedResult, shapeFetchResult } from "./respond"
 import { parallelFetchInputShape, parallelFetchOutputShape } from "./schemas"
 
 const DESCRIPTION =
@@ -12,8 +12,6 @@ const DESCRIPTION =
   "has the same shape as `fetch`, and a failed URL does not fail the batch. Limited to 10 URLs per call to " +
   "fit the context budget; for larger batches make multiple calls."
 
-// Bodies appear once, in the text block; structuredContent carries metadata
-// only. Cap the combined response to stay inside the 25k host limit.
 const TOTAL_BUDGET_TOKENS = 20_000
 
 export const registerParallelFetchTool = (server: McpServer, deps: ToolDeps): void => {
@@ -57,26 +55,26 @@ const runParallelFetch = async (deps: ToolDeps, args: ParallelFetchArgs): Promis
   for (const [index, url] of args.urls.entries()) {
     const outcome = settled[index]
     if (!outcome) continue
-    if (outcome.status === "rejected") {
-      const error = classifyError(outcome.reason)
-      results.push({ url, error })
-      sections.push(`## ${url}\n\nFailed: ${error.message}`)
-      continue
-    }
-    const { text, structured } = shapeFetchResult(outcome.value, {
-      maxTokens: args.perItemMaxTokens,
-      startIndex: 0,
-      includeQuality: args.includeQuality,
-      source: url,
-    })
-    const cost = estimateTokens(text) + estimateTokens(JSON.stringify(structured))
+    const error = outcome.status === "rejected" ? classifyError(outcome.reason) : undefined
+    const { text, structured } =
+      outcome.status === "fulfilled"
+        ? shapeFetchResult(outcome.value, {
+            maxTokens: args.perItemMaxTokens,
+            startIndex: 0,
+            includeQuality: args.includeQuality,
+            source: url,
+          })
+        : { text: `Failed: ${error?.message}`, structured: { error } }
+    const item = { url, ...structured }
+    const section = `## ${url}\n\n${text}`
+    const cost = estimateTokens(section) + estimateTokens(JSON.stringify(item)) + 2
     if (results.length > 0 && usedTokens + cost > TOTAL_BUDGET_TOKENS) {
       truncatedAt = index
       break
     }
     usedTokens += cost
-    results.push({ url, ...structured })
-    sections.push(`## ${url}\n\n${text}`)
+    results.push(item)
+    sections.push(section)
   }
 
   const meta: Record<string, number> = { requested: args.urls.length, returned: results.length }
@@ -88,8 +86,5 @@ const runParallelFetch = async (deps: ToolDeps, args: ParallelFetchArgs): Promis
     )
   }
 
-  return {
-    content: [{ type: "text", text: sections.join("\n\n---\n\n") }],
-    structuredContent: { results, meta },
-  }
+  return boundedResult(sections.join("\n\n---\n\n"), { results, meta })
 }

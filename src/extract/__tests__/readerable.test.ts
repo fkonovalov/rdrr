@@ -47,6 +47,23 @@ describe("isProbablyReaderable (document input)", () => {
 })
 
 describe("isProbablyReaderable (url input)", () => {
+  it("honours request options when probing a URL", async () => {
+    const controller = new AbortController()
+    const fetchMock = vi.fn<(_url: string, init?: RequestInit) => Promise<Response>>(async (_url, init) => {
+      expect(init?.signal).toBeDefined()
+      controller.abort()
+      expect(init?.signal?.aborted).toBe(true)
+      return new Response("<p>Short content</p>", { headers: { "content-type": "text/html" } })
+    })
+    vi.stubGlobal("fetch", fetchMock)
+    await isProbablyReaderable("http://127.0.0.1/", {
+      allowPrivateNetworks: true,
+      userAgent: "agent-test",
+      timeoutMs: 1000,
+      signal: controller.signal,
+    })
+    expect(fetchMock.mock.calls[0]?.[1]?.headers).toMatchObject({ "User-Agent": "agent-test" })
+  })
   it("fetches the URL and scores the document", async () => {
     const html = `<html><body><article>${"<p>" + "Body prose long enough to pass 140 characters. ".repeat(4) + "</p>"}${"<p>" + "Second paragraph of similar length to push score above 20. ".repeat(4) + "</p>"}</article></body></html>`
     vi.stubGlobal(

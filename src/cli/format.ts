@@ -8,6 +8,7 @@ export type OutputFormat = "md" | "json" | "jsonl" | "xml"
  * casts at every render site and gives consumers typed access.
  */
 export interface EnrichedResult extends ParseResult {
+  extractionEmpty?: true
   quality?: { score: number; verdict: "good" | "partial" | "poor" }
   truncated?: { omittedTokens: number; totalTokens: number; kept: number; total: number }
 }
@@ -52,6 +53,7 @@ export const renderXml = (result: EnrichedResult, { source, fetchedAt }: XmlOpti
   if (result.description) lines.push(`    <description>${escapeXml(result.description)}</description>`)
   if (result.readTime) lines.push(`    <readTime>${escapeXml(result.readTime)}</readTime>`)
   lines.push(`    <wordCount>${result.wordCount}</wordCount>`)
+  if (result.extractionEmpty) lines.push("    <extractionEmpty>true</extractionEmpty>")
   lines.push("  </meta>")
 
   if (result.quality) {

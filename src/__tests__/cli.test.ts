@@ -22,6 +22,23 @@ const EMPTY_HTML = '<!doctype html><html><head><title>Shell</title></head><body>
 // These tests exercise the built CLI binary; they are skipped when dist/ has
 // not been built yet (run `pnpm build` first).
 describe.skipIf(!existsSync(CLI))("cli (built dist)", () => {
+  it("rejects oversized stdin instead of parsing a partial document", () => {
+    const { status, stdout, stderr } = run(["-"], "x".repeat(20 * 1024 * 1024 + 1))
+    expect(status).toBe(1)
+    expect(stdout).toBe("")
+    expect(stderr).toContain("20971520-byte limit")
+  })
+
+  it("recognizes npm URLs in --check without fetching the bot-walled website", () => {
+    const { status, stdout } = run(["https://www.npmjs.com/package/rdrr", "--check"])
+    expect(status).toBe(0)
+    expect(stdout.trim()).toBe("readable")
+  })
+  it.each(["10junk", "1.5", "2e3", "9007199254740993"])("rejects invalid integer arguments: %s", (value) => {
+    const { status, stderr } = run(["-", "--budget", value], ARTICLE_HTML)
+    expect(status).not.toBe(0)
+    expect(stderr).toContain("positive integer")
+  })
   it("parses HTML from stdin and prints frontmatter + markdown, exit 0", () => {
     const { status, stdout } = run(["-"], ARTICLE_HTML)
     expect(status).toBe(0)
@@ -36,6 +53,29 @@ describe.skipIf(!existsSync(CLI))("cli (built dist)", () => {
     expect(status).toBe(0)
     expect(stdout).toContain('extraction: "empty"')
     expect(stderr).toContain("no content extracted")
+  })
+
+  it.each(["json", "jsonl"])("marks empty %s output and preserves strict exit status", (format) => {
+    const { status, stdout, stderr } = run(["-", "--format", format, "--strict", "--quality"], EMPTY_HTML)
+    expect(status).toBe(3)
+    expect(JSON.parse(stdout)).toMatchObject({
+      extractionEmpty: true,
+      content: "",
+      wordCount: 0,
+      readTime: "0 min",
+      quality: { verdict: "poor" },
+    })
+    expect(stderr).toContain("no content extracted")
+    const success = run(["-", "--format", format, "--budget", "10"], ARTICLE_HTML)
+    expect(success.status).toBe(0)
+    expect(JSON.parse(success.stdout).extractionEmpty).toBeUndefined()
+  })
+
+  it("marks empty XML output without changing the default exit status", () => {
+    const { status, stdout } = run(["-", "--format", "xml"], EMPTY_HTML)
+    expect(status).toBe(0)
+    expect(stdout).toContain("<extractionEmpty>true</extractionEmpty>")
+    expect(stdout).toContain("<readTime>0 min</readTime>")
   })
 
   it("exits 3 on empty extraction with --strict", () => {

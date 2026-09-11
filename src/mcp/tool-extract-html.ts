@@ -3,14 +3,14 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 import type { ToolDeps } from "./parse-cached"
 import { parseHtml } from "../provider/web"
 import { errorResult } from "./errors"
-import { shapeFetchResult } from "./respond"
+import { boundedResult, shapeFetchResult } from "./respond"
 import { extractHtmlInputShape, fetchOutputShape } from "./schemas"
 
 const DESCRIPTION =
   "Run rdrr's extraction pipeline on HTML you already have (e.g. fetched by another tool, loaded from " +
   "cache, rendered by a headless browser). Returns the same clean markdown plus metadata as `fetch` would " +
   "for the same URL. Useful when you need a different fetcher (auth, custom headers, browser rendering) " +
-  "but still want rdrr's site extractors and cleanup."
+  "but still want rdrr's site extractors and cleanup. Some site extractors fetch their public APIs."
 
 export const registerExtractHtmlTool = (server: McpServer, deps: ToolDeps): void => {
   server.registerTool(
@@ -20,7 +20,7 @@ export const registerExtractHtmlTool = (server: McpServer, deps: ToolDeps): void
       description: DESCRIPTION,
       inputSchema: extractHtmlInputShape,
       outputSchema: fetchOutputShape,
-      annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
+      annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
     },
     async (args): Promise<CallToolResult> => {
       deps.idle.begin()
@@ -33,7 +33,7 @@ export const registerExtractHtmlTool = (server: McpServer, deps: ToolDeps): void
           fields: args.fields,
           source: args.url,
         })
-        return { content: [{ type: "text", text }], structuredContent: structured }
+        return boundedResult(text, structured)
       } catch (error) {
         return errorResult(error)
       } finally {

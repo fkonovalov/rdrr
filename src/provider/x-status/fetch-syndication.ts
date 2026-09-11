@@ -1,5 +1,7 @@
 import { mergeSignals } from "@shared"
 import type { NormalizedFacet, NormalizedMedia, NormalizedQuote, NormalizedStatus } from "./types"
+import { readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
 import { codePointConverter } from "../_twitter/normalize"
 
 const BASE = "https://cdn.syndication.twimg.com/tweet-result"
@@ -69,7 +71,7 @@ export const fetchFromSyndication = async (id: string, opts: SynFetchOptions = {
     signal: mergeSignals(opts.timeoutMs ?? REQUEST_TIMEOUT_MS, opts.signal),
   })
   if (!res.ok) throw new Error(`syndication ${res.status} ${res.statusText}`)
-  const body = (await res.json()) as SynTweet
+  const body = (await readResponseJson(res)) as SynTweet
   if (body.tombstone?.text?.text) throw new Error(`syndication: ${body.tombstone.text.text}`)
   if (!body.id_str || !body.user) throw new Error("syndication: incomplete response")
   return toNormalized(body)

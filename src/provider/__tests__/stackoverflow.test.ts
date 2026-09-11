@@ -1,4 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
+import { MAX_INPUT_BYTES } from "../../security/body"
 import { parseStackOverflow } from "../stackoverflow"
 
 const makeFetch = (responders: Record<string, () => Response>): void => {
@@ -42,6 +43,55 @@ const ANSWERS = [
 ]
 
 describe("parseStackOverflow", () => {
+  it("forwards the custom user agent through answer resolution and both content requests", async () => {
+    const fetchMock = vi.fn<typeof fetch>(async (url) => {
+      if (String(url).includes("/answers/123?")) return jsonResponse({ items: [{ question_id: 11227809 }] })
+      return jsonResponse({ items: String(url).includes("/answers?") ? ANSWERS : [QUESTION] })
+    })
+    vi.stubGlobal("fetch", fetchMock)
+    await parseStackOverflow("https://stackoverflow.com/a/123", { userAgent: "agent-test" })
+    expect(fetchMock).toHaveBeenCalledTimes(3)
+    for (const [, init] of fetchMock.mock.calls) {
+      expect(new Headers(init?.headers).get("User-Agent")).toBe("agent-test")
+    }
+  })
+
+  it.each(["TimeoutError", "AbortError"])("preserves %s while reading the response body", async (name) => {
+    const error = new DOMException("Reading interrupted", name)
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(
+            new ReadableStream({
+              start(controller) {
+                controller.error(error)
+              },
+            }),
+          ),
+      ),
+    )
+    await expect(parseStackOverflow("https://stackoverflow.com/questions/1")).rejects.toBe(error)
+  })
+
+  it("preserves the input limit error instead of reporting HTTP 200", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("", { headers: { "content-length": String(MAX_INPUT_BYTES + 1) } })),
+    )
+    await expect(parseStackOverflow("https://stackoverflow.com/questions/1")).rejects.toMatchObject({
+      name: "InputTooLargeError",
+    })
+  })
+
+  it("reports an upstream HTTP error when its body is not JSON", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () => new Response("Bad Gateway", { status: 502 })),
+    )
+    await expect(parseStackOverflow("https://stackoverflow.com/questions/1")).rejects.toThrow("HTTP 502")
+  })
+
   it("renders question, metadata, and answers as markdown", async () => {
     makeFetch({
       "/questions/11227809/answers": () => jsonResponse({ items: ANSWERS }),

@@ -160,6 +160,14 @@ describe("parseGitHub issue/PR", () => {
 })
 
 describe("parseGitHub file", () => {
+  it("does not treat query parameters as part of a file name", async () => {
+    makeFetch({
+      "raw.githubusercontent.com": () => new Response("# Hello", { headers: { "content-type": "text/plain" } }),
+    })
+    const result = await parseGitHub("https://github.com/acme/widget/blob/main/README.md?plain=1")
+    expect(result.title).toBe("README.md - acme/widget")
+    expect(result.content).toBe("# Hello")
+  })
   it("fetches raw content and fences it with detected language", async () => {
     makeFetch({
       "raw.githubusercontent.com": () =>
@@ -301,6 +309,12 @@ describe("comment pagination truncation", () => {
 })
 
 describe("parseGitHub routing", () => {
+  it("rejects GitHub-looking paths on other hosts before fetching", async () => {
+    const fetchMock = vi.fn<typeof fetch>()
+    vi.stubGlobal("fetch", fetchMock)
+    await expect(parseGitHub("https://notgithub.com/acme/widget/issues/1")).rejects.toThrow(/Not a GitHub/)
+    expect(fetchMock).not.toHaveBeenCalled()
+  })
   it("throws for unsupported github paths", async () => {
     await expect(parseGitHub("https://github.com/acme/widget")).rejects.toThrow(
       /Not a GitHub issue\/PR\/discussion\/file/,

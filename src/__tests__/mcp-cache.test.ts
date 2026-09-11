@@ -12,6 +12,21 @@ const makeClock = (start = 0) => {
 }
 
 describe("createAsyncCache", () => {
+  it("does not let an older request overwrite a completed forced refresh", async () => {
+    const cache = createAsyncCache<string>()
+    let finishOld!: (value: string) => void
+    const old = cache.get(
+      "k",
+      () =>
+        new Promise<string>((resolve) => {
+          finishOld = resolve
+        }),
+    )
+    expect(await cache.get("k", async () => "fresh", { force: true })).toBe("fresh")
+    finishOld("stale")
+    expect(await old).toBe("stale")
+    expect(await cache.get("k", async () => "unexpected")).toBe("fresh")
+  })
   it("returns the cached value without recomputing", async () => {
     const cache = createAsyncCache<string>()
     const compute = vi.fn<() => Promise<string>>(async () => "value")

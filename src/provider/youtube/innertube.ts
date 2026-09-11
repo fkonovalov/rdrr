@@ -1,5 +1,9 @@
+import { mergeSignals } from "@shared"
 import { parseHTML } from "linkedom"
+import type { ParseOptions } from "../../types"
 import type { RawChapter, RawItem, VideoMetadata } from "./types"
+import { readResponseText, readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
 
 const INNERTUBE_API = "https://www.youtube.com/youtubei/v1/player?prettyPrint=false"
 const INNERTUBE_NEXT = "https://www.youtube.com/youtubei/v1/next?prettyPrint=false"
@@ -8,31 +12,39 @@ const ANDROID_CONTEXT = { client: { clientName: "ANDROID", clientVersion: INNERT
 const WEB_CONTEXT = { client: { clientName: "WEB", clientVersion: "2.20240101.00.00" } }
 const ANDROID_UA = `com.google.android.youtube/${INNERTUBE_VERSION} (Linux; U; Android 14)`
 
-export const fetchMetadata = async (videoId: string): Promise<VideoMetadata> => {
-  const oembed = await fetchOembedMetadata(videoId)
+export const fetchMetadata = async (videoId: string, options?: ParseOptions): Promise<VideoMetadata> => {
+  const oembed = await fetchOembedMetadata(videoId, options)
   if (oembed) return oembed
-  const player = await fetchPlayerMetadata(videoId)
+  const player = await fetchPlayerMetadata(videoId, options)
   if (player) return player
   throw new Error("Video not found")
 }
 
-const fetchOembedMetadata = async (videoId: string): Promise<VideoMetadata | undefined> => {
+const fetchOembedMetadata = async (videoId: string, options?: ParseOptions): Promise<VideoMetadata | undefined> => {
+  const signal = mergeSignals(options?.timeoutMs ?? 25000, options?.signal)
   try {
-    const res = await fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`)
+    const res = await fetch(
+      `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`,
+      {
+        signal,
+        headers: options?.userAgent ? { "User-Agent": options.userAgent } : undefined,
+      },
+    )
     if (!res.ok) return undefined
-    const data = (await res.json()) as { title?: string; author_name?: string; thumbnail_url?: string }
+    const data = (await readResponseJson(res)) as { title?: string; author_name?: string; thumbnail_url?: string }
     return {
       title: data.title ?? "",
       author: data.author_name ?? "",
       thumbnailUrl: data.thumbnail_url ?? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
     }
   } catch {
+    signal.throwIfAborted()
     return undefined
   }
 }
 
-const fetchPlayerMetadata = async (videoId: string): Promise<VideoMetadata | undefined> => {
-  const data = await tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA)
+const fetchPlayerMetadata = async (videoId: string, options?: ParseOptions): Promise<VideoMetadata | undefined> => {
+  const data = await tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA, options)
   if (!data) return undefined
   const details = asRecord(asRecord(data).videoDetails)
   const title = asString(details.title)
@@ -46,38 +58,46 @@ const fetchPlayerMetadata = async (videoId: string): Promise<VideoMetadata | und
   }
 }
 
-export const fetchTranscript = async (videoId: string, preferredLanguage?: string): Promise<RawItem[]> => {
-  const playerData = await fetchPlayerData(videoId)
+export const fetchTranscript = async (
+  videoId: string,
+  preferredLanguage?: string,
+  options?: ParseOptions,
+): Promise<RawItem[]> => {
+  const playerData = await fetchPlayerData(videoId, options)
   if (!playerData) throw new Error("FETCH_FAILED")
   const tracks = getCaptionTracks(playerData)
   if (tracks.length === 0) throw new Error("NO_CAPTIONS")
   const track = pickTrack(tracks, playerData, preferredLanguage)
   if (!track?.baseUrl || !validateCaptionUrl(track.baseUrl)) throw new Error("NO_CAPTIONS")
   const res = await fetch(track.baseUrl, {
-    headers: { "User-Agent": "Mozilla/5.0" },
-    signal: AbortSignal.timeout(4000),
+    headers: { "User-Agent": options?.userAgent ?? "Mozilla/5.0" },
+    signal: mergeSignals(options?.timeoutMs ?? 4000, options?.signal),
   })
   if (!res.ok) throw new Error("NO_CAPTIONS")
-  const xml = await res.text()
+  const xml = await readResponseText(res)
   const items = parseCaptionXml(xml)
   if (items.length === 0) throw new Error("NO_CAPTIONS")
   return items
 }
 
-export const fetchChapters = async (videoId: string): Promise<RawChapter[]> => {
+export const fetchChapters = async (videoId: string, options?: ParseOptions): Promise<RawChapter[]> => {
   let res: Response
   try {
     res = await fetch(INNERTUBE_NEXT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        ...(options?.userAgent ? { "User-Agent": options.userAgent } : {}),
+      },
       body: JSON.stringify({ videoId, context: WEB_CONTEXT }),
-      signal: AbortSignal.timeout(4000),
+      signal: mergeSignals(options?.timeoutMs ?? 4000, options?.signal),
     })
   } catch {
+    options?.signal?.throwIfAborted()
     return []
   }
   if (!res.ok) return []
-  const data = await res.json()
+  const data = await readResponseJson(res)
   for (const panel of asArray(asRecord(data).engagementPanels)) {
     const panelObj = asRecord(panel)
     const markers = asRecord(asRecord(panelObj.engagementPanelSectionListRenderer).content).macroMarkersListRenderer
@@ -109,14 +129,18 @@ const parseTimestamp = (timeStr: string): number => {
   return parts[0] ?? 0
 }
 
-const fetchPlayerData = async (videoId: string): Promise<unknown | undefined> => {
-  // Race both client contexts in parallel. Android almost always wins and carries
-  // captions; WEB is a safety net when YouTube rate-limits the Android client.
-  const attempts = [tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA), tryFetchPlayerData(videoId, WEB_CONTEXT)]
-  const results = await Promise.all(attempts)
-  for (const data of results) {
-    if (data && getCaptionTracks(data).length > 0) return data
+const fetchPlayerData = async (videoId: string, options?: ParseOptions): Promise<unknown | undefined> => {
+  const attempts = [
+    tryFetchPlayerData(videoId, ANDROID_CONTEXT, ANDROID_UA, options),
+    tryFetchPlayerData(videoId, WEB_CONTEXT, undefined, options),
+  ]
+  const results = await Promise.allSettled(attempts)
+  options?.signal?.throwIfAborted()
+  for (const result of results) {
+    if (result.status === "fulfilled" && getCaptionTracks(result.value).length > 0) return result.value
   }
+  const failed = results.find((result) => result.status === "rejected")
+  if (failed?.status === "rejected") throw failed.reason
   return undefined
 }
 
@@ -124,19 +148,23 @@ const tryFetchPlayerData = async (
   videoId: string,
   context: Record<string, unknown>,
   userAgent?: string,
+  options?: ParseOptions,
 ): Promise<unknown | undefined> => {
+  const signal = mergeSignals(options?.timeoutMs ?? 4000, options?.signal)
   try {
     const headers: Record<string, string> = { "Content-Type": "application/json" }
-    if (userAgent) headers["User-Agent"] = userAgent
+    const agent = options?.userAgent ?? userAgent
+    if (agent) headers["User-Agent"] = agent
     const res = await fetch(INNERTUBE_API, {
       method: "POST",
       headers,
-      signal: AbortSignal.timeout(4000),
+      signal,
       body: JSON.stringify({ context, videoId }),
     })
     if (!res.ok) return undefined
-    return await res.json()
+    return await readResponseJson(res)
   } catch {
+    signal.throwIfAborted()
     return undefined
   }
 }

@@ -7,23 +7,23 @@ how to submit changes.
 ## Development setup
 
 ```sh
-# Node 18+ and pnpm 9+ required
-git clone https://github.com/fkonovalov/rdrr-oss.git
+# Node 22.12+ and pnpm 11 required
+git clone https://github.com/fkonovalov/rdrr.git
 cd rdrr
 pnpm install
 ```
 
-Four scripts cover the inner loop:
+These scripts cover the inner loop:
 
 ```sh
 pnpm build   # type-check (tsc --noEmit) + bundle (tsdown) → dist/
 pnpm dev     # tsdown --watch (rebuilds on change)
-pnpm test    # vitest run — snapshots against real fixtures
+pnpm test    # deterministic tests; build first
 pnpm lint    # knip (dead code) + oxlint
 pnpm fmt     # oxfmt --write .
 ```
 
-`pnpm build` must pass cleanly before you open a PR — `tsc --noEmit` is the
+`pnpm build` must pass cleanly before you open a PR. `tsc --noEmit` is the
 source of truth, not your editor.
 
 ### Running the CLI locally
@@ -55,11 +55,11 @@ src/
 │   ├── elements/      # element processors (code, math, images, footnotes)
 │   ├── filters/       # content filtering (hidden, scoring, patterns)
 │   └── utils/         # DOM helpers
-└── provider/          # content providers (web, youtube, github, pdf)
+└── provider/          # content providers (web, youtube, github, stackoverflow, npm, x)
     └── youtube/       # multi-file providers live in their own subdirectory
 ```
 
-See [`CLAUDE.md`](./CLAUDE.md) for the full convention guide. Highlights:
+See [`AGENTS.md`](./AGENTS.md) for the full convention guide. Highlights:
 
 - **TypeScript**, strict, no `any`, `noUncheckedIndexedAccess` on.
 - **Arrow functions** everywhere, no classes, named exports only.
@@ -72,24 +72,31 @@ See [`CLAUDE.md`](./CLAUDE.md) for the full convention guide. Highlights:
 
 ## Adding a site extractor
 
-1. Create `src/extract/sites/your-site.ts` that exports a default `SiteExtractor`.
+1. Create `src/extract/sites/your-site.ts` that calls `registerSite({ patterns, create })`.
 2. Register it in `src/extract/sites/init.ts` via a side-effect import.
-3. Drop a representative HTML fixture into `src/__tests__/snapshot/` and run
-   `pnpm test -u` to generate the baseline markdown.
+3. Add a focused test in a `__tests__/` directory beside the extractor or engine.
+   Use local HTML fixtures and assertions for the content that must survive.
 
 ## Tests
 
-We use [`vitest`](https://vitest.dev). Tests live in `src/__tests__/` and
-snapshot markdown output from real URLs saved as HTML fixtures. To add a test:
-
-- Fetch the target URL with `rdrr <url> > src/__tests__/snapshot/<slug>.md`.
-- Commit the fixture so CI can diff against it.
-
-Run a single file with:
+We use [`vitest`](https://vitest.dev). `pnpm test` runs deterministic tests,
+including network mocks, local HTTP fixtures, built CLI/MCP checks and public
+API type checks. Build first so those checks exercise the current code:
 
 ```sh
-pnpm test src/__tests__/snapshot.test.ts
+pnpm build
+pnpm test
+pnpm exec vitest run src/extract/__tests__/content-fidelity.test.ts
 ```
+
+Live snapshot generation is separate. It fetches public URLs and writes
+Markdown for manual inspection, not an extraction-parity assertion suite:
+
+```sh
+pnpm snapshots:update
+```
+
+Set `RDRR_SNAPSHOT_DIR` to keep live outputs outside `src/__tests__/snapshot/`.
 
 ## Submitting changes
 
@@ -100,16 +107,23 @@ pnpm test src/__tests__/snapshot.test.ts
 4. Open a PR with a short description of the motivation and the user-visible
    effect. Link related issues.
 
-CI (GitHub Actions) will run the same lint/build/test matrix on Node 18, 20,
-and 22. A PR is not mergeable until all lanes are green.
+CI (GitHub Actions) will run the same lint/build/test matrix on Node 22
+and 24. A PR is not mergeable until all lanes are green.
 
 ## Releasing (maintainers only)
 
-1. Update `CHANGELOG.md` under `## [Unreleased]` as work lands on `main`.
-2. When cutting a release: bump the `version` in `package.json`, rename the
-   changelog section, `git tag vX.Y.Z`, push, and `npm publish`.
-3. `prepublishOnly` runs `pnpm build` automatically — never publish from a
-   dirty tree.
+1. Keep changes in the next version's `Unreleased` section in `CHANGELOG.md`.
+   Include compatibility changes and limitations, then confirm the version in `package.json`.
+2. Run `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm build`, `pnpm test`
+   and `pnpm audit`. Review the full diff and any advisory findings.
+3. Build a candidate with `pnpm pack --pack-destination <directory>`. Inspect its
+   file list and test the library, CLI and MCP from the unpacked archive on supported Node versions.
+4. Once the candidate is approved for publication, date the changelog section,
+   commit the reviewed files, tag `vX.Y.Z` and push. Publish the reviewed package
+   with `npm publish`, then verify its version and create the release notes.
+
+`prepublishOnly` runs lint, build and tests. Publish from a clean, reviewed tree.
+Local plans, captured pages and benchmark reports in `.Codex/` are not release files.
 
 ## License
 

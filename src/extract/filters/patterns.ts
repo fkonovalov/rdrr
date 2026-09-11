@@ -38,6 +38,7 @@ const filterExactSelectors = (
   for (const el of root.querySelectorAll(EXACT_SELECTORS_JOINED)) {
     if (!el.parentNode) continue
     if (closestByTag(el, PRE_CODE)) continue
+    if (el.localName === "a" && closestByTag(el, HEADING_TAGS) && /[\p{L}\p{N}]/u.test(el.textContent ?? "")) continue
     if (mainContent && el.contains(mainContent)) continue
 
     if (hiddenExact && hiddenSkip) {

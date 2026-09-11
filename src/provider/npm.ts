@@ -1,6 +1,8 @@
 import { countWords, estimateReadTime, mergeSignals } from "@shared"
 import type { ParseOptions, WebpageResult } from "../types"
 import { extractNpmPackage } from "../detect"
+import { readResponseJson, readResponseText } from "../security/body"
+import { fetchResource as fetch } from "../security/fetch"
 
 const DEFAULT_TIMEOUT_MS = 25000
 const REGISTRY = "https://registry.npmjs.org"
@@ -61,29 +63,12 @@ const registryHeaders = (options: ParseOptions | undefined): Record<string, stri
 })
 
 const readBodyCapped = async (res: Response, cap: number): Promise<string | null> => {
-  const declared = Number(res.headers.get("content-length") ?? 0)
-  if (declared > cap) {
-    await res.body?.cancel()
-    return null
+  try {
+    return await readResponseText(res, cap)
+  } catch (error) {
+    if (error instanceof Error && error.name === "InputTooLargeError") return null
+    throw error
   }
-  const reader = res.body?.getReader()
-  if (!reader) {
-    const text = await res.text()
-    return text.length > cap ? null : text
-  }
-  const chunks: Uint8Array[] = []
-  let total = 0
-  for (;;) {
-    const { done, value } = await reader.read()
-    if (done) break
-    total += value.length
-    if (total > cap) {
-      await reader.cancel()
-      return null
-    }
-    chunks.push(value)
-  }
-  return Buffer.concat(chunks).toString("utf8")
 }
 
 // The version endpoint resolves dist-tags itself and stays tiny, but carries
@@ -104,7 +89,7 @@ const parseFromVersionEndpoint = async (
   if (res.status === 404) throw new Error(`Version ${pinned ?? "latest"} of "${name}" not found in the registry`)
   if (!res.ok) throw new Error(`Failed to fetch npm registry: ${res.status} ${res.statusText}`)
 
-  const manifest = (await res.json()) as RegistryManifest & { version?: string }
+  const manifest = (await readResponseJson(res)) as RegistryManifest & { version?: string }
   const version = manifest.version ?? pinned ?? ""
   const description = manifest.description ?? ""
   const content =

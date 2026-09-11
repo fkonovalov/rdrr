@@ -2,7 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 import { errorResult } from "./errors"
 import { cachedParse, type ToolDeps } from "./parse-cached"
-import { shapeFetchResult } from "./respond"
+import { boundedResult, shapeFetchResult } from "./respond"
 import { fetchInputShape, fetchOutputShape } from "./schemas"
 
 const DESCRIPTION =
@@ -34,7 +34,7 @@ export const registerFetchTool = (server: McpServer, deps: ToolDeps): void => {
           fields: args.fields,
           source: args.url,
         })
-        return { content: [{ type: "text", text }], structuredContent: structured }
+        return boundedResult(text, structured)
       } catch (error) {
         return errorResult(error)
       } finally {

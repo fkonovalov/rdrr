@@ -1,4 +1,7 @@
 export interface ExtractOptions {
+  signal?: AbortSignal
+  timeoutMs?: number
+  userAgent?: string
   url?: string
   markdown?: boolean
   debug?: boolean
@@ -6,6 +9,7 @@ export interface ExtractOptions {
 }
 
 export interface ExtractResult {
+  nextPageUrl?: string
   title: string
   author: string
   content: string

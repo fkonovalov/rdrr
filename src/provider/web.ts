@@ -4,7 +4,8 @@ import type { ParseOptions, WebpageResult } from "../types"
 import { extractAsync } from "../extract/engine"
 import { toMarkdown } from "../extract/markdown"
 import { parseLinkedomHTML } from "../extract/utils/parse-html"
-import { assertPublicUrl } from "../security/ssrf"
+import { assertInputSize, readResponseText } from "../security/body"
+import { fetchResource } from "../security/fetch"
 
 const USER_AGENT =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
@@ -35,7 +36,7 @@ const RAW_TEXT_TYPES = [
 
 const RAW_TEXT_EXT = /\.(txt|json|csv|xml|yaml|yml|md|rss|atom|log|tsv|toml|ini|cfg|conf)(\?|$)/i
 
-export interface ParseHtmlOptions {
+export interface ParseHtmlOptions extends Pick<ParseOptions, "signal" | "timeoutMs" | "userAgent"> {
   /** Optional base URL -- used to resolve relative links, set domain metadata, and match site extractors. */
   url?: string
   /** Preferred content language (BCP 47). Passed to the extraction pipeline. */
@@ -45,10 +46,11 @@ export interface ParseHtmlOptions {
 }
 
 export const parseHtml = async (html: string, options?: ParseHtmlOptions): Promise<WebpageResult> => {
+  assertInputSize(Buffer.byteLength(html, "utf8"))
   const url = options?.url ?? ""
   const doc = parseLinkedomHTML(html, url || undefined)
 
-  const result = await extractAsync(doc, { url })
+  const result = await extractAsync(doc, { ...options, url })
   const markdown = toMarkdown(result.content, url)
 
   return {
@@ -56,6 +58,7 @@ export const parseHtml = async (html: string, options?: ParseHtmlOptions): Promi
     title: result.title || "",
     author: result.author || "",
     content: markdown,
+    nextPageUrl: result.nextPageUrl,
     description: result.description || "",
     domain: result.domain || "",
     siteName: result.siteName || "",
@@ -73,24 +76,25 @@ export const parseWeb = async (url: string, options?: ParseOptions): Promise<Web
   if (!res.ok) throw new Error(fetchErrorMessage(res.status, res.statusText, url))
 
   const contentType = res.headers.get("content-type") ?? ""
+  const finalUrl = res.url || url
 
   // Check the pathname too: misconfigured servers ship .pdf files as
   // text/plain, which would otherwise dump raw PDF binary into the output.
-  if (contentType.includes("application/pdf") || isPdfPath(url)) {
+  if (contentType.includes("application/pdf") || isPdfPath(finalUrl)) {
     throw new Error("PDF parsing is not supported (removed in v0.5.0). Use a dedicated PDF tool for this URL.")
   }
 
-  if (isRawText(contentType, url)) {
-    const text = await res.text()
-    return rawTextResult(text, url, options?.wordsPerMinute)
+  if (isRawText(contentType, finalUrl)) {
+    const text = await readResponseText(res)
+    return rawTextResult(text, finalUrl, options?.wordsPerMinute)
   }
 
   if (!contentType.includes("text/html") && !contentType.includes("application/xhtml")) {
     throw new Error(`Unsupported content type: ${contentType}`)
   }
 
-  const html = await res.text()
-  return parseHtml(html, { url, language: options?.language, wordsPerMinute: options?.wordsPerMinute })
+  const html = await readResponseText(res)
+  return parseHtml(html, { ...options, url: finalUrl })
 }
 
 const fetchErrorMessage = (status: number, statusText: string, url: string): string => {
@@ -138,7 +142,7 @@ const describeNetworkError = (err: unknown, url: string): Error => {
   const code = typeof cause?.code === "string" ? cause.code : ""
   const detail = code || (typeof cause?.message === "string" ? cause.message : "") || "network error"
   const hint = NETWORK_ERROR_HINTS[code]
-  const wrapped = new Error(`Could not fetch ${safeDomain(url)}: ${detail}${hint ? ` (${hint})` : ""}`)
+  const wrapped = new TypeError(`Could not fetch ${safeDomain(url)}: ${detail}${hint ? ` (${hint})` : ""}`)
   wrapped.cause = err
   return wrapped
 }
@@ -203,6 +207,7 @@ export const fetchWithRedirects = async (url: string, opts: FetchOpts = {}): Pro
   const primary = await tryFetch(url, USER_AGENT, opts)
   if (primary && !shouldRetryWithSimpleUa(primary.status)) return primary
 
+  await primary?.body?.cancel()
   const fallback = await tryFetch(url, SIMPLE_UA, opts)
   if (fallback) return fallback
   if (primary) return primary
@@ -219,12 +224,11 @@ const tryFetch = async (url: string, userAgent: string, opts: FetchOpts): Promis
   for (let i = 0; i < MAX_REDIRECTS; i++) {
     visited.add(current)
 
-    if (!opts.allowPrivateNetworks) await assertPublicUrl(current)
-
     const timeoutMs = opts.timeoutMs ?? DEFAULT_TIMEOUT_MS
     let res: Response
     try {
-      res = await fetch(current, {
+      res = await fetchResource(current, {
+        allowPrivateNetworks: opts.allowPrivateNetworks,
         headers: {
           "User-Agent": userAgent,
           "Accept": "text/html,application/xhtml+xml,*/*",
@@ -247,6 +251,7 @@ const tryFetch = async (url: string, userAgent: string, opts: FetchOpts): Promis
 
     if (res.status < 300 || res.status >= 400) return res
 
+    await res.body?.cancel()
     const location = res.headers.get("location")
     if (!location) {
       throw new Error(`Redirect (${res.status}) without Location header from ${safeDomain(current)}`)

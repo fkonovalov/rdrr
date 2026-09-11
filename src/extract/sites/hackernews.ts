@@ -1,12 +1,12 @@
 import type { CommentData } from "../utils/comments"
 import type { SiteExtractor } from "./types"
 import { buildComment, buildCommentTree, buildContentHtml } from "../utils/comments"
-import { serializeHTML } from "../utils/dom"
+import { escapeHtml, serializeHTML } from "../utils/dom"
 import { registerSite } from "./registry"
 
 registerSite({
   patterns: [/news\.ycombinator\.com\/item\?id=.*/],
-  create: (doc) => {
+  create: (doc, url) => {
     const fatitem = doc.querySelector(".fatitem")
     const isCommentPage = !!fatitem?.querySelector(".onstory") && !fatitem?.querySelector(".titleline")
     const mainComment = isCommentPage ? (fatitem?.querySelector("tr.athing") ?? null) : null
@@ -16,12 +16,17 @@ registerSite({
       extract: () => {
         const postContent = getPostContent(fatitem, isCommentPage, mainComment)
         const comments = extractComments(doc)
-        const contentHtml = buildContentHtml("hackernews", postContent, comments)
+        const nextPageUrl = getNextPageUrl(doc, url)
+        const continuation = nextPageUrl
+          ? `<p>More comments are available: <a href="${escapeHtml(nextPageUrl)}">Continue reading on Hacker News</a>.</p>`
+          : ""
+        const contentHtml = buildContentHtml("hackernews", postContent, comments) + continuation
         const postTitle = getPostTitle(fatitem, isCommentPage, mainComment)
         const postAuthor = fatitem?.querySelector(".hnuser")?.textContent?.trim() ?? ""
         const published = getPostDate(fatitem)
 
         return {
+          nextPageUrl,
           content: contentHtml,
           contentHtml,
           variables: {
@@ -123,4 +128,22 @@ const getPostDate = (fatitem: Element | null): string => {
   if (!fatitem) return ""
   const timestamp = fatitem.querySelector(".age")?.getAttribute("title") ?? ""
   return timestamp.split("T")[0] ?? ""
+}
+
+const getNextPageUrl = (doc: Document, url: string): string | undefined => {
+  const href = doc.querySelector("a.morelink")?.getAttribute("href")
+  if (!href) return undefined
+  try {
+    const next = new URL(href, url)
+    const current = new URL(url)
+    if (
+      next.origin !== current.origin ||
+      next.pathname !== "/item" ||
+      next.searchParams.get("id") !== current.searchParams.get("id")
+    )
+      return undefined
+    return next.href
+  } catch {
+    return undefined
+  }
 }

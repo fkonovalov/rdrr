@@ -4,10 +4,10 @@
 
 Only the latest minor release of `rdrr` receives security fixes.
 
-| Version | Supported |
-| ------- | --------- |
-| 0.2.x   | yes       |
-| < 0.2   | no        |
+| Version                | Supported |
+| ---------------------- | --------- |
+| Latest published minor | yes       |
+| Older minors           | no        |
 
 ## Reporting a vulnerability
 
@@ -36,7 +36,7 @@ You can expect an initial acknowledgement within 72 hours. Fix timelines depend 
 - Dangerous URL schemes surviving sanitisation (`javascript:`, `vbscript:`, `data:text/html`, etc.).
 - Authentication credential leakage (`GITHUB_TOKEN`, `githubToken` option).
 - Redirect-based attacks (protocol downgrade, open redirect chains).
-- Zip-slip / path traversal during PDF or HTML ingestion.
+- Unexpected file access during HTML ingestion.
 
 ### Out of scope
 
@@ -52,5 +52,7 @@ If you expose `rdrr` through an HTTP or queue-based service:
 - Leave `allowPrivateNetworks: false` (the default). Enable only when you can validate the input domain.
 - Run the process with a restricted outbound firewall (deny RFC1918, link-local, loopback, and metadata endpoints).
 - Apply a wall-clock timeout on top of the built-in per-fetch timeouts.
-- Isolate untrusted PDF parsing in a separate process or sandbox -- malformed PDFs can OOM or CPU-burn.
+- Isolate extraction of untrusted HTML in a worker process when serving multiple tenants. The 20 MiB input limit is not a total memory or CPU limit. PDF parsing is not supported.
 - Never forward user-supplied `githubToken` values without validating the caller.
+
+Protected requests validate DNS results in the connection lookup and check each redirect. Cross-origin redirects drop credentials. HTTP/HTML input is bounded to 20 MiB, including decompressed responses. rdrr uses a private Undici dispatcher without changing the global dispatcher. It does not inherit custom global proxy dispatchers; use deployment-level egress controls where needed.

@@ -1,9 +1,6 @@
 import { z } from "zod"
 import type { UrlType } from "../detect"
 
-// Claude Code, Claude Desktop, and Cursor enforce a 25k-token limit on MCP
-// tool responses. The body appears once, in the text block (structuredContent
-// carries metadata only), so even the max budget stays under the cap.
 const DEFAULT_MAX_TOKENS = 10_000
 const MAX_MAX_TOKENS = 20_000
 
@@ -26,7 +23,7 @@ const maxTokens = z
   .max(MAX_MAX_TOKENS)
   .default(DEFAULT_MAX_TOKENS)
   .describe(
-    `Token budget for the markdown body, cut at a paragraph boundary. Default ${DEFAULT_MAX_TOKENS} keeps the response inside the 25k-token limit MCP hosts enforce. Paginate with startIndex when you need more`,
+    `Estimated token budget for the markdown body, cut at a paragraph boundary when possible. Default ${DEFAULT_MAX_TOKENS}. Paginate with startIndex when you need more`,
   )
 
 const startIndex = z
@@ -95,6 +92,10 @@ const qualitySchema = z.object({
 // The markdown body is NOT part of structuredContent -- it arrives once, in
 // the text content block. structuredContent carries metadata and pagination.
 export const fetchOutputShape = {
+  nextPageUrl: z
+    .string()
+    .optional()
+    .describe("Another upstream page of this discussion is available; fetch this URL to continue"),
   type: z.enum(["webpage", "youtube", "github", "stackoverflow", "x-profile", "x-status"]).optional(),
   title: z.string().optional(),
   author: z.string().optional(),
@@ -108,7 +109,9 @@ export const fetchOutputShape = {
   extractionEmpty: z
     .boolean()
     .optional()
-    .describe("True when extraction produced no content: the page is likely JS-rendered or behind a bot wall"),
+    .describe(
+      "True when extraction produced no content, including unavailable transcripts, JS-rendered pages and bot walls",
+    ),
   truncated: truncatedSchema.optional().describe("Present when the body was cut to fit the token budget"),
   quality: qualitySchema.optional(),
 }
@@ -123,7 +126,9 @@ export const parallelFetchInputShape = {
     .positive()
     .max(8000)
     .default(4000)
-    .describe("Token budget per URL. The total response is additionally capped to fit the MCP 25k-token limit"),
+    .describe(
+      "Estimated body token budget per URL. The serialized response is separately limited to an estimated 24,000 tokens",
+    ),
   timeoutMs,
   force,
 }
@@ -152,6 +157,7 @@ const URL_TYPE_VALUES = [
   "github-discussion",
   "github-file",
   "stackoverflow",
+  "npm",
   "x-profile",
   "x-status",
   "webpage",
@@ -163,7 +169,7 @@ export const checkInputShape = {
 
 export const checkOutputShape = {
   url: z.string().describe("The URL as submitted"),
-  normalizedUrl: z.string().describe("Canonicalized URL (https, no fragment, no trailing slash)"),
+  normalizedUrl: z.string().describe("URL without its fragment; preserves scheme, path and query"),
   type: z.enum(URL_TYPE_VALUES).describe("Detected URL type used for routing"),
   readable: z.boolean().describe("Whether the page likely yields meaningful article content"),
 }

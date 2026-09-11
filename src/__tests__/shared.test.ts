@@ -43,8 +43,8 @@ describe("countWords", () => {
 })
 
 describe("estimateReadTime", () => {
-  it("returns '1 min' for 0 words", () => {
-    expect(estimateReadTime(0)).toBe("1 min")
+  it("returns '0 min' for 0 words", () => {
+    expect(estimateReadTime(0)).toBe("0 min")
   })
 
   it("returns '1 min' for under 200 words", () => {

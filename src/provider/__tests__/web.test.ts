@@ -50,6 +50,16 @@ describe("parseHtml", () => {
 })
 
 describe("parseWeb", () => {
+  it("resolves relative links against the final response URL after a redirect", async () => {
+    const response = htmlResponse(
+      '<article><p>Read the <a href="next.html">next page</a> for more details.</p></article>',
+    )
+    Object.defineProperty(response, "url", { value: "https://docs.example/guide/" })
+    stubFetch(() => response)
+    const result = await parseWeb("https://old.example/start", { allowPrivateNetworks: true })
+    expect(result.content).toContain("https://docs.example/guide/next.html")
+    expect(result.domain).toBe("docs.example")
+  })
   it("fetches, parses HTML, and returns WebpageResult", async () => {
     stubFetch(() =>
       htmlResponse(

@@ -28,9 +28,19 @@ const X_PROFILE_HANDLE = /^\/([A-Za-z0-9_]{1,15})\/?$/
 const X_STATUS_BY_HANDLE = /^\/([A-Za-z0-9_]{1,15})\/status\/(\d+)\/?$/
 const X_STATUS_BY_ID = /^\/i\/status\/(\d+)\/?$/
 
-const GITHUB_ISSUE_PR = /github\.com\/[^/]+\/[^/]+\/(issues|pull)\/\d+/
-const GITHUB_FILE = /github\.com\/[^/]+\/[^/]+\/blob\/.+/
-const GITHUB_DISCUSSION = /github\.com\/[^/]+\/[^/]+\/discussions\/\d+/
+const GITHUB_ISSUE_PR = /^\/[^/]+\/[^/]+\/(issues|pull)\/\d+(?:\/|$)/
+const GITHUB_FILE = /^\/[^/]+\/[^/]+\/blob\/[^/]+\/.+/
+const GITHUB_DISCUSSION = /^\/[^/]+\/[^/]+\/discussions\/\d+(?:\/|$)/
+
+export const extractGitHubPath = (url: string): string => {
+  try {
+    const { hostname, pathname, protocol } = new URL(url)
+    if (protocol !== "https:" && protocol !== "http:") return ""
+    return hostname === "github.com" || hostname === "www.github.com" ? pathname : ""
+  } catch {
+    return ""
+  }
+}
 export type UrlType =
   | "youtube"
   | "github-issue"
@@ -44,9 +54,10 @@ export type UrlType =
 
 export const detectUrlType = (url: string): UrlType => {
   if (isYouTube(url)) return "youtube"
-  if (GITHUB_ISSUE_PR.test(url)) return "github-issue"
-  if (GITHUB_DISCUSSION.test(url)) return "github-discussion"
-  if (GITHUB_FILE.test(url)) return "github-file"
+  const githubPath = extractGitHubPath(url)
+  if (GITHUB_ISSUE_PR.test(githubPath)) return "github-issue"
+  if (GITHUB_DISCUSSION.test(githubPath)) return "github-discussion"
+  if (GITHUB_FILE.test(githubPath)) return "github-file"
   if (isStackOverflowQuestion(url)) return "stackoverflow"
   if (isNpmPackage(url)) return "npm"
   if (isXStatus(url)) return "x-status"
@@ -168,12 +179,7 @@ export const normalizeUrl = (url: string): string => {
   try {
     const u = new URL(url)
     u.hash = ""
-    if (u.protocol === "http:") u.protocol = "https:"
-    const normalized = u.toString()
-    // Preserve the canonical trailing slash on the root path (`https://x/`),
-    // strip elsewhere (`https://x/foo/` -> `https://x/foo`).
-    if (u.pathname === "/") return normalized
-    return normalized.endsWith("/") ? normalized.slice(0, -1) : normalized
+    return u.toString()
   } catch {
     return url
   }

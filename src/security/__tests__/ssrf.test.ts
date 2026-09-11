@@ -62,6 +62,8 @@ describe("assertPublicUrl", () => {
 
   it("blocks IPv6 link-local", async () => {
     await expect(assertPublicUrl("http://[fe80::1]/")).rejects.toThrow(PrivateNetworkError)
+    await expect(assertPublicUrl("http://[fe90::1]/")).rejects.toThrow(PrivateNetworkError)
+    await expect(assertPublicUrl("http://[febf::1]/")).rejects.toThrow(PrivateNetworkError)
   })
 
   it("blocks IPv6 multicast", async () => {

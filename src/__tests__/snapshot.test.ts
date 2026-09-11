@@ -14,7 +14,7 @@ import { describe, it, expect } from "vitest"
 import type { ParseResult } from "../types"
 import { parse } from "../rdrr"
 
-const OUT_DIR = resolve(__dirname, "snapshot")
+const OUT_DIR = process.env.RDRR_SNAPSHOT_DIR ?? resolve(__dirname, "snapshot")
 mkdirSync(OUT_DIR, { recursive: true })
 
 const URLS = [

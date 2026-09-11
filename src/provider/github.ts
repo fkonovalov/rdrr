@@ -1,11 +1,14 @@
 import { countWords, estimateReadTime, mergeSignals } from "@shared"
 import type { GitHubResult, ParseOptions } from "../types"
+import { extractGitHubPath } from "../detect"
+import { readResponseText, readResponseJson } from "../security/body"
+import { fetchResource as fetch } from "../security/fetch"
 
 const DEFAULT_TIMEOUT_MS = 25000
 
-const ISSUE_PR_RE = /github\.com\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)/
-const FILE_RE = /github\.com\/([^/]+)\/([^/]+)\/blob\/(.+)/
-const DISCUSSION_RE = /github\.com\/([^/]+)\/([^/]+)\/discussions\/(\d+)/
+const ISSUE_PR_RE = /^\/([^/]+)\/([^/]+)\/(issues|pull)\/(\d+)(?:\/|$)/
+const FILE_RE = /^\/([^/]+)\/([^/]+)\/blob\/([^/]+\/.+)/
+const DISCUSSION_RE = /^\/([^/]+)\/([^/]+)\/discussions\/(\d+)(?:\/|$)/
 
 interface Issue {
   title: string
@@ -26,9 +29,10 @@ interface Comment {
 }
 
 export const parseGitHub = async (url: string, options?: ParseOptions): Promise<GitHubResult> => {
-  if (ISSUE_PR_RE.test(url)) return parseIssue(url, options)
-  if (DISCUSSION_RE.test(url)) return parseDiscussion(url, options)
-  if (FILE_RE.test(url)) return parseFile(url, options)
+  const path = extractGitHubPath(url)
+  if (ISSUE_PR_RE.test(path)) return parseIssue(path, options)
+  if (DISCUSSION_RE.test(path)) return parseDiscussion(path, options)
+  if (FILE_RE.test(path)) return parseFile(path, options)
   throw new Error(`Not a GitHub issue/PR/discussion/file URL: ${url}`)
 }
 
@@ -78,7 +82,7 @@ const parseIssue = async (url: string, options?: ParseOptions): Promise<GitHubRe
 
   if (!issueRes.ok) throw ghApiError(issueRes, "Issue/PR")
 
-  const issue = (await issueRes.json()) as Issue
+  const issue = (await readResponseJson(issueRes)) as Issue
 
   const isPR = !!issue.pull_request || type === "pull"
   const kind = isPR ? "PR" : "Issue"
@@ -159,7 +163,7 @@ const parseDiscussion = async (url: string, options?: ParseOptions): Promise<Git
 
   if (!discussionRes.ok) throw ghApiError(discussionRes, "Discussion")
 
-  const discussion = (await discussionRes.json()) as Discussion
+  const discussion = (await readResponseJson(discussionRes)) as Discussion
   const author = discussion.user?.login ?? "unknown"
 
   const lines: string[] = [
@@ -227,7 +231,7 @@ const parseFile = async (url: string, options?: ParseOptions): Promise<GitHubRes
     return fileResult(owner!, repo!, filename, `Binary file: ${filename} (${contentType})`, 0, options?.wordsPerMinute)
   }
 
-  const text = await res.text()
+  const text = await readResponseText(res)
   const lang = detectLang(filename)
   const noFence = lang === "markdown" || lang === "md" || (lang === "" && filename.endsWith(".txt"))
   const content = noFence ? text : "```" + lang + "\n" + text + "\n```"
@@ -328,7 +332,7 @@ const fetchAllComments = async (
       signal: mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal),
     })
     if (!res.ok) return { comments: collected, truncated: true }
-    const page = (await res.json()) as Comment[]
+    const page = (await readResponseJson(res)) as Comment[]
     collected.push(...page)
     pages++
     nextUrl = parseNextLink(res.headers.get("link"))

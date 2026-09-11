@@ -1,12 +1,4 @@
-/**
- * Approximate token count using a fixed char-per-token ratio.
- *
- * Real tokenizers (cl100k_base, o200k_base) live in tiktoken/gpt-tokenizer
- * and weigh >1 MB. For an LLM context-budget guardrail we don't need exactness
- * — a slightly conservative estimate that never *overshoots* real token counts
- * is the win. Empirically 4 chars/token matches BPE tokenizers within ~10% on
- * English prose and undercounts on Cyrillic/CJK (which is safe for budgeting).
- */
+// ponytail: character estimate only; use a model tokenizer for exact budgets.
 const CHARS_PER_TOKEN = 4
 
 export const estimateTokens = (text: string): number => Math.ceil(text.length / CHARS_PER_TOKEN)

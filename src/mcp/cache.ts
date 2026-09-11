@@ -63,7 +63,7 @@ export const createAsyncCache = <T>(options: CacheOptions = {}): AsyncCache<T> =
 
     const promise = compute()
       .then((value) => {
-        store(key, value)
+        if (inflight.get(key) === promise) store(key, value)
         return value
       })
       .finally(() => {

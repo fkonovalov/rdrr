@@ -1,6 +1,9 @@
+import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 import type { ParseResult } from "../types"
 import type { FetchField } from "./schemas"
+import { estimateTokens } from "../cli/budget"
 import { computeQuality } from "../cli/quality"
+import { errorResult } from "./errors"
 import { paginate, type PageInfo } from "./paginate"
 
 export interface ShapeOptions {
@@ -18,8 +21,21 @@ export interface ShapedResult {
 }
 
 const EMPTY_NOTE =
-  "No content could be extracted from this URL. The page is likely JS-rendered (SPA) or behind a bot wall; " +
-  "rdrr does not execute JavaScript. Use a browser-based tool for this URL."
+  "No content could be extracted from this URL. The source may require JavaScript, block automated access, " +
+  "or have no available transcript. Try a browser-based tool or another source."
+
+const MAX_RESPONSE_TOKENS = 24_000
+
+export const boundedResult = (text: string, structured: Record<string, unknown>): CallToolResult => {
+  const result: CallToolResult = { content: [{ type: "text", text }], structuredContent: structured }
+  if (estimateTokens(JSON.stringify(result)) <= MAX_RESPONSE_TOKENS) return result
+  const error = new Error(
+    "Response exceeds the estimated 24,000-token limit including metadata. " +
+      'Retry fetch/extract_html with fields: ["content"], a smaller maxTokens, or a smaller batch.',
+  )
+  error.name = "ResponseTooLargeError"
+  return errorResult(error)
+}
 
 /** Keys every ParseResult carries; anything else is a type-specific extra. */
 const BASE_RESULT_KEYS = new Set([
@@ -48,9 +64,6 @@ export const shapeFetchResult = (result: ParseResult, options: ShapeOptions): Sh
 
   if (wants("content")) {
     const page = paginate(result.content, options.startIndex, options.maxTokens)
-    // The body lives only in the text block; duplicating it into
-    // structuredContent would double the response against the host's
-    // 25k-token cap.
     body = page.body
     truncated = page.truncated
     if (page.truncated) structured.truncated = page.truncated
@@ -113,6 +126,7 @@ const renderText = (structured: Record<string, unknown>, options: RenderOptions)
     ["site", structured.siteName],
     ["type", structured.type],
     ["source", options.source],
+    ["next_page", structured.nextPageUrl],
     ["domain", structured.domain],
     ["language", structured.language],
     ["published", structured.published],

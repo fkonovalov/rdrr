@@ -21,7 +21,7 @@ export default defineConfig({
     "@mixmark-io/domino": fileURLToPath(new URL("./src/domino-shim.ts", import.meta.url)),
   },
   deps: {
-    alwaysBundle: ["turndown", "linkedom", "commander", "@modelcontextprotocol/sdk", "zod"],
+    alwaysBundle: ["turndown", "linkedom", "commander", "@modelcontextprotocol/sdk", "zod", "undici"],
     onlyBundle: false,
   },
 })

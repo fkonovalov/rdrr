@@ -15,6 +15,8 @@ export { PrivateNetworkError } from "./security/ssrf"
 export type {
   ParseOptions,
   ParseResult,
+  ParsedResult,
+  XStatusResult,
   Chapter,
   TranscriptSegment,
   YouTubeResult,

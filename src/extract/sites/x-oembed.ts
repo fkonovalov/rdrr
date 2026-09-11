@@ -1,4 +1,8 @@
+import type { ExtractOptions } from "../types"
 import type { SiteExtractor, SiteExtractorResult } from "./types"
+import { readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
+import { mergeSignals } from "../../shared"
 import { escapeHtml } from "../utils/dom"
 import { registerSite } from "./registry"
 
@@ -70,15 +74,15 @@ registerSite({
       canExtract: () => false,
       extract: () => ({ content: "", contentHtml: "" }),
       canExtractAsync: () => /\/(status|article)\/\d+/.test(url),
-      extractAsync: () => extractXPost(url),
+      extractAsync: (options) => extractXPost(url, options),
     }) satisfies SiteExtractor,
 })
 
-const extractXPost = async (url: string): Promise<SiteExtractorResult> => {
+const extractXPost = async (url: string, options?: ExtractOptions): Promise<SiteExtractorResult> => {
   const match = url.match(/\/([a-zA-Z0-9_]{1,15})\/(status|article)\/(\d+)/)
   if (!match?.[1] || !match?.[3]) throw new Error(`Invalid X post URL: ${url}`)
 
-  const data = await fetchFx(match[1], match[3])
+  const data = await fetchFx(match[1], match[3], options)
 
   if (data.tweet?.article) return buildArticleResult(data)
   if (data.tweet?.text) return buildTweetResult(data)
@@ -86,13 +90,13 @@ const extractXPost = async (url: string): Promise<SiteExtractorResult> => {
   throw new Error("Could not fetch post content")
 }
 
-const fetchFx = async (username: string, id: string): Promise<FxResponse> => {
+const fetchFx = async (username: string, id: string, options?: ExtractOptions): Promise<FxResponse> => {
   const res = await fetch(`https://api.fxtwitter.com/${username}/status/${id}`, {
-    headers: { "User-Agent": "Mozilla/5.0 (compatible; rdrr/1.0; +https://rdrr.app)" },
-    signal: AbortSignal.timeout(10000),
+    headers: { "User-Agent": options?.userAgent ?? "Mozilla/5.0 (compatible; rdrr/1.0; +https://rdrr.app)" },
+    signal: mergeSignals(options?.timeoutMs ?? 10000, options?.signal),
   })
   if (!res.ok) throw new Error(`FxTwitter API error: ${res.status}`)
-  return res.json() as Promise<FxResponse>
+  return readResponseJson(res) as Promise<FxResponse>
 }
 
 const buildArticleResult = (data: FxResponse): SiteExtractorResult => {

@@ -23,12 +23,14 @@ export const fetchStatus = async (
   id: string,
   opts: FetchStatusOptions = {},
 ): Promise<FetchOutcome> => {
+  opts.signal?.throwIfAborted()
   const errors: string[] = []
 
   try {
     const status = await fetchFromFxtwitter(handle, id, opts)
     return { status, source: "fxtwitter" }
   } catch (err) {
+    opts.signal?.throwIfAborted()
     errors.push(`fxtwitter: ${(err as Error).message}`)
   }
 
@@ -36,6 +38,7 @@ export const fetchStatus = async (
     const status = await fetchFromSyndication(id, opts)
     return { status, source: "syndication" }
   } catch (err) {
+    opts.signal?.throwIfAborted()
     errors.push(`syndication: ${(err as Error).message}`)
   }
 

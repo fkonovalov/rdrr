@@ -2,13 +2,24 @@ import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js"
 import { PrivateNetworkError } from "../security/ssrf"
 
 export interface ToolError {
-  kind: "private-network" | "aborted" | "timeout" | "http" | "invalid-url" | "network" | "unknown"
+  kind:
+    | "private-network"
+    | "aborted"
+    | "timeout"
+    | "http"
+    | "invalid-url"
+    | "network"
+    | "response-too-large"
+    | "input-too-large"
+    | "unknown"
   message: string
 }
 
 export const classifyError = (error: unknown): ToolError => {
   if (error instanceof PrivateNetworkError) return { kind: "private-network", message: error.message }
   if (!(error instanceof Error)) return { kind: "unknown", message: String(error) }
+  if (error.name === "InputTooLargeError") return { kind: "input-too-large", message: error.message }
+  if (error.name === "ResponseTooLargeError") return { kind: "response-too-large", message: error.message }
   if (error.name === "AbortError") return { kind: "aborted", message: error.message }
   if (error.name === "TimeoutError" || /timed out/i.test(error.message))
     return { kind: "timeout", message: error.message }
@@ -20,7 +31,8 @@ export const classifyError = (error: unknown): ToolError => {
 
 /** Tool execution failure per MCP spec: an isError result, never a thrown protocol error. */
 export const errorResult = (error: unknown): CallToolResult => {
-  const toolError = classifyError(error)
+  const classified = classifyError(error)
+  const toolError = { ...classified, message: classified.message.slice(0, 4000) }
   return {
     content: [{ type: "text", text: `Failed: ${toolError.message}` }],
     structuredContent: { error: toolError },

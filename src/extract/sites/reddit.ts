@@ -1,5 +1,9 @@
+import type { ExtractOptions } from "../types"
 import type { CommentData } from "../utils/comments"
 import type { SiteExtractor, SiteExtractorResult } from "./types"
+import { readResponseText } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
+import { mergeSignals } from "../../shared"
 import { buildCommentTree, buildContentHtml } from "../utils/comments"
 import { parseHTML, serializeHTML } from "../utils/dom"
 import { registerSite } from "./registry"
@@ -15,7 +19,7 @@ registerSite({
 
     const canExtractAsync = (): boolean => isComments && !isOldReddit
 
-    const extractAsync = async (): Promise<SiteExtractorResult> => {
+    const extractAsync = async (options: ExtractOptions = {}): Promise<SiteExtractorResult> => {
       // old.reddit.com carries the full comment tree in server-rendered HTML,
       // but Reddit increasingly bot-walls it (403). Fall back to whatever the
       // shreddit page already delivered instead of failing the whole parse.
@@ -24,16 +28,18 @@ registerSite({
         oldUrl.hostname = "old.reddit.com"
 
         const response = await fetch(oldUrl.toString(), {
-          headers: { "User-Agent": "Mozilla/5.0 (compatible; rdrr/1.0)" },
+          headers: { "User-Agent": options.userAgent ?? "Mozilla/5.0 (compatible; rdrr/1.0)" },
+          signal: mergeSignals(options.timeoutMs ?? 25000, options.signal),
         })
         if (!response.ok) throw new Error(`Failed to fetch old.reddit.com: ${response.status}`)
 
-        const html = await response.text()
+        const html = await readResponseText(response)
         const Parser = doc.defaultView?.DOMParser ?? (typeof DOMParser !== "undefined" ? DOMParser : null)
         if (!Parser) throw new Error("DOMParser is not available")
         const parsed = new Parser().parseFromString(html, "text/html")
         return extractOldReddit(parsed)
       } catch {
+        options.signal?.throwIfAborted()
         return extract()
       }
     }

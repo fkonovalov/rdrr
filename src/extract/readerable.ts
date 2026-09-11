@@ -1,8 +1,13 @@
+import type { ParseOptions } from "../types"
 import { fetchWithRedirects } from "../provider/web"
+import { readResponseText } from "../security/body"
 import { PARTIAL_SELECTORS_REGEX } from "./constants"
 import { parseLinkedomHTML } from "./utils/parse-html"
 
-export interface ReaderableOptions {
+export interface ReaderableOptions extends Pick<
+  ParseOptions,
+  "allowPrivateNetworks" | "timeoutMs" | "signal" | "userAgent" | "language"
+> {
   minContentLength?: number
   minScore?: number
 }
@@ -15,15 +20,15 @@ export const isProbablyReaderable = async (
   input: string | Document,
   options: ReaderableOptions = {},
 ): Promise<boolean> => {
-  const doc = typeof input === "string" ? await fetchAndParse(input) : input
+  const doc = typeof input === "string" ? await fetchAndParse(input, options) : input
   return scoreDocument(doc, options)
 }
 
-const fetchAndParse = async (url: string): Promise<Document> => {
-  const res = await fetchWithRedirects(url, {})
+const fetchAndParse = async (url: string, options: ReaderableOptions): Promise<Document> => {
+  const res = await fetchWithRedirects(url, options)
   if (!res.ok) throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`)
-  const html = await res.text()
-  return parseLinkedomHTML(html, url)
+  const html = await readResponseText(res)
+  return parseLinkedomHTML(html, res.url || url)
 }
 
 const scoreDocument = (doc: Document, { minContentLength = 140, minScore = 20 }: ReaderableOptions): boolean => {

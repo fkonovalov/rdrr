@@ -21,7 +21,14 @@ export interface CachedParseArgs {
 
 /** Cache key covers every option that changes the parsed result. */
 const cacheKey = (args: CachedParseArgs): string =>
-  JSON.stringify([args.url, args.language ?? "", args.limit ?? 0, args.order ?? "", args.includeLlmsTxt ?? false])
+  JSON.stringify([
+    args.url,
+    args.language ?? "",
+    args.limit ?? 0,
+    args.order ?? "",
+    args.includeLlmsTxt ?? false,
+    args.timeoutMs ?? null,
+  ])
 
 // Deliberately no per-request AbortSignal: the in-flight promise is shared by
 // every concurrent caller of the same key (single-flight), so one caller's

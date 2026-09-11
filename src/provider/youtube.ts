@@ -4,19 +4,26 @@ import type { VideoMetadata } from "./youtube/types"
 import { extractVideoId } from "../detect"
 import { fetchChapters, fetchMetadata, fetchTranscript } from "./youtube/innertube"
 import { detectLyricContent, groupLyricItems } from "./youtube/lyrics"
-import { groupTranscriptItems } from "./youtube/transcript"
+import { toTranscriptSegments } from "./youtube/transcript"
 
 export const parseYouTube = async (url: string, options?: ParseOptions): Promise<YouTubeResult> => {
+  options?.signal?.throwIfAborted()
   const wpm = options?.wordsPerMinute
   const videoId = extractVideoId(url)
   if (!videoId) throw new Error(`Invalid YouTube URL: ${url}`)
 
   const [metadata, transcript, chapters] = await Promise.allSettled([
-    fetchMetadata(videoId),
-    fetchTranscript(videoId, options?.language),
-    fetchChapters(videoId),
+    fetchMetadata(videoId, options),
+    fetchTranscript(videoId, options?.language, options),
+    fetchChapters(videoId, options),
   ])
 
+  options?.signal?.throwIfAborted()
+  for (const result of [metadata, transcript]) {
+    if (result.status === "rejected" && result.reason instanceof Error && result.reason.name === "TimeoutError") {
+      throw result.reason
+    }
+  }
   if (metadata.status === "rejected") throw new Error(`Could not fetch video metadata: ${metadata.reason}`)
 
   const items = transcript.status === "fulfilled" ? transcript.value : []
@@ -24,11 +31,11 @@ export const parseYouTube = async (url: string, options?: ParseOptions): Promise
   const formattedChapters: Chapter[] = rawChapters.map((c) => ({ ...c, formattedTime: formatTime(c.startTime) }))
 
   const lyric = detectLyricContent(items)
-  const segments = lyric.isLyric ? groupLyricItems(items) : groupTranscriptItems(items)
+  const segments = lyric.isLyric ? groupLyricItems(items) : toTranscriptSegments(items)
 
   assignChapterIndices(segments, formattedChapters)
 
-  const wc = items.reduce((sum, item) => sum + countWords(item.text), 0)
+  const wc = segments.reduce((sum, segment) => sum + countWords(segment.text), 0)
   const content = buildMarkdown(segments, metadata.value, videoId)
 
   return {
@@ -63,6 +70,7 @@ const assignChapterIndices = (segments: TranscriptSegment[], chapters: Chapter[]
 }
 
 const buildMarkdown = (segments: TranscriptSegment[], meta: VideoMetadata, videoId: string): string => {
+  if (segments.length === 0) return ""
   const lines: string[] = [
     `# ${meta.title}`,
     "",

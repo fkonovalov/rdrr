@@ -44,9 +44,10 @@ export const extractAsync = async (doc: Document, options: ExtractOptions = {}):
   const url = options.url ?? ""
   // Async site extractor short-circuits everything — an async site knows how
   // to talk to its own API and the sync pipeline has nothing to add.
+  options.signal?.throwIfAborted()
   const asyncExtractor = findAsyncSiteExtractor(doc, url)
   if (asyncExtractor?.extractAsync) {
-    const extracted = await asyncExtractor.extractAsync()
+    const extracted = await asyncExtractor.extractAsync(options)
     return finaliseMarkdown(buildResultFromExtractor(extracted, collectMeta(doc), url), options, url)
   }
 
@@ -55,7 +56,7 @@ export const extractAsync = async (doc: Document, options: ExtractOptions = {}):
   // doesn't convert HTML that will be replaced wholesale.
   let result = extract(doc, { ...options, markdown: false })
   if (result.wordCount === 0 && asyncExtractor?.extractAsync) {
-    const extracted = await asyncExtractor.extractAsync()
+    const extracted = await asyncExtractor.extractAsync(options)
     result = mergeAsyncFallback(result, extracted)
   }
   return finaliseMarkdown(result, options, url)
@@ -190,6 +191,7 @@ const mergeAsyncFallback = (syncResult: ExtractResult, extracted: SiteExtractorR
   title: extracted.variables?.title ?? syncResult.title,
   author: extracted.variables?.author ?? syncResult.author,
   content: extracted.contentHtml,
+  nextPageUrl: extracted.nextPageUrl,
   siteName: extracted.variables?.site ?? syncResult.siteName,
   published: extracted.variables?.published ?? syncResult.published,
   wordCount: countHtmlWords(extracted.contentHtml),
@@ -203,6 +205,7 @@ const buildResultFromExtractor = (extracted: SiteExtractorResult, meta: Metadata
   title: extracted.variables?.title ?? meta.title,
   author: extracted.variables?.author ?? meta.author,
   content: extracted.contentHtml,
+  nextPageUrl: extracted.nextPageUrl,
   description: extracted.variables?.description ?? meta.description,
   domain: meta.domain || (url ? safeDomain(url) : ""),
   siteName: extracted.variables?.site ?? meta.siteName,

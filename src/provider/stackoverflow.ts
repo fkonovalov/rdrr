@@ -2,6 +2,8 @@ import { countWords, estimateReadTime, mergeSignals } from "@shared"
 import type { ParseOptions, StackOverflowResult } from "../types"
 import { extractStackOverflowRef } from "../detect"
 import { toMarkdown } from "../extract/markdown"
+import { readResponseJson } from "../security/body"
+import { fetchResource as fetch } from "../security/fetch"
 
 const DEFAULT_TIMEOUT_MS = 25000
 const API = "https://api.stackexchange.com/2.3"
@@ -45,16 +47,17 @@ export const parseStackOverflow = async (url: string, options?: ParseOptions): P
   if (!ref) throw new Error(`Not a Stack Overflow question URL: ${url}`)
 
   const signal = mergeSignals(options?.timeoutMs ?? DEFAULT_TIMEOUT_MS, options?.signal)
+  const request = { signal, headers: { "User-Agent": options?.userAgent ?? "rdrr/1.0 (reader)" } }
   const common = "site=stackoverflow&filter=withbody"
 
   // /a/<id> answer permalinks resolve to their parent question first.
-  const id = ref.kind === "answer" ? await resolveQuestionId(ref.id, signal) : ref.id
+  const id = ref.kind === "answer" ? await resolveQuestionId(ref.id, request) : ref.id
 
   const [question, answers] = await Promise.all([
-    fetchItems<SoQuestion>(`${API}/questions/${id}?${common}`, signal).then(([q]) => q),
+    fetchItems<SoQuestion>(`${API}/questions/${id}?${common}`, request).then(([q]) => q),
     fetchItems<SoAnswer>(
       `${API}/questions/${id}/answers?${common}&sort=votes&order=desc&pagesize=${MAX_ANSWERS}`,
-      signal,
+      request,
     ),
   ])
 
@@ -110,18 +113,21 @@ export const parseStackOverflow = async (url: string, options?: ParseOptions): P
   }
 }
 
-const resolveQuestionId = async (answerId: string, signal: AbortSignal): Promise<string> => {
-  const [answer] = await fetchItems<{ question_id: number }>(`${API}/answers/${answerId}?site=stackoverflow`, signal)
+const resolveQuestionId = async (answerId: string, request: RequestInit): Promise<string> => {
+  const [answer] = await fetchItems<{ question_id: number }>(`${API}/answers/${answerId}?site=stackoverflow`, request)
   if (!answer) throw new Error(`Stack Overflow answer ${answerId} not found`)
   return String(answer.question_id)
 }
 
-const fetchItems = async <T>(url: string, signal: AbortSignal): Promise<T[]> => {
-  const res = await fetch(url, { headers: { "User-Agent": "rdrr/1.0 (reader)" }, signal })
+const fetchItems = async <T>(url: string, request: RequestInit): Promise<T[]> => {
+  const res = await fetch(url, request)
   // StackExchange reports errors as JSON with error_name even on non-2xx,
   // so inspect the body before deciding: a 400 can be a throttle violation
   // or just a malformed id.
-  const data = (await res.json().catch(() => null)) as SoResponse<T> | null
+  const data = (await readResponseJson(res).catch((error: unknown) => {
+    if (error instanceof SyntaxError) return null
+    throw error
+  })) as SoResponse<T> | null
   if (!res.ok || !data || data.error_id) {
     const detail = data?.error_message ?? `HTTP ${res.status}`
     if (res.status === 429 || data?.error_name === "throttle_violation" || detail.includes("throttle")) {

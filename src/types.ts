@@ -26,6 +26,7 @@ export interface ParseOptions {
 }
 
 export interface ParseResult {
+  nextPageUrl?: string
   type: "youtube" | "webpage" | "github" | "stackoverflow" | "x-profile" | "x-status"
   title: string
   author: string
@@ -93,3 +94,11 @@ export interface XStatusResult extends ParseResult {
   /** Which upstream strategy produced the result (e.g. "fxtwitter", "syndication"). */
   source: string
 }
+
+export type ParsedResult =
+  | YouTubeResult
+  | WebpageResult
+  | GitHubResult
+  | StackOverflowResult
+  | XProfileResult
+  | XStatusResult

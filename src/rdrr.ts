@@ -1,10 +1,10 @@
 import { ensureProtocol } from "@shared"
-import type { ParseOptions, ParseResult } from "./types"
+import type { ParseOptions, ParsedResult } from "./types"
 import { detectUrlType, isValidUrl, normalizeUrl } from "./detect"
 import { detectLlmsTxt } from "./provider/llms-txt"
 import { parseWeb } from "./provider/web"
 
-export const parse = async (url: string, options?: ParseOptions): Promise<ParseResult> => {
+export const parse = async (url: string, options?: ParseOptions): Promise<ParsedResult> => {
   if (!url) throw new Error("URL is required")
 
   const normalized = ensureProtocol(url)
@@ -16,7 +16,7 @@ export const parse = async (url: string, options?: ParseOptions): Promise<ParseR
   const result = await route(finalUrl, urlType, options)
 
   if (options?.includeLlmsTxt) {
-    const llms = await detectLlmsTxt(finalUrl, options?.allowPrivateNetworks)
+    const llms = await detectLlmsTxt(finalUrl, options)
     if (llms?.llmsContent) {
       result.llmsTxt = llms.llmsContent
       result.content = `${result.content}\n\n---\n\n## llms.txt\n\nSource: ${llms.llmsTxtUrl}\n\n${llms.llmsContent}`
@@ -30,7 +30,7 @@ const route = async (
   url: string,
   urlType: ReturnType<typeof detectUrlType>,
   options?: ParseOptions,
-): Promise<ParseResult> => {
+): Promise<ParsedResult> => {
   switch (urlType) {
     case "youtube": {
       const { parseYouTube } = await import("./provider/youtube")

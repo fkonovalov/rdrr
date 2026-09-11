@@ -1,4 +1,5 @@
-import { promises as dns } from "node:dns"
+import type { LookupFunction } from "node:net"
+import { lookup } from "node:dns"
 import { isIP } from "node:net"
 
 // Hostnames that should never resolve against the host's loopback/network stack.
@@ -27,7 +28,9 @@ export class PrivateNetworkError extends Error {
 export const assertPublicUrl = async (url: string): Promise<void> => {
   let hostname: string
   try {
-    hostname = new URL(url).hostname.toLowerCase().replace(/^\[|\]$/g, "")
+    const parsed = new URL(url)
+    if (parsed.protocol !== "https:" && parsed.protocol !== "http:") throw new Error("Invalid protocol")
+    hostname = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, "")
   } catch {
     throw new Error(`Invalid URL: ${url}`)
   }
@@ -42,18 +45,23 @@ export const assertPublicUrl = async (url: string): Promise<void> => {
     }
     return
   }
+}
 
-  try {
-    const results = await dns.lookup(hostname, { all: true })
-    for (const { address } of results) {
-      if (isPrivateIp(address)) {
-        throw new PrivateNetworkError(`Refusing to fetch ${hostname}: resolves to private IP ${address}`)
-      }
-    }
-  } catch (err) {
-    if (err instanceof PrivateNetworkError) throw err
-    // DNS resolution failure -- let fetch() surface the network error later.
-  }
+export const publicLookup: LookupFunction = (hostname, options, callback) => {
+  lookup(hostname, { ...options, all: true }, (error, addresses) => {
+    if (error) return callback(error, "", 0)
+    const blocked = addresses.find(({ address }) => isPrivateIp(address))
+    if (blocked)
+      return callback(
+        new PrivateNetworkError(`Refusing to fetch ${hostname}: resolves to private IP ${blocked.address}`),
+        "",
+        0,
+      )
+    if (options.all) return callback(null, addresses)
+    const first = addresses[0]
+    if (!first) return callback(new Error(`DNS returned no addresses for ${hostname}`), "", 0)
+    callback(null, first.address, first.family)
+  })
 }
 
 const isPrivateIp = (ip: string): boolean => {
@@ -82,7 +90,7 @@ const isPrivateV6 = (ip: string): boolean => {
   const lower = ip.toLowerCase()
   if (lower === "::" || lower === "::1") return true
   if (lower.startsWith("fc") || lower.startsWith("fd")) return true
-  if (lower.startsWith("fe80")) return true
+  if (/^fe[89ab][0-9a-f]:/.test(lower)) return true
   if (lower.startsWith("ff")) return true
   // IPv4-mapped in dotted form: ::ffff:127.0.0.1
   const mapped = lower.match(/^::ffff:(\d+\.\d+\.\d+\.\d+)$/)

@@ -13,6 +13,7 @@ const DEFAULT_LIMIT = 10
 const MAX_PAGES = 50
 
 export const parseXProfile = async (url: string, options?: ParseOptions): Promise<XProfileResult> => {
+  options?.signal?.throwIfAborted()
   const handle = extractXHandle(url)
   if (!handle) throw new Error(`Invalid X profile URL: ${url}`)
 
@@ -20,8 +21,8 @@ export const parseXProfile = async (url: string, options?: ParseOptions): Promis
   const order = options?.order ?? "newest"
 
   const [profileRes, statusesRes] = await Promise.all([
-    fetchProfile(handle),
-    fetchStatuses(handle, requested, MAX_PAGES),
+    fetchProfile(handle, options),
+    fetchStatuses(handle, requested, MAX_PAGES, options),
   ])
 
   const profile: ProfileInfo | null = profileRes?.user ? normalizeProfile(profileRes.user) : null

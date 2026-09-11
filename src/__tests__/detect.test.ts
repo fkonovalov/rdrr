@@ -10,6 +10,17 @@ import {
 } from "../detect"
 
 describe("detectUrlType", () => {
+  it("only routes GitHub URLs by their actual host and pathname", () => {
+    for (const url of [
+      "https://notgithub.com/user/repo/issues/42",
+      "https://example.com/github.com/user/repo/issues/42",
+      "https://example.com/?next=https://github.com/user/repo/issues/42",
+      "https://github.com/user/repo/issues/42oops",
+    ]) {
+      expect(detectUrlType(url)).toBe("webpage")
+    }
+    expect(detectUrlType("https://GITHUB.COM/user/repo/issues/42?tab=comments")).toBe("github-issue")
+  })
   it("classifies youtube variants", () => {
     expect(detectUrlType("https://www.youtube.com/watch?v=abc123")).toBe("youtube")
     expect(detectUrlType("https://youtube.com/watch?v=abc123")).toBe("youtube")
@@ -163,16 +174,17 @@ describe("isValidUrl", () => {
 })
 
 describe("normalizeUrl", () => {
-  it("upgrades http to https", () => {
-    expect(normalizeUrl("http://example.com/foo")).toBe("https://example.com/foo")
+  it("preserves an explicitly requested HTTP URL", () => {
+    expect(normalizeUrl("http://example.com/foo")).toBe("http://example.com/foo")
   })
 
   it("strips hash fragment", () => {
     expect(normalizeUrl("https://example.com/foo#section")).toBe("https://example.com/foo")
   })
 
-  it("strips trailing slash on paths", () => {
-    expect(normalizeUrl("https://example.com/foo/")).toBe("https://example.com/foo")
+  it("preserves significant path and query slashes", () => {
+    expect(normalizeUrl("https://example.com/foo/")).toBe("https://example.com/foo/")
+    expect(normalizeUrl("https://example.com/api?prefix=docs/")).toBe("https://example.com/api?prefix=docs/")
   })
 
   it("preserves trailing slash on root", () => {

@@ -1,6 +1,8 @@
 import { mergeSignals } from "@shared"
 import type { FxStatus } from "../_twitter/types"
 import type { NormalizedStatus } from "./types"
+import { readResponseJson } from "../../security/body"
+import { fetchResource as fetch } from "../../security/fetch"
 import { applyDisplayRange, extractMedia, normalizeQuote } from "../_twitter/normalize"
 
 const BASE = "https://api.fxtwitter.com"
@@ -30,7 +32,7 @@ export const fetchFromFxtwitter = async (
     signal: mergeSignals(opts.timeoutMs ?? REQUEST_TIMEOUT_MS, opts.signal),
   })
   if (!res.ok) throw new Error(`fxtwitter ${res.status} ${res.statusText}`)
-  const body = (await res.json()) as FxResponse
+  const body = (await readResponseJson(res)) as FxResponse
   if (body.code !== 200 || !body.tweet) throw new Error(`fxtwitter: ${body.message ?? "no tweet"}`)
   return toNormalized(body.tweet)
 }
