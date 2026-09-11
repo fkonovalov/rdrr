@@ -52,6 +52,7 @@ Example sizes, measured with rdrr 0.7.0 on September 11, 2026:
 | Page                                                                           | Raw HTML | Markdown body | Reduction |
 | ------------------------------------------------------------------------------ | -------: | ------------: | --------: |
 | [React quick start](https://react.dev/learn)                                   |   66,256 |         3,785 |     17.5x |
+| [MDN Array.map()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/map) |   44,578 |         2,654 |     16.8x |
 | [TypeScript on Wikipedia](https://en.wikipedia.org/wiki/TypeScript)            |  107,137 |        10,171 |     10.5x |
 | [Dropbox discussion on Hacker News](https://news.ycombinator.com/item?id=8863) |   25,250 |         7,967 |      3.2x |
 
