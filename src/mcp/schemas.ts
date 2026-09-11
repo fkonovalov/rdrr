@@ -42,9 +42,9 @@ const timeoutMs = z
   .number()
   .int()
   .positive()
-  .max(60_000)
+  .max(120_000)
   .optional()
-  .describe("Per-request timeout in milliseconds. Default 25000")
+  .describe("Timeout in milliseconds. Default 25000 per request; Reddit 120000 for all attempts and rate-limit waits")
 
 const force = z.boolean().default(false).describe("Bypass the per-session in-memory cache")
 
@@ -158,6 +158,7 @@ const URL_TYPE_VALUES = [
   "github-file",
   "stackoverflow",
   "npm",
+  "reddit",
   "x-profile",
   "x-status",
   "webpage",

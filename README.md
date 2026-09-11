@@ -83,6 +83,7 @@ Try another source with the same command:
 | GitHub                     | `rdrr "https://github.com/mozilla/readability/issues/1"` | Issue body and comments; also supports PR conversations, discussions, and files |
 | Stack Overflow             | `rdrr "https://stackoverflow.com/questions/11227809"`    | Question and up to 10 top-voted answers                                         |
 | npm                        | `rdrr "https://www.npmjs.com/package/rdrr"`              | Package facts and README from the registry                                      |
+| Reddit                     | `rdrr "https://www.reddit.com/comments/1wd9yit/"`        | Public post body and available comments from Reddit's RSS feed                   |
 | X / Twitter                | `rdrr "https://x.com/discotune" -n 10`                   | Recent public posts; single post URLs work too                                  |
 | Local HTML                 | `rdrr page.html` or `cat page.html \| rdrr -`            | Markdown from a saved file or HTML stream                                       |
 

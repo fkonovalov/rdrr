@@ -20,9 +20,6 @@ registerSite({
     const canExtractAsync = (): boolean => isComments && !isOldReddit
 
     const extractAsync = async (options: ExtractOptions = {}): Promise<SiteExtractorResult> => {
-      // old.reddit.com carries the full comment tree in server-rendered HTML,
-      // but Reddit increasingly bot-walls it (403). Fall back to whatever the
-      // shreddit page already delivered instead of failing the whole parse.
       try {
         const oldUrl = new URL(url)
         oldUrl.hostname = "old.reddit.com"
@@ -37,15 +34,20 @@ registerSite({
         const Parser = doc.defaultView?.DOMParser ?? (typeof DOMParser !== "undefined" ? DOMParser : null)
         if (!Parser) throw new Error("DOMParser is not available")
         const parsed = new Parser().parseFromString(html, "text/html")
-        return extractOldReddit(parsed)
+        if (parsed.querySelector(".thing.link")) return extractOldReddit(parsed)
       } catch {
         options.signal?.throwIfAborted()
-        return extract()
       }
+      return extract()
     }
 
     const extract = (): SiteExtractorResult => {
       if (isOldReddit) return extractOldReddit(doc)
+      if (!shredditPost) {
+        throw new Error(
+          "Reddit did not return a post. It may require login or a browser check. Use a browser-based tool for this URL.",
+        )
+      }
 
       const postTitle = doc.querySelector("h1")?.textContent?.trim() ?? ""
       const subreddit = url.match(/\/r\/([^/]+)/)?.[1] ?? ""

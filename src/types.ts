@@ -19,7 +19,7 @@ export interface ParseOptions {
   wordsPerMinute?: number
   /** Abort signal forwarded to every underlying fetch. */
   signal?: AbortSignal
-  /** Per-request timeout in milliseconds. Defaults to 25000. */
+  /** Timeout in ms: default 25000 per request, or 120000 for the complete Reddit operation. */
   timeoutMs?: number
   /** Override the outbound User-Agent header. */
   userAgent?: string

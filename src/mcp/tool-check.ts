@@ -10,7 +10,7 @@ import { checkInputShape, checkOutputShape } from "./schemas"
 
 const DESCRIPTION =
   "Cheap pre-flight check. Returns the detected URL type (webpage/youtube/github-issue/github-discussion/" +
-  "github-file/stackoverflow/npm/x-status/x-profile) plus whether the URL is likely to yield meaningful article " +
+  "github-file/stackoverflow/npm/reddit/x-status/x-profile) plus whether the URL is likely to yield meaningful article " +
   "content. Use before `fetch` to route on URL type or skip URLs unlikely to extract well. Does NOT extract " +
   "the content."
 

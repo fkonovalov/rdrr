@@ -2,6 +2,7 @@ import { configDefaults, defineConfig } from "vitest/config"
 
 export default defineConfig({
   test: {
+    fsModuleCache: true,
     exclude: [...configDefaults.exclude, "src/__tests__/snapshot.test.ts"],
     typecheck: { enabled: true },
     coverage: {

@@ -10,6 +10,23 @@ import {
 } from "../detect"
 
 describe("detectUrlType", () => {
+  it("routes Reddit post links without matching lookalike hosts or listing pages", () => {
+    for (const url of [
+      "https://www.reddit.com/r/test/comments/abc123/title/",
+      "https://old.reddit.com/comments/abc123/",
+      "https://redd.it/abc123",
+    ]) {
+      expect(detectUrlType(url)).toBe("reddit")
+    }
+    for (const url of [
+      "https://notreddit.com/comments/abc123/",
+      "https://reddit.com.evil.test/comments/abc123/",
+      "https://reddit.com/r/test/",
+      "https://example.com/?url=https://reddit.com/comments/abc123/",
+    ]) {
+      expect(detectUrlType(url)).toBe("webpage")
+    }
+  })
   it("only routes GitHub URLs by their actual host and pathname", () => {
     for (const url of [
       "https://notgithub.com/user/repo/issues/42",

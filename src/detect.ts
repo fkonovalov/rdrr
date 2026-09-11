@@ -48,6 +48,7 @@ export type UrlType =
   | "github-file"
   | "stackoverflow"
   | "npm"
+  | "reddit"
   | "x-profile"
   | "x-status"
   | "webpage"
@@ -60,6 +61,7 @@ export const detectUrlType = (url: string): UrlType => {
   if (GITHUB_FILE.test(githubPath)) return "github-file"
   if (isStackOverflowQuestion(url)) return "stackoverflow"
   if (isNpmPackage(url)) return "npm"
+  if (extractRedditPostId(url)) return "reddit"
   if (isXStatus(url)) return "x-status"
   if (isXProfile(url)) return "x-profile"
   return "webpage"
@@ -68,6 +70,18 @@ export const detectUrlType = (url: string): UrlType => {
 interface XStatusRef {
   handle: string | null
   id: string
+}
+
+export const extractRedditPostId = (url: string): string | null => {
+  try {
+    const { hostname, pathname, protocol } = new URL(url)
+    if (protocol !== "https:" && protocol !== "http:") return null
+    if (hostname === "redd.it") return pathname.match(/^\/([a-z0-9]+)\/?$/i)?.[1]?.toLowerCase() ?? null
+    if (hostname !== "reddit.com" && !hostname.endsWith(".reddit.com")) return null
+    return pathname.match(/^\/(?:r\/[^/]+\/)?comments\/([a-z0-9]+)(?:\/|$)/i)?.[1]?.toLowerCase() ?? null
+  } catch {
+    return null
+  }
 }
 
 export const extractXStatus = (url: string): XStatusRef | null => {

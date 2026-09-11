@@ -50,6 +50,10 @@ const route = async (
       const { parseNpm } = await import("./provider/npm")
       return parseNpm(url, options)
     }
+    case "reddit": {
+      const { parseReddit } = await import("./provider/reddit")
+      return parseReddit(url, options)
+    }
     case "x-profile": {
       const { parseXProfile } = await import("./provider/x-profile")
       return parseXProfile(url, options)

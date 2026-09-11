@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 While `rdrr` is pre-`1.0`, minor version bumps (`0.x.0`) may contain breaking changes.
 
+## [0.8.0] - 2026-09-11
+
+### Added
+
+- Read public Reddit posts and available comments through Atom/RSS when HTML requires login or a browser check. Export `parseReddit()` and recognize Reddit post URLs, comment permalinks, and `redd.it` links.
+- Validate complete XML before extraction, reject missing content fields, and verify that a requested comment appears in the response.
+- Add a repeatable live check for 20 pinned Reddit posts, with captured responses and content assertions.
+
+### Fixed
+
+- Retry transient Reddit connection and response-body failures, malformed feeds, and temporary HTTP errors. Make at most three attempts within one deadline, respecting server retry headers and cancellation.
+- Preserve comment context, sorting, explicit URL limits, media links, and captions without imposing a 100-comment cap.
+- Preserve a readable Reddit HTML post when the old Reddit fallback returns a login page instead of content.
+- Avoid unnecessary minute-long waits when a `Retry-After` date has already elapsed.
+
+### Changed
+
+- Upgrade Vitest and its V8 coverage package to 5.0.0 and cache transformed test modules between runs.
+- Allow MCP callers to specify the full 120-second Reddit timeout.
+
+### Compatibility notes
+
+- `detectUrlType()` can now return `reddit`. Reddit parsers return a `webpage` result.
+- Reddit's default timeout is 120 seconds for all attempts and rate-limit waits. Explicit timeouts can shorten it.
+- RSS supplies flat comments without scores. Reddit controls feed completeness and access; removing rdrr's comment cap does not guarantee the entire thread.
+
 ## [0.7.0] - 2026-09-11
 
 ### Security
@@ -204,6 +230,8 @@ First public release.
 - Requires Node.js >=20.17.0.
 - API is considered experimental until `1.0.0`; breaking changes may land in `0.x.0` releases.
 
+[0.8.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.8.0
+[0.7.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.7.0
 [0.6.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.6.0
 [0.5.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.5.0
 [0.4.0]: https://github.com/fkonovalov/rdrr/releases/tag/v0.4.0

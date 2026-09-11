@@ -10,28 +10,28 @@ rdrr <input> [options]
 
 `<input>` is a URL, a local `.html` file, or `-` to read HTML from stdin. A URL without a scheme gets `https://`.
 
-| Flag                       | Description                                                      |
-| -------------------------- | ---------------------------------------------------------------- |
-| `-o, --output <file>`      | Save to file instead of stdout                                   |
-| `-c, --clip`               | Copy to the system clipboard, suppresses stdout                  |
-| `-j, --json`               | Full JSON with metadata (alias for `--format json`)              |
-| `--format <fmt>`           | `md` (default), `json`, `jsonl`, or `xml`                        |
-| `-p, --property <name>`    | Print a single field (`title`, `content`, ...)                   |
-| `-l, --language <code>`    | Preferred language (BCP 47)                                      |
-| `-n, --limit <n>`          | Max items for aggregate URLs such as X profiles (default 10)     |
-| `--order <order>`          | `newest` (default) or `oldest`                                   |
-| `--budget <tokens>`        | Shorten the body toward an estimated token budget; may exceed it |
-| `--quality`                | Attach a readability score (0-100) and signals to JSON output    |
-| `--check`                  | Probe readability without parsing, exit 0/1                      |
-| `--strict`                 | Exit 3 when nothing could be extracted                           |
-| `--llms`                   | Append the site's `/llms.txt`                                    |
-| `--timeout <ms>`           | Per-request timeout (default 25000)                              |
-| `--github-token <token>`   | GitHub API token (falls back to `$GITHUB_TOKEN`)                 |
-| `--user-agent <ua>`        | Override the outbound User-Agent header                          |
-| `--wpm <n>`                | Words per minute used for `readTime` (default 200)               |
-| `--allow-private-networks` | Allow RFC1918, loopback and link-local targets (SSRF-unsafe)     |
-| `--no-history`             | Skip logging this call to history                                |
-| `--debug`                  | Pipeline diagnostics to stderr                                   |
+| Flag                       | Description                                                              |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `-o, --output <file>`      | Save to file instead of stdout                                           |
+| `-c, --clip`               | Copy to the system clipboard, suppresses stdout                          |
+| `-j, --json`               | Full JSON with metadata (alias for `--format json`)                      |
+| `--format <fmt>`           | `md` (default), `json`, `jsonl`, or `xml`                                |
+| `-p, --property <name>`    | Print a single field (`title`, `content`, ...)                           |
+| `-l, --language <code>`    | Preferred language (BCP 47)                                              |
+| `-n, --limit <n>`          | Max items for aggregate URLs such as X profiles (default 10)             |
+| `--order <order>`          | `newest` (default) or `oldest`                                           |
+| `--budget <tokens>`        | Shorten the body toward an estimated token budget; may exceed it         |
+| `--quality`                | Attach a readability score (0-100) and signals to JSON output            |
+| `--check`                  | Probe readability without parsing, exit 0/1                              |
+| `--strict`                 | Exit 3 when nothing could be extracted                                   |
+| `--llms`                   | Append the site's `/llms.txt`                                            |
+| `--timeout <ms>`           | Request timeout (default 25000; Reddit 120000 including rate-limit wait) |
+| `--github-token <token>`   | GitHub API token (falls back to `$GITHUB_TOKEN`)                         |
+| `--user-agent <ua>`        | Override the outbound User-Agent header                                  |
+| `--wpm <n>`                | Words per minute used for `readTime` (default 200)                       |
+| `--allow-private-networks` | Allow RFC1918, loopback and link-local targets (SSRF-unsafe)             |
+| `--no-history`             | Skip logging this call to history                                        |
+| `--debug`                  | Pipeline diagnostics to stderr                                           |
 
 ### Subcommands
 
@@ -127,7 +127,7 @@ const result = await parse("https://en.wikipedia.org/wiki/TypeScript", { languag
 | `wordsPerMinute`       | `number`               | `200`   | Used for `readTime`                                          |
 | `allowPrivateNetworks` | `boolean`              | `false` | Allow private, loopback and link-local targets (SSRF-unsafe) |
 
-An explicit `timeoutMs` applies to each request, not the entire parse operation. Without an override, web/API requests generally use 25 seconds; YouTube player/caption/chapter requests use 4 seconds, X requests 10 seconds, and optional llms.txt probes 5 seconds. Redirects, retries and pagination can increase total elapsed time. URL normalization preserves explicit HTTP, trailing path slashes and query values, and removes fragments.
+An explicit `timeoutMs` generally applies to each request. For Reddit it bounds the whole operation, including a rate-limit wait, and defaults to 120 seconds. Without an override, other web/API requests generally use 25 seconds; YouTube player/caption/chapter requests use 4 seconds, X requests 10 seconds, and optional llms.txt probes 5 seconds. Redirects, retries and pagination can increase total elapsed time. URL normalization preserves explicit HTTP, trailing path slashes and query values, and removes fragments.
 
 Every result carries `type`, `title`, `author`, `content`, `description`, `domain`, `siteName`, `published`, `wordCount`, `readTime`, and optionally `language`, `dir`, `llmsTxt`. Metadata fields can be empty when unavailable. Zero words yield `readTime: "0 min"`. `parse()` returns the `ParsedResult` union. Check `result.type` to access source-specific fields such as `transcript` or `postCount`. The common `ParseResult` interface remains available for code that only needs shared fields:
 
@@ -156,13 +156,23 @@ Lightweight pre-check: will this URL yield a meaningful article? Returns `Promis
 
 ### Other exports
 
-Per-source parsers `parseWeb`, `parseYouTube`, `parseGitHub`, `parseStackOverflow`, `parseNpm`, `parseXProfile`; URL helpers `detectUrlType`, `extractVideoId`, `normalizeUrl`; token helpers `estimateTokens`, `truncateToBudget`; `computeQuality` for the readability report; `PrivateNetworkError`. The extraction engine alone is available from `rdrr/extract`.
+Per-source parsers `parseWeb`, `parseYouTube`, `parseGitHub`, `parseStackOverflow`, `parseNpm`, `parseReddit`, `parseXProfile`; URL helpers `detectUrlType`, `extractVideoId`, `normalizeUrl`; token helpers `estimateTokens`, `truncateToBudget`; `computeQuality` for the readability report; `PrivateNetworkError`. The extraction engine alone is available from `rdrr/extract`.
 
 ## Site extractors
 
 Generic pages go through the readability engine. Dedicated extractors in `src/extract/sites/` handle Reddit, Hacker News, Substack (posts and notes), GitHub pages, X articles and posts, ChatGPT, Claude, Gemini and Grok conversation HTML, and the c2.com wiki. Extractor support requires matching page markup; it does not guarantee that a public share URL serves that markup without JavaScript or authentication.
 
 Hacker News `item?id=...` URLs preserve the post link or text, comment authors, dates, permalinks, and nested replies present in the fetched HTML. When the fetched HTML links to another comment page, `nextPageUrl` contains that URL, Markdown includes a continuation link, and CLI frontmatter includes `next_page`. Fetch that URL to read the next upstream page. MCP `truncated.nextStartIndex` only paginates the document already in memory. The extractor does not fetch additional comment pages or the linked article automatically.
+
+## Reddit posts
+
+Post URLs on `reddit.com`, its subdomains, and `redd.it` route directly to Reddit's public Atom/RSS feed. `detectUrlType()` returns `reddit`; `parse()` and `parseReddit()` return a `webpage` result. No login cookies, API credentials, or browser installation are needed for accessible public feeds.
+
+The output includes the post body, author, publication date, links, available media thumbnails, and all comments supplied by the feed. rdrr does not add a comment limit. Reddit still controls the size of its feed, which may omit part of a thread. Feeds do not include scores or reply nesting, and a media link does not imply that rdrr downloaded the original image or video. Comment permalinks and the URL parameters `sort`, `context`, `depth`, `limit`, and `comment` are preserved. A focused comment must appear in the feed or rdrr returns an error.
+
+Reddit can rate-limit feeds per IP, even when HTML pages are blocked separately. rdrr makes at most three attempts within a shared 120-second deadline. It retries transient connection/body failures, incomplete feeds, and HTTP 408, 429, 500, 502, 503, and 504. It honors `Retry-After` and `X-Ratelimit-Reset`; a 429 without a usable delay waits 61 seconds. Other transient failures wait briefly before retrying. Explicit cancellation, permanent HTTP errors, and safety/size rejections are not retried. `--timeout` and `signal` can shorten the deadline. Persistent errors are returned instead of a fabricated successful extraction. Malformed XML and missing content fields are rejected; an explicitly empty body can still represent a valid title-only post.
+
+Run `pnpm test:reddit:live` to check 20 pinned post URLs against expected titles, authors, and content snippets or media links. It saves each live feed, Markdown output, and a JSON result report. For a custom output directory, run `node scripts/test-reddit-live.mjs <directory>` after building. Allow about 20 minutes when Reddit admits one request per minute. These live checks are separate from `pnpm test`.
 
 ## Token measurements
 
