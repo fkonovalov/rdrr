@@ -47,13 +47,13 @@ The [hosted service](https://rdrr.app) includes 1,000 free requests per month pe
 
 rdrr extracts source content without an LLM summarization step.
 
-Example sizes, measured with rdrr 0.6.0 on September 9, 2026:
+Example sizes, measured with rdrr 0.7.0 on September 11, 2026:
 
 | Page                                                                           | Raw HTML | Markdown body | Reduction |
 | ------------------------------------------------------------------------------ | -------: | ------------: | --------: |
 | [React quick start](https://react.dev/learn)                                   |   66,256 |         3,785 |     17.5x |
-| [TypeScript on Wikipedia](https://en.wikipedia.org/wiki/TypeScript)            |  107,111 |        10,170 |     10.5x |
-| [Dropbox discussion on Hacker News](https://news.ycombinator.com/item?id=8863) |   25,263 |         7,967 |      3.2x |
+| [TypeScript on Wikipedia](https://en.wikipedia.org/wiki/TypeScript)            |  107,137 |        10,171 |     10.5x |
+| [Dropbox discussion on Hacker News](https://news.ycombinator.com/item?id=8863) |   25,250 |         7,967 |      3.2x |
 
 Counts are **estimated tokens**, using `ceil(text.length / 4)`, with no truncation. Savings depend on the page and tokenizer. [Measurement method](./docs/reference.md#token-measurements).
 

@@ -166,7 +166,7 @@ Hacker News `item?id=...` URLs preserve the post link or text, comment authors, 
 
 ## Token measurements
 
-The README compares each downloaded HTML response with the complete Markdown body extracted from that same response by rdrr 0.6.0. No `--budget`, metadata frontmatter, or LLM summarization is involved. Counts use `estimateTokens(text)`, which is `Math.ceil(text.length / 4)`, not a model tokenizer. Ratios compare those estimates; results change with page content and markup.
+The README compares each downloaded HTML response with the complete Markdown body extracted from that same response by rdrr 0.7.0 on September 11, 2026. No `--budget`, metadata frontmatter, or LLM summarization is involved. Counts use `estimateTokens(text)`, which is `Math.ceil(text.length / 4)`, not a model tokenizer. Ratios compare those estimates; results change with page content and markup.
 
 To repeat a measurement after installing `rdrr`, save the source HTML and run this in an ESM script:
 
